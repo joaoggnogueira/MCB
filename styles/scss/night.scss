@@ -1,0 +1,24 @@
+/* 
+    Created on : 18/05/2018, 21:09:00
+    Author     : Acer
+*/
+
+$gray0 : #EEE;
+$gray1 : #CCC;
+$gray2 : #AAA;
+$gray3 : #888;
+$gray4 : #666;
+$gray5 : #444;
+$gray6 : #222;
+$gray7 : #000;
+
+$background: rgb(0,0,0);
+$background_50: rgba(0,0,0,0.5);
+
+$foreground: rgb(0,0,0);
+$foreground_50: rgba(0,0,0,0.5);
+$foreground_80: rgba(0,0,0,0.5);
+
+body.night-theme{
+    @import "day-night-template.scss";
+}

@@ -1,0 +1,8 @@
+{
+    "short_name": "M3C",
+    "name": "Mapa da Concentração de Cursos da Computação",
+    "theme_color": "#4267b2",
+    "background_color": "#EEEEEE",
+    "display": "standalone",
+    "start_url": "/"
+}

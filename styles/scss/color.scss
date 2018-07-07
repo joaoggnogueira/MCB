@@ -1,0 +1,219 @@
+/* 
+    Created on : 17/05/2018, 19:16:54
+    Author     : Acer
+*/
+
+/**
+* ùnico arquivo onde é aceito o !important
+**/
+
+/**
+*   BUTTON
+**/
+
+.btn-toggle-sidebar:hover{
+    background: $hex5;
+}
+
+.btn-toggle-sidebar:active{
+    background: $hex2;
+}
+
+.sidebar-button-icon{
+    background: $hex5;
+}
+
+.sidebar-button-text{
+    background: $hex1;
+}
+
+.sidebar-button:hover{
+    .sidebar-button-icon{
+        background: $hex2;
+    }
+}
+
+.sidebar-button:active{
+    .sidebar-button-icon{
+        background: $hex7;
+    }
+}
+
+.simple-btn{
+    color: $hex5;
+}
+
+.simple-btn:hover{
+    background: $hex5;
+    color: unset;
+}
+
+.simple-btn:active{
+    background: $hex2;
+}
+
+.btn-toggle-filter:hover{
+    background: $hex4;
+}
+
+.btn-toggle-filter:active{
+    background: $hex4;
+}
+
+.filter-type.enabled{
+    border: 1px solid $hex4 !important;
+    .title{
+        background: $hex4 !important;
+    }
+}
+
+::selection {
+    background: $hex5; /* WebKit/Blink Browsers */
+    color: white;
+}
+::-moz-selection {
+    background: $hex5; /* Gecko Browsers */
+    color: white;
+}
+
+:not(input[type='checkbox']):focus {
+    outline: 1px dotted $hex5;
+    outline: 5px auto $hex5;
+}
+
+input[type='checkbox']:focus{
+    outline: none;
+    color: $hex4;
+}
+
+input[type='checkbox']:hover:after{
+    color: $hex4;
+}
+
+label:hover > input[type="checkbox"]:after{
+    color: $hex4;
+}
+
+input[type="checkbox"]:hover + label,input[type="checkbox"]:focus + label{ 
+    color: $hex4;
+}
+.filterbar-header{
+    input[type='checkbox']:hover::after{
+        color: $hex5 !important;
+    }
+    button:hover{
+        color: $hex5 !important;
+    }
+    label:hover{
+        color: $hex5 !important;
+    }
+    .counter{
+        .total{
+            background: $hex5;
+        }
+    }
+    .counter:hover{
+        color: $hex5 !important;
+    }
+}
+.filter-type{
+    .options{
+        button:hover{
+            background: $hex3 !important;
+        }
+        button:active{
+            background: $hex2 !important;
+        }
+        button.checked{
+            background: $hex5 !important;
+        }
+    }
+}
+
+.theater-about-content{
+    button:hover{
+        background: $hex4 !important;
+    }
+    button:active{
+        background: $hex2 !important;
+    }
+    .badge.badge-edit:hover{
+        background: $hex4 !important;
+    }
+    .badge.badge-edit:active{
+        background: $hex5 !important;
+    }
+
+}
+
+.dataTables_wrapper {
+    .fg-button:not(.ui-state-disabled):hover {
+        background: $hex4 !important;
+    }
+    .fg-button:not(.ui-state-disabled):active {
+        background: $hex2 !important;
+    }
+    thead{
+        background: $hex30;
+        tr{
+            th:not(:last-child){
+                border-right: 1px solid $hex7;
+            }
+        }
+        th{
+            background: $hex4;
+        }
+        th:hover{
+            background: $hex3;
+        }
+    }
+    tbody{
+        tr:hover{
+            background: $hex3 !important;
+            td:not(:last-child){
+                border-right: 1px solid $hex0;
+            }
+        }
+        tr:active{
+            background: $hex4 !important;
+        }
+    }
+}
+
+.marker-dialog{
+    .header{
+        .close-btn:hover{
+            background: $hex4 !important;
+        }
+        .close-btn:active{
+            background: $hex2 !important;
+        }
+    }
+    .overview{
+    }
+    
+    .tabs{
+        .tab{
+            .table-list{
+            }
+        }
+    }
+
+}
+
+.notebook{
+    .tabs-header{
+        .tab-header:hover{
+            border-top: 5px solid $hex2 !important;
+        }
+        .tab-header.selected{
+            border-top: 5px solid $hex4 !important;
+        }
+    }
+}
+
+#input-group-search {
+    .input-group-addon{
+        background: $hex4;
+    }
+}

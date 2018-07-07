@@ -1,0 +1,26 @@
+/* 
+    Created on : 17/05/2018, 19:17:08
+    Author     : Acer
+*/
+
+$background: rgb(255,255,255);
+$background_50: rgba(255,255,255,0.8);
+
+$foreground: rgb(0,0,0);
+$foreground_50: rgba(0,0,0,0.5);
+
+$hex0: #ebfcb6;
+$hex1: #ddf985;
+$hex2: #cff754;
+$hex3: #c2f523;
+$hex4: #a8dc0a;
+$hex5: #83ab08;
+$hex6: #5e7a06;
+$hex7: #384903;
+$hex8: #131801;
+$hex9: #030800;
+$hex30: rgba(166,220,8,0.3);
+
+body.green-yellow-theme{
+    @import "color.scss";
+}

@@ -1,0 +1,20 @@
+/* 
+    Created on : 17/05/2018, 19:17:08
+    Author     : Acer
+*/
+
+$hex0: #e5e5ff;
+$hex1: #b3b3ff;
+$hex2: #8080ff;
+$hex3: #4d4dff;
+$hex4: #1a1aff;
+$hex5: #0000e6;
+$hex6: #0000b3;
+$hex7: #000080;
+$hex8: #00004d;
+$hex9: #00001a;
+$hex30: rgba(0,0,255,0.5);
+
+body.blue-theme{
+    @import "color.scss";
+}

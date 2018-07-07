@@ -1,0 +1,30 @@
+Function Precedencia(dificuldade As Range, criticidade As Range) As Integer
+
+Dim dif_value As Integer
+Dim cri_value As Integer
+
+Select Case dificuldade.Text
+Case "Ínfima"
+    dif_value = 1
+Case "Baixa"
+    dif_value = 2
+Case "Média"
+    dif_value = 3
+Case "Alta"
+    dif_value = 4
+Case "Elavada"
+    dif_value = 5
+End Select
+
+Select Case criticidade.Text
+Case "Baixa"
+    cri_value = 1
+Case "Média"
+    cri_value = 2
+Case "Alta"
+    cri_value = 3
+End Select
+
+Precedencia = dif_value + cri_value
+
+End Function
