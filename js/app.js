@@ -17,6 +17,4 @@ function initMap() {
     
     onload_all();
 
-    document.getElementsByTagName("iframe").setAttribute("title","Direitos reservados ao Google Maps");
-
 }

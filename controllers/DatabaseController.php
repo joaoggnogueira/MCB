@@ -53,7 +53,12 @@ class DatabaseController {
     
     public function listTable($tablename,$order_by){
         
-        $stmt = $this->connection->prepare("SELECT * FROM $tablename");
+        $query = "SELECT * FROM $tablename";
+        
+        if(isset($order_by) && is_string($order_by)){
+            $query .= " ORDER BY $order_by ASC";
+        }
+        $stmt = $this->connection->prepare($query);
         if($stmt->execute()){
             return $stmt->fetchAll(PDO::FETCH_ASSOC);
         } else {
