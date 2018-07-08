@@ -20,9 +20,8 @@ function cMarkerDialogControl() {
     };
     
     this.open = function (data) {
-        console.log(data);
         ctrl.dialog.slideDown(400);
-        cUI.catchElement("name-mun").html(data.name_mun);
+        cUI.catchElement("name-mun").html(data.name_mun+" ("+data.uf+")");
         cUI.catchElement("cod-mun").html(data.cod_mun);
         if (ctrl.datatable) {
             ctrl.datatable.destroy(true);

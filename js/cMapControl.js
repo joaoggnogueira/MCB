@@ -119,10 +119,11 @@ function cMapControl() {
                 ctrl.hashMarkers[mun[3]] = marker;
                 const cod_mun = mun[3];
                 const name_mun = mun[4];
+                const uf_mun = mun[5];
                 marker.addListener('click', function () {
                     cData.listCursos(cod_mun, cUI.filterCtrl.getFilters(), function (data) {
                         cUI.filterCtrl.close();
-                        cUI.markerDialogCtrl.open({cod_mun: cod_mun, name_mun: name_mun, data: data});
+                        cUI.markerDialogCtrl.open({uf: uf_mun,cod_mun: cod_mun, name_mun: name_mun, data: data});
                     });
                 });
             }

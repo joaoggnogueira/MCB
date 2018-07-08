@@ -389,14 +389,6 @@ if(isset($_GET['savedconfig'])){
             </div>
             <table class="overview">
                 <tr>
-                    <th class="label">
-                        Múnicipio (UF)
-                    </th>
-                    <th class="label">
-                        Código
-                    </th>
-                </tr>  
-                <tr>
                     <th class="value" id="name-mun">
                         Presidente Prudente (SP)
                     </th>
