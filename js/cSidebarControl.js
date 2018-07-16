@@ -9,7 +9,8 @@ function cSidebarControl() {
     this.sidebarBtn.child("i").setStates(["fa-bars", "fa-times"]);
 
     this.filter_btn = cUI.catchElement("sidebar-filters-btn");
-    this.markers_btn = cUI.catchElement("sidebar-markers-btn");
+    this.visualizacao_btn = cUI.catchElement("sidebar-visualizacao-btn");
+    this.marcador_btn = cUI.catchElement("sidebar-markers-btn");
     this.help_btn = cUI.catchElement("sidebar-help-btn");
     this.save_btn = cUI.catchElement("sidebar-save-btn");
     this.load_btn = cUI.catchElement("sidebar-load-btn");
@@ -24,6 +25,7 @@ function cSidebarControl() {
         ctrl.sidebarBtn.child("i").nextState();
         cUI.filterCtrl.fadeOut(200);
         cUI.markerDialogCtrl.close();
+        cUI.mapCtrl.DesabilitarModoInstituicao();
         ctrl.showTheater("theater-overview");
     };
 
@@ -42,11 +44,15 @@ function cSidebarControl() {
     };
 
     this.showMarkersTheater = function () {
-        ctrl.showTheater("theater-markers");
+        ctrl.showTheater("theater-markers", ctrl.marcador_btn);
+    };
+
+    this.showVisualizacaoTheater = function () {
+        ctrl.showTheater("theater-visualizacao", ctrl.visualizacao_btn);
     };
 
     this.showHelpTheater = function () {
-        ctrl.showTheater("theater-help");
+        ctrl.showTheater("theater-help", ctrl.help_btn);
     };
 
     this.showSaveTheater = function () {
@@ -81,7 +87,7 @@ function cSidebarControl() {
         markersave.child(".badge-edit").click(ctrl.showMarkersTheater);
         filtersave.child(".badge-edit").click(ctrl.showFilters);
 
-        ctrl.showTheater("theater-save");
+        ctrl.showTheater("theater-save", ctrl.save_btn);
     };
 
     this.saveData = function () {
@@ -143,9 +149,32 @@ function cSidebarControl() {
                     {"width": "20px", "className": "text-center", "targets": 0},
                     {"width": "170px", "targets": 2},
                     {"width": "150px", "targets": 3}
-                ]
+                ],
+                "language": {
+                    "sEmptyTable": "Nenhum registro encontrado",
+                    "sInfo": "Mostrando de _START_ até _END_ de _TOTAL_ registros",
+                    "sInfoEmpty": "Mostrando 0 até 0 de 0 registros",
+                    "sInfoFiltered": "(Filtrados de _MAX_ registros)",
+                    "sInfoPostFix": "",
+                    "sInfoThousands": ".",
+                    "sLengthMenu": "_MENU_ resultados por página",
+                    "sLoadingRecords": "Carregando...",
+                    "sProcessing": "Processando...",
+                    "sZeroRecords": "Nenhum registro encontrado",
+                    "sSearch": "Pesquisar",
+                    "oPaginate": {
+                        "sNext": "Próximo",
+                        "sPrevious": "Anterior",
+                        "sFirst": "Primeiro",
+                        "sLast": "Último"
+                    },
+                    "oAria": {
+                        "sSortAscending": ": Ordenar colunas de forma ascendente",
+                        "sSortDescending": ": Ordenar colunas de forma descendente"
+                    }
+                }
             });
-            ctrl.showTheater("theater-open");
+            ctrl.showTheater("theater-open", ctrl.load_btn);
 
             $('#table-load tbody').on('click', 'tr', function () {
                 var row = ctrl.datatable.row(this).data();
@@ -158,25 +187,59 @@ function cSidebarControl() {
         });
     };
 
-    this.showTheater = function (id) {
+    this.showTheater = function (id, source) {
+
+        var buttonlist = ctrl.sidebar.childlist(".sidebar-button");
+
+        for (var i = 0; i < buttonlist.length; i++) {
+            buttonlist[i].classList.remove("selected");
+        }
+        if (source) {
+            source.classList.add("selected");
+        }
         if (id !== ctrl.selectedTheater.id) {
             var theater = cUI.catchElement("theater-content").child("#" + id);
-            ctrl.selectedTheater.fadeOut(400, function () {
-                theater.fadeIn(400);
-            });
+
+            var theaterslist = cUI.catchElement("theater-content").childlist(".theater-about");
+            for (var i = 0; i < theaterslist.length; i++) {
+                theaterslist[i].hide();
+            }
+            theater.show();
+
             ctrl.selectedTheater = theater;
         }
     };
 
-    this.btnMarkerEvent = function (event, data) {
+    this.btnVisualEvent = function (event, data) {
+        cUI.mapCtrl.changeVisualType(data.ind);
+        ctrl.setSelectedVisual(data.ind);
         ctrl.toggle();
-        cUI.mapCtrl.changeMarkerType(data.ind);
     };
 
+    this.btnMarkerEvent = function (event, data) {
+        cUI.mapCtrl.changeMarkerType(data.ind);
+        ctrl.setSelectedMarker(data.ind);
+        ctrl.toggle();
+    };
+
+    this.setSelectedVisual = function(ind){
+        for (var i = 0; i < ctrl.btn_list_visualizacao.length; i++) {
+           ctrl.btn_list_visualizacao[i].enable();
+        }
+        ctrl.btn_list_visualizacao[ind].disable();
+    };
+    this.setSelectedMarker = function(ind){
+        for (var i = 0; i < ctrl.btn_list_marker.length; i++) {
+           ctrl.btn_list_marker[i].enable();
+        } 
+        ctrl.btn_list_marker[ind].disable();
+    };
+        
     this.filter_btn.click(this.showFilters);
     this.sidebarBtn.click(this.toggle);
     this.randomTheme.click(this.nextTheme);
-    this.markers_btn.click(this.showMarkersTheater);
+    this.visualizacao_btn.click(this.showVisualizacaoTheater);
+    this.marcador_btn.click(this.showMarkersTheater);
     this.help_btn.click(this.showHelpTheater);
     this.save_btn.click(this.showSaveTheater);
     this.load_btn.click(this.loadData);
@@ -195,10 +258,18 @@ function cSidebarControl() {
             theaterslist[i].style.display = "none";
         }
     }
-
-    var buttonlist = theaterslist[1].childlist("button");
-    for (var i = 0; i < buttonlist.length; i++) {
-        buttonlist[i].click(this.btnMarkerEvent, {ind: i});
+    
+    var buttonlistVisualizacao = theaterslist[1].childlist("button");
+    for (var i = 0; i < buttonlistVisualizacao.length; i++) {
+        buttonlistVisualizacao[i].click(this.btnVisualEvent, {ind: i});
     }
+
+    var buttonlistMarker = theaterslist[2].childlist("button");
+    for (var i = 0; i < buttonlistMarker.length; i++) {
+        buttonlistMarker[i].click(this.btnMarkerEvent, {ind: i});
+    }
+    
+    this.btn_list_visualizacao = buttonlistVisualizacao;
+    this.btn_list_marker = buttonlistMarker;
 
 }

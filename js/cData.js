@@ -27,14 +27,20 @@
             });
         };
         
-        this.listCursos = function(cod_mun,filters,callback){
-            cRequest.postJson("listCursos.php",{cod_mun:cod_mun,filters: JSON.stringify(filters)},function(data){
+        this.listCursos = function(id,filters,callback){
+            cRequest.postJson("listCursos.php",{id:id,filters: JSON.stringify(filters)},function(data){
                 callback(data.data);
             });
         };
         
         this.getDetailsHTML = function(id,callback){
             cRequest.postJson("getCursoDetailsHTML.php",{id:id},function(data){
+                callback(data.data);
+            });
+        };
+        
+        this.listInstituicoes = function(callback){
+            cRequest.postJson("listInstituicoes.php",{},function(data){
                 callback(data.data);
             });
         };

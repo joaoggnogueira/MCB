@@ -22,79 +22,83 @@ class RelatorioModel {
     function beginTransaction() {
         $this->controller->beginTransaction();
     }
-    
-    function commit(){
+
+    function commit() {
         $this->controller->commit();
     }
-    
-    function getLastInsertedId(){
+
+    function getLastInsertedId() {
         return $this->controller->getLastInsertedId();
     }
-    
+
     function getLastquery() {
         return $this->lastquery;
     }
 
     public function listGrau() {
-        return $this->controller->listTable("curso_grau_academico","nome");
+        return $this->controller->listTable("curso_grau_academico", "nome");
     }
 
     public function listRede() {
-        return $this->controller->listTable("curso_rede","nome");
+        return $this->controller->listTable("curso_rede", "nome");
     }
 
     public function listModalidade() {
-        return $this->controller->listTable("curso_modalidade","nome");
+        return $this->controller->listTable("curso_modalidade", "nome");
     }
 
     public function listNatureza() {
-        return $this->controller->listTable("curso_natureza","nome");
+        return $this->controller->listTable("curso_natureza", "nome");
     }
 
     public function listNaturezaDepartamento() {
-        return $this->controller->listTable("curso_natureza_departamento","nome");
+        return $this->controller->listTable("curso_natureza_departamento", "nome");
     }
 
     public function listNivel() {
-        return $this->controller->listTable("curso_nivel","nome");
+        return $this->controller->listTable("curso_nivel", "nome");
     }
 
     public function listPrograma() {
-        return $this->controller->listTable("curso_programa","nome");
+        return $this->controller->listTable("curso_programa", "nome");
     }
 
     public function listEstado() {
-        return $this->controller->listTable("estado","nome");
+        return $this->controller->listTable("estado", "nome");
     }
 
     public function listRegiao() {
-        return $this->controller->listTable("regiao","nome");
+        return $this->controller->listTable("regiao", "nome");
     }
 
     public function listTipoOrganizacao() {
-        return $this->controller->listTable("tipo_organizacao","nome");
+        return $this->controller->listTable("tipo_organizacao", "nome");
     }
-    
+
+    public function listInstituicoes() {
+        return $this->controller->listTable("instituicao", "sigla");
+    }
+
     public function listConfiguracoes() {
         $query = "SELECT id,nome,json,data_hora FROM relatorio";
         $stmt = $this->controller->query($query);
         return $stmt->fetchAll();
     }
-    
-    public function saveConfiguracoes($rotulo,$json) {
-        
+
+    public function saveConfiguracoes($rotulo, $json) {
+
         $query = "INSERT INTO relatorio(nome,json,ip,data_hora) VALUES (:nome,:json,:ip,NOW())";
-        
+
         $stmt = $this->controller->query($query);
-        
+
         $stmt->bindString("nome", $rotulo);
         $stmt->bindString("json", $json);
         $stmt->bindCurrentIp("ip");
-        
+
         return $stmt->execute();
     }
 
-    public function getCursoDetails($id){
+    public function getCursoDetails($id) {
         $query = "SELECT 
                 c.`matutino` as 'eh_matutino',
                 c.`vespertino` as 'eh_vespertino',
@@ -142,22 +146,22 @@ class RelatorioModel {
                 LEFT JOIN `curso_natureza_departamento` cnpu ON cnpu.`id` = c.`id_natureza_departamento`
                 WHERE c.id = :id";
         $stmt = $this->controller->query($query);
-        
+
         $stmt->bindInt("id", $id);
-        
+
         return $stmt->fetchAssoc();
     }
-    
-    public function getConfiguracoes($id){
+
+    public function getConfiguracoes($id) {
         $query = "SELECT id,nome,json,data_hora FROM relatorio WHERE id = :id";
         $stmt = $this->controller->query($query);
-        
+
         $stmt->bindInt("id", $id);
-        
+
         return $stmt->fetchAssoc();
     }
-    
-    public function listCursos($cod_mun,$filters){
+
+    public function listCursosByMunicipio($cod_mun, $filters) {
         $query = "SELECT "
                 . "c.id as id "
                 . ",ri.nome as nome "
@@ -168,13 +172,47 @@ class RelatorioModel {
                 . "INNER JOIN estado e ON e.id = m.id_estado "
                 . "INNER JOIN registro_inep ri ON ri.id = c.id_registro_inep "
                 . "INNER JOIN instituicao i ON i.id = c.id_instituicao ";
-        
-        $stmt = $this->append_filter_to_query($filters, $query, " c.cod_municipio = :cod_mun ");
+
+        $stmt = $this->append_filter_to_query($filters, $query, false, " c.cod_municipio = :cod_mun ");
         $stmt->bindString("cod_mun", $cod_mun);
         return $stmt->fetchAll();
     }
     
-    public function listMarkers($filters) {
+    public function listCursosByEstado($id_estado, $filters) {
+        $query = "SELECT "
+                . "c.id as id "
+                . ",ri.nome as nome "
+                . ",i.sigla as instituicao "
+                . ",i.nome as nome_instituicao "
+                . "FROM curso c "
+                . "INNER JOIN cidade m ON c.cod_municipio = m.cod "
+                . "INNER JOIN estado e ON e.id = m.id_estado "
+                . "INNER JOIN registro_inep ri ON ri.id = c.id_registro_inep "
+                . "INNER JOIN instituicao i ON i.id = c.id_instituicao ";
+
+        $stmt = $this->append_filter_to_query($filters, $query, false, " m.id_estado = :id_estado ");
+        $stmt->bindString("id_estado", $id_estado);
+        return $stmt->fetchAll();
+    }
+    
+    public function listCursosByRegiao($id_regiao, $filters) {
+        $query = "SELECT "
+                . "c.id as id "
+                . ",ri.nome as nome "
+                . ",i.sigla as instituicao "
+                . ",i.nome as nome_instituicao "
+                . "FROM curso c "
+                . "INNER JOIN cidade m ON c.cod_municipio = m.cod "
+                . "INNER JOIN estado e ON e.id = m.id_estado "
+                . "INNER JOIN registro_inep ri ON ri.id = c.id_registro_inep "
+                . "INNER JOIN instituicao i ON i.id = c.id_instituicao ";
+
+        $stmt = $this->append_filter_to_query($filters, $query, false, " e.id_regiao = :id_regiao ");
+        $stmt->bindString("id_regiao", $id_regiao);
+        return $stmt->fetchAll();
+    }
+
+    public function listMarkersMunicipios($filters) {
 
         $query = "SELECT "
                 . "COUNT(c.cod_municipio) as total "
@@ -186,17 +224,51 @@ class RelatorioModel {
                 . "FROM curso c "
                 . "INNER JOIN cidade m ON c.cod_municipio = m.cod "
                 . "INNER JOIN estado e ON e.id = m.id_estado ";
-        
-        $stmt = $this->append_filter_to_query($filters, $query, false);
+
+        $stmt = $this->append_filter_to_query($filters, $query,"c.cod_municipio", false);
+        return $stmt->fetchAll();
+    }
+    public function listMarkersEstado($filters) {
+
+        $query = "SELECT "
+                . "COUNT(c.cod_municipio) as total "
+                . ",e.longitude as lng "
+                . ",e.latitude as lat "
+                . ",e.id as cod "
+                . ",e.nome as nome "
+                . ",e.sigla as uf "
+                . "FROM curso c "
+                . "INNER JOIN cidade m ON c.cod_municipio = m.cod "
+                . "INNER JOIN estado e ON e.id = m.id_estado ";
+
+        $stmt = $this->append_filter_to_query($filters, $query,"e.id", false);
+        return $stmt->fetchAll();
+    }
+    public function listMarkersRegiao($filters) {
+
+        $query = "SELECT "
+                . "COUNT(c.cod_municipio) as total "
+                . ",r.longitude as lng "
+                . ",r.latitude as lat "
+                . ",r.id as cod "
+                . ",r.nome as nome "
+                . ",'' as uf "
+                . "FROM curso c "
+                . "INNER JOIN cidade m ON c.cod_municipio = m.cod "
+                . "INNER JOIN estado e ON e.id = m.id_estado "
+                . "INNER JOIN regiao r ON r.id = e.id_regiao ";
+
+        $stmt = $this->append_filter_to_query($filters, $query,"e.id_regiao", false);
         return $stmt->fetchAll();
     }
 
-    
-    private function append_filter_to_query($filters,$query,$adictional){
-        
+    private function append_filter_to_query($filters, $query, $group_by , $adictional) {
+
         $first = true;
         $this->log = array();
-        
+        if (isset($filters->instituicao)) {
+            $query .= $this->append_filter($filters->instituicao, "c.id_instituicao", "instituicao", $first);
+        }
         $query .= $this->append_filter($filters->grau, "c.id_grau", "grau", $first);
         $query .= $this->append_filter($filters->rede, "c.id_rede", "rede", $first);
         $query .= $this->append_filter($filters->modalidades, "c.id_modalidade", "modalidade", $first);
@@ -207,19 +279,21 @@ class RelatorioModel {
         $query .= $this->append_filter($filters->tipoorganizacao, "c.id_tipo_organizacao", "tipoorganizacao", $first);
         $query .= $this->append_filter($filters->regiao, "e.id_regiao", "regiao", $first);
         $query .= $this->append_filter($filters->estado, "m.id_estado", "estado", $first);
-        
-        if($adictional){
-            if($first){
+
+        if ($adictional) {
+            if ($first) {
                 $query .= "WHERE ";
             } else {
                 $query .= "AND ";
             }
-            $query .= $adictional." ";
+            $query .= $adictional . " ";
         } else {
-            $query .= "GROUP BY c.cod_municipio";
+            $query .= "GROUP BY $group_by";
         }
         $stmt = $this->controller->query($query);
-        
+        if (isset($filters->instituicao)) {
+            $this->bind_array_to_param($stmt, $filters->instituicao, "instituicao");
+        }
         $this->bind_array_to_param($stmt, $filters->grau, "grau");
         $this->bind_array_to_param($stmt, $filters->rede, "rede");
         $this->bind_array_to_param($stmt, $filters->modalidades, "modalidade");
@@ -230,10 +304,10 @@ class RelatorioModel {
         $this->bind_array_to_param($stmt, $filters->tipoorganizacao, "tipoorganizacao");
         $this->bind_array_to_param($stmt, $filters->regiao, "regiao");
         $this->bind_array_to_param($stmt, $filters->estado, "estado");
-        
+
         return $stmt;
     }
-    
+
     /**
      * @param array(string) $filter
      * @param string $id_name
@@ -242,7 +316,7 @@ class RelatorioModel {
      */
     private function append_filter($filter, $id_name, $param, &$first) {
         if (!isset($filter->all)) {
-            $param = $this->filter_to_param($filter,$param);
+            $param = $this->filter_to_param($filter, $param);
             if ($first) {
                 $first = false;
                 return "WHERE $id_name IN ($param) ";
@@ -252,7 +326,7 @@ class RelatorioModel {
         }
         return "";
     }
-    
+
     /**
      * 
      * @param array(string) $filter
@@ -269,8 +343,8 @@ class RelatorioModel {
             } else {
                 $query .= ",";
             }
-            $work = str_replace("-", "_","".$value);
-            $query .= ":".$param."_".$work;
+            $work = str_replace("-", "_", "" . $value);
+            $query .= ":" . $param . "_" . $work;
         }
         return ($query);
     }
@@ -282,11 +356,11 @@ class RelatorioModel {
      */
     private function bind_array_to_param($stmt, $filter, $param) {
         if (!isset($filter->all)) {
-            
+
             foreach ($filter as $value) {
-                $work = str_replace("-", "_","".$value);
-                $stmt->bindString($param."_".$work, $value);
-                $this->log[] = "Definindo ".$param."_".$work." como ".$value;
+                $work = str_replace("-", "_", "" . $value);
+                $stmt->bindString($param . "_" . $work, $value);
+                $this->log[] = "Definindo " . $param . "_" . $work . " como " . $value;
             }
         }
     }

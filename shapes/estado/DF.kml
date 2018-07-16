@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<kml xmlns="http://earth.google.com/kml/2.1">
+<Folder>
+	<name>DF</name>
+	<Placemark>
+		<name>track</name>
+		<Style>
+			<LineStyle>
+				<color>cc0000cc</color>
+				<width>4</width>
+			</LineStyle>
+		</Style>
+		<LineString>
+			<altitudeMode>clampToGround</altitudeMode>
+			<coordinates>-48.25185599941406,-15.947499289239127,0
+-48.2850859,-15.8367224,0
+-48.213736255078125,-15.748148519630245,0
+-48.2412894,-15.6865874,0
+-48.2003723,-15.6231563,0
+-48.2003479,-15.5002552,0
+-47.4169872,-15.5002566,0
+-47.3125847,-15.7401025,0
+-47.380293064648434,-15.881543004973835,0
+-47.3792095,-15.9736402,0
+-47.298088417382814,-16.017264819038385,0
+-48.2786060,-16.0502612,0
+			</coordinates>
+		</LineString>
+	</Placemark></Folder>
+</kml>

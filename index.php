@@ -61,25 +61,59 @@ if(isset($_GET['savedconfig'])){
         <script src='<?= resource_script("polyfill.js"); ?>'></script>
 
         <script src="https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/markerclusterer.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/5.5.0/d3.min.js"></script>
         <script defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC6A2l8RrNfmBdbVI-kMjRHBoZmBa1e4IU&libraries=places&callback=initMap"></script>
 
         <link async rel="stylesheet" href="<?= resource_css("font.css"); ?>">
         <link async href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet"/>
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/7.24.1/sweetalert2.min.css"/>
+        <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.min.css"/>
         <script src="https://unpkg.com/promise-polyfill"></script>
 
         <link rel="stylesheet" href="<?= resource_css("principal.css"); ?>"/>
     </head>
     <body id='body' class='day-theme'>
         <div id="input-group-search" class="input-group">
-            <span class="input-group-addon"><i class="fa fa-search"></i></span>
-            <label for="pac-input" style="position: absolute">Pesquisar múnicipio: </label>
-            <input id="pac-input" type="text" placeholder="Pesquise o município aqui">
+            <span id="icon-search" class="input-group-addon"><i class="fa fa-search"></i></span>
+            <label for="pac-input" style="position: absolute">Pesquisar: </label>
+            <select name="select-search" id="select-search">
+                <option value="municipio">Pesquisar por Localização</option>
+                <option value="instituicao">Pesquisar por Instituição</option>
+            </select>
+            <input id="pac-input" class="pac-input" type="text" placeholder="Nome do Local, Município e Organização">
+            <input id="inst-input" class="pac-input" type="text" placeholder="Sigla ou Nome da Instituição">
+            <a class="pac-button" id="close-filter-inst-btn">
+                <i class='pac-addon-icon fa fa-times'></i>
+                <div class="pac-addon-header"></div>
+                <div class="pac-addon-content"></div>
+            </a>
+        </div>
+        <div class="tree-process-selector" id="selected-mode">
+            <div class="content">
+                <ul>
+                    <li>
+                        <select class="text" id="visual-selected-text">
+                            <option value="0">Marcadores com agrupamento</option>
+                            <option value="1">Marcadores sem agrupamento</option>
+                            <option value="2">Circulo Ponderado</option>
+                        </select>
+                        <div class="next"></div>
+                    </li>
+                    <li>
+                        <select class="text" id="marker-selected-text">
+                            <option value="0">Por município</option>
+                            <option value="1">Por estado</option>
+                            <option value="2">Por região</option>
+                        </select>
+                    </li>
+                </ul>
+            </div>
         </div>
         <div class='theater' id="theater-details">
-            <div class="modal-content">
-                
-            </div>
+            <div class="modal-content"></div>
+        </div>
+        <div class='theater' id="theater-search">
+            <div class="modal-content"></div>
         </div>
         <div class='theater' id="theater-sidebar">
             <div class="theater-content" id="theater-content">
@@ -105,12 +139,12 @@ if(isset($_GET['savedconfig'])){
                         <a target="_blank" rel="noopener" href="https://www.linkedin.com/in/joão-gabriel-gomes-nogueira-96133040/">João Gabriel Gomes Nogueira @2018</a>
                     </div>
                 </div>
-                <div class="theater-about" id="theater-markers">
+                <div class="theater-about" id="theater-visualizacao">
                     <div class="theater-about-title">
-                        <i class="fa fa-map-marker"></i>&nbsp;&nbsp;&nbsp;Marcadores
+                        <i class="fa fa-map"></i>&nbsp;&nbsp;&nbsp;Visualização
                     </div>
                     <div class="theater-about-content max-content">
-                        Escolha o tipo de exibição dos marcadores:
+                        Escolha o tipo de exibição da visualização:
                         <br/><br/>
                         <table>
                             <tr>
@@ -120,7 +154,7 @@ if(isset($_GET['savedconfig'])){
                                 <td style="vertical-align: top"> 
                                     <div class="label-title">Com agrupamento</div>
                                     <div class="label-content">Marcadores muito próximos serão agrupados</div>
-                                    <button>Selecionar</button>
+                                    <button class="button-toggle-theater" disabled title="Selecionar"></button>
                                 </td>
                             </tr>
                             <tr>
@@ -130,7 +164,7 @@ if(isset($_GET['savedconfig'])){
                                 <td style="vertical-align: top"> 
                                     <div class="label-title">Sem agrupamento</div>
                                     <div class="label-content">Pode levar muito tempo para processar devido a quantidade de marcadores</div>
-                                    <button>Selecionar</button>
+                                    <button class="button-toggle-theater" title="Selecionar"></button>
                                 </td>
                             </tr>
                             <tr>
@@ -140,7 +174,48 @@ if(isset($_GET['savedconfig'])){
                                 <td> 
                                     <div class="label-title">Circulo Ponderado</div>
                                     <div class="label-content">Não possui interação, mas permite ver a concentração de caracterizações</div>
-                                    <button>Selecionar</button>
+                                    <button class="button-toggle-theater" title="Selecionar"></button>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+                <div class="theater-about" id="theater-markers">
+                    <div class="theater-about-title">
+                        <i class="fa fa-map-marker"></i>&nbsp;&nbsp;&nbsp;Modo de Marcador
+                    </div>
+                    <div class="theater-about-content max-content">
+                        Escolha o modo de exibição dos marcadores:
+                        <br/><br/>
+                        <table>
+                            <tr>
+                                <td>
+                                    <img width="150px" alt="exemplo de modo por múnicipio" src='./images/ui/marcador/6.jpeg'/>
+                                </td>
+                                <td style="vertical-align: top"> 
+                                    <div class="label-title">Por Município</div>
+                                    <div class="label-content">Cada marcador representa um múnicipio</div>
+                                    <button class="button-toggle-theater" disabled title="Selecionar"></button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <img width="150px" alt="exemplo de modo por estado" src='./images/ui/marcador/5.jpeg'/>
+                                </td>
+                                <td style="vertical-align: top"> 
+                                    <div class="label-title">Por Estado</div>
+                                    <div class="label-content">Cada marcador representa um estado</div>
+                                    <button class="button-toggle-theater" title="Selecionar"></button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <img width="150px" alt="exemplo de modo por região" src='./images/ui/marcador/4.jpeg'/>
+                                </td>
+                                <td> 
+                                    <div class="label-title">Por Região</div>
+                                    <div class="label-content">Cada marcador representa uma região</div>
+                                    <button class="button-toggle-theater" title="Selecionar"></button>
                                 </td>
                             </tr>
                         </table>
@@ -251,7 +326,14 @@ if(isset($_GET['savedconfig'])){
                     <li class='item-list-buttons-sidebar'>
                         <?PHP
                         resource_component(
-                            "buttonSidebar.php", array("id" => "markers", "fa-icon" => "fa-map-marker", "text" => "Marcadores")
+                            "buttonSidebar.php", array("id" => "visualizacao", "fa-icon" => "fa-map", "text" => "Visualização")
+                        );
+                        ?>
+                    </li>     
+                    <li class='item-list-buttons-sidebar'>
+                        <?PHP
+                        resource_component(
+                            "buttonSidebar.php", array("id" => "markers", "fa-icon" => "fa-map-marker", "text" => "Modo de Marcador")
                         );
                         ?>
                     </li>     
@@ -389,21 +471,24 @@ if(isset($_GET['savedconfig'])){
             </div>
             <table class="overview">
                 <tr>
-                    <th class="value" id="name-mun">
-                        Presidente Prudente (SP)
-                    </th>
-                    <th class="value" id="cod-mun">
-                        #12345678
-                    </th>
+                    <td class="value" id="name-mun">
+                        %Município%(%UF%)
+                    </td>
+                    <td class="value" id="cod-mun">
+                        %COD_MUN%
+                    </td>
                 </tr>  
             </table>
             <div class="notebook" id="notebook-marker-dialog">
                 <div class="tabs-header">
                     <div class="tab-header selected">
-                        Lista de Cursos no Múnicipio
+                        Lista de Cursos no Município
                     </div>
                     <div class="tab-header">
                         Gráficos
+                    </div>
+                    <div class="tab-header">
+                        Exportar
                     </div>
                 </div>
                 <div class="tabs">
@@ -419,6 +504,9 @@ if(isset($_GET['savedconfig'])){
                         </table>
                     </div>
                     <div class="tab" id="graphs-tab">
+
+                    </div>
+                    <div class="tab" id="export-tab">
 
                     </div>
                 </div>

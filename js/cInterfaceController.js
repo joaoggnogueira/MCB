@@ -88,6 +88,14 @@
                 });
                 return d;
             };
+            d.disable = function(){
+                d.setAttribute("disabled","disabled");
+                return d;
+            };
+            d.enable = function(){
+                d.removeAttribute("disabled");
+                return d;
+            }
             d.click = function (callback,data) {
                 if(callback){
                     d.addEventListener("click", function(event){

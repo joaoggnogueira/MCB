@@ -15,7 +15,7 @@
                         callback(data);
                     } else {
                         swal({title:"Opss ...",type: 'warning',text:data.message});
-                        console.log(data.data);
+                        console.log(data);
                     }
                 },
                 error: function (data) {

@@ -1,0 +1,16 @@
+/* 
+    Created on : 08/07/2018, 17:03:34
+    Author     : Acer
+*/
+
+.ui-widget-header{
+    background: none !important;
+    border: none !important;
+}
+
+.ui-autocomplete {
+    max-height: 300px;
+    overflow-y: auto;
+    /* prevent horizontal scrollbar */
+    overflow-x: hidden;
+}

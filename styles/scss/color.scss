@@ -23,7 +23,7 @@
     background: $hex5;
 }
 
-.sidebar-button-text{
+.sidebar-button-text,.sidebar-button.selected::after{
     background: $hex1;
 }
 
@@ -131,10 +131,10 @@ input[type="checkbox"]:hover + label,input[type="checkbox"]:focus + label{
 }
 
 .theater-about-content{
-    button:hover{
+    button:not(:disabled):hover{
         background: $hex4 !important;
     }
-    button:active{
+    button:not(:disabled):active{
         background: $hex2 !important;
     }
     .badge.badge-edit:hover{
@@ -201,19 +201,38 @@ input[type="checkbox"]:hover + label,input[type="checkbox"]:focus + label{
 
 }
 
-.notebook{
-    .tabs-header{
-        .tab-header:hover{
-            border-top: 5px solid $hex2 !important;
-        }
-        .tab-header.selected{
-            border-top: 5px solid $hex4 !important;
-        }
-    }
-}
-
 #input-group-search {
     .input-group-addon{
         background: $hex4;
     }
+    #close-filter-inst-btn:hover{
+        background: $hex4;
+    }
+    #close-filter-inst-btn:active{
+        background: $hex6;
+    }
+}
+
+.tree-process-selector{
+    .content{
+        ul{
+            > li:hover{
+                background: $hex4;
+                .next{
+                    background: $hex4;
+                }
+            }
+            > li:active{
+                background: $hex5;
+                .next{
+                    background: $hex5;
+                }
+            }
+        }
+    }
+}
+
+.ui-state-active{
+    background: $hex4;
+    border: 1px solid $hex5;
 }

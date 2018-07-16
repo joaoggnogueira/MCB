@@ -101,6 +101,7 @@ function cFilterControl() {
         } else {
             ctrl.togglefilterbar.html('<i class="fa fa-filter"></i>');
         }
+        cUI.mapCtrl.DesabilitarModoInstituicao();
     };
 
     this.resetFilters = function (update) {

@@ -12,8 +12,18 @@ if ($request->verifyPOST(["filters"])) {
     include "../models/RelatorioModel.php";
     
     $model = new RelatorioModel();
-    $result = $model->listMarkers($filters);
-    
+    $result = false;
+    switch($filters->markerType){
+        case 0:
+            $result = $model->listMarkersMunicipios($filters);
+            break;
+        case 1:
+            $result = $model->listMarkersEstado($filters);
+            break;
+        case 2:
+            $result = $model->listMarkersRegiao($filters);
+            break;
+    }
     if(is_array($result)){
         ob_start("ob_gzhandler");
         $request->responseSuccess("Sucesso ao recuperar dados", $result);
