@@ -47,6 +47,13 @@
             if (d.cInterfaceInitialized) {
                 return d;
             }
+            d.append = function(child){
+                $(d).append(child);
+            }
+            d.removeAllClickEvents = function(){
+                $(d).off("click");
+                return d;
+            }
             d.setStates = function (arr) {
                 var item;
                 if (d.id.length !== 0) {
@@ -121,8 +128,20 @@
                 return d;
             };
             d.html = function (html) {
-                $(d).html(html);
-                return d;
+                if(html === undefined){
+                    return $(d).html();
+                } else {
+                    $(d).html(html);
+                    return d;
+                }
+            };
+            d.cText = function(text){
+                if(text === undefined){
+                    return $(d).text();
+                } else {
+                    $(d).text(text);
+                    return d;
+                }
             };
             d.slideDown = function (time) {
                 $(d).slideDown(time, "easeInOutQuint");

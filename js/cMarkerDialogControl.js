@@ -94,6 +94,11 @@ function cMarkerDialogControl() {
         ctrl.dialog.slideUp(400);
     };
     
+    $("#graphs-tab ul").sortable({
+        items: "> li",
+        handle: ".fa-ellipsis-v.draggable-sortable-btn"
+    });
+    
     this.close_btn.click(this.close);
     this.dialog.hide();
     this.theater.hide();

@@ -176,21 +176,7 @@
                 > li{
                     border: 1px solid $gray5;
                     box-shadow: 0px 0px 2px black;
-                    .options{
-                        color: $gray3;
-                        background: $gray6;
-                        border-bottom: 1px solid $gray6;
-                        button{
-                            background: $gray7;
-                            color: $gray2;
-                        }
-                        button:hover{
-                            color: $background;
-                        }
-                        button.checked{
-                            color: $background;
-                        }
-                    }
+
                     .counter{
                         width: 100%;
                         height: 20px;
@@ -211,7 +197,8 @@
                     .title{
                         background: $gray5;
                     }
-                    .content{
+
+                    .placeholder{
                         color: $foreground;
                     }
                 }
@@ -245,7 +232,6 @@
 a{
     color: white;
 }
-
 
 .marker-dialog{
     border: 1px solid $gray4;
@@ -313,6 +299,12 @@ a{
                 td:first-child{
                     border-left: 1px solid $gray6;
                 }
+            }
+        }
+        ul{
+            color: $foreground;
+            details{
+                box-shadow: 0px 0px 5px rgba(0,0,0,0.3);
             }
         }
     }
@@ -395,4 +387,54 @@ a{
     top: 70px !important;
     left: 60px !important;
     position: absolute;
+}
+
+.wrapper-graph{
+    summary{
+        color: $background;
+    }
+    .visual{
+        background: $background;
+    }
+}
+
+table{
+    color: $foreground;
+}
+
+.ui-dialog{
+    .ui-dialog-titlebar{
+        background: $gray5;
+        color: $background;
+        .ui-button{
+            background: transparent;
+            color: $background;
+            border: none;
+            .ui-icon-closethick{
+                background-image: none;
+            }
+        }    
+    }
+}
+
+.body-filter{
+    .options{
+        color: $gray3;
+        background: $gray6;
+        border-bottom: 1px solid $gray6;
+        button{
+            background: $gray7;
+            color: $gray2;
+        }
+        button:hover{
+            color: $background;
+        }
+        button.checked{
+            color: $background;
+        }
+    }
+    .content{
+        color: $foreground;
+        background: $background_50;
+    }
 }

@@ -3,7 +3,7 @@
     Author     : Acer
 */
 
-.ui-widget-header{
+.ui-widget-header:not(.ui-dialog-titlebar){
     background: none !important;
     border: none !important;
 }

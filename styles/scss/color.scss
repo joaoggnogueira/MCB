@@ -116,19 +116,6 @@ input[type="checkbox"]:hover + label,input[type="checkbox"]:focus + label{
         color: $hex5 !important;
     }
 }
-.filter-type{
-    .options{
-        button:hover{
-            background: $hex3 !important;
-        }
-        button:active{
-            background: $hex2 !important;
-        }
-        button.checked{
-            background: $hex5 !important;
-        }
-    }
-}
 
 .theater-about-content{
     button:not(:disabled):hover{
@@ -235,4 +222,28 @@ input[type="checkbox"]:hover + label,input[type="checkbox"]:focus + label{
 .ui-state-active{
     background: $hex4;
     border: 1px solid $hex5;
+}
+
+
+.wrapper-graph{
+    summary{
+         background: $hex3;
+    }
+    .visual{
+        border: 1px solid $hex3;
+    }
+}
+
+.body-filter{
+    .options{
+        button:hover{
+            background: $hex3 !important;
+        }
+        button:active{
+            background: $hex2 !important;
+        }
+        button.checked{
+            background: $hex5 !important;
+        }
+    }
 }

@@ -1,2 +1,2 @@
-.ui-widget-header{background:none !important;border:none !important}.ui-autocomplete{max-height:300px;overflow-y:auto;overflow-x:hidden}
+.ui-widget-header:not(.ui-dialog-titlebar){background:none !important;border:none !important}.ui-autocomplete{max-height:300px;overflow-y:auto;overflow-x:hidden}
 /*# sourceMappingURL=reset.css.map */

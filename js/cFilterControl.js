@@ -9,9 +9,9 @@ function cFilterControl() {
     this.visiblefilters = false;
     this.filterCheckboxes = [];
     this.counterFilters = cUI.catchElement("counter-filters");
-    
+
     this.counterFilters.hide();
-    
+
     var ctrl = this;
 
     this.updateFiltersActived = function () {
@@ -28,7 +28,7 @@ function cFilterControl() {
         } else {
             countertotal.show();
             totaldiv.html(total);
-            
+
             if (total === 1) {
                 textdiv.html("Filtro ativo");
             } else {
@@ -66,23 +66,23 @@ function cFilterControl() {
     };
 
     this.show = function () {
-        if(ctrl.visiblefilters === false) {
+        if (ctrl.visiblefilters === false) {
             ctrl.visiblefilters = true;
             ctrl.filterbar.slideDown(200);
             ctrl.togglefilterbar.html('<i class="fa fa-angle-double-up"></i>');
             ctrl.togglefilterbar.toggleClass("active");
         }
     };
-    
-    this.close = function(){
-        if(ctrl.visiblefilters) {
+
+    this.close = function () {
+        if (ctrl.visiblefilters) {
             ctrl.visiblefilters = false;
             ctrl.filterbar.slideUp(200);
             ctrl.togglefilterbar.html('<i class="fa fa-filter"></i>');
             ctrl.togglefilterbar.toggleClass("active");
         }
     }
-    
+
     this.fadeOut = function (time) {
         ctrl.filterbar.slideUp(time);
         ctrl.togglefilterbar.toggleSlideVeritical(time);
@@ -105,7 +105,7 @@ function cFilterControl() {
     };
 
     this.resetFilters = function (update) {
-        if(update === undefined){
+        if (update === undefined) {
             update = true;
         }
         var listfilters = ctrl.filterCheckboxes;
@@ -126,7 +126,7 @@ function cFilterControl() {
                 selectOne.toggleClass("checked");
             }
         }
-        if(update){
+        if (update) {
             ctrl.updateFiltersActived();
             ctrl.updateRequest();
         }
@@ -156,24 +156,24 @@ function cFilterControl() {
         return data;
     };
 
-    this.setFilters = function (filters){
+    this.setFilters = function (filters) {
         ctrl.resetFilters(false);
-        
-        for(var key in filters){
-            if(!filters[key].all){
+
+        for (var key in filters) {
+            if (!filters[key].all) {
                 var list = filters[key];
                 var listcheckboxes = ctrl.filterCheckboxes[key];
-                for(var keycheckbox in listcheckboxes) {
-                    if(!list.includes(listcheckboxes[keycheckbox].value)){
+                for (var keycheckbox in listcheckboxes) {
+                    if (!list.includes(listcheckboxes[keycheckbox].value)) {
                         listcheckboxes[keycheckbox].checked = false;
                     }
                 }
-                ctrl.filterbar.child(".filter-type[name='"+key+"']").classList.add("enabled");
+                ctrl.filterbar.child(".filter-type[name='" + key + "']").classList.add("enabled");
             } else {
-                ctrl.filterbar.child(".filter-type[name='"+key+"']").classList.remove("enabled");
+                ctrl.filterbar.child(".filter-type[name='" + key + "']").classList.remove("enabled");
             }
         }
-        
+
     };
 
     this.hide = function () {
@@ -187,7 +187,7 @@ function cFilterControl() {
 
     this.filterBtnEvent = function (event, data) {
         var lista = data.list;
-
+        cUI.markerDialogCtrl.close();
         if (data.selectOne.checked) {
             for (var i = 0; i < lista.length; i++) {
                 lista[i].checked = false;
@@ -223,6 +223,7 @@ function cFilterControl() {
 
     this.selectAllBtnEvent = function (event, data) {
         var list = data.list;
+        cUI.markerDialogCtrl.close();
         for (var keyinput in list) {
             list[keyinput].checked = true;
         }
@@ -238,6 +239,7 @@ function cFilterControl() {
     this.selectOneBtnEvent = function (event, data) {
         var btn = data.btn;
         var list = data.list;
+        cUI.markerDialogCtrl.close();
         if (!data.selectOne.checked) {
 
             var total = 0;
@@ -258,12 +260,41 @@ function cFilterControl() {
         ctrl.updateFiltersActived();
     };
 
+    this.toWindowBtnEvent = function (event, data) {
+        var filtertype = data.filtertype;
+        var body = filtertype.child(".body");
+        var placeholder = $("<a/>").addClass("placeholder").html("Restaurar");
+        var onclose = function( event, ui ) {
+            placeholder.remove();
+            $(body).dialog("destroy");
+            filtertype.append(body);
+            filtertype.child(".to-window-btn.fa-window-maximize").show();
+            filtertype.child(".to-window-btn.fa-reply").hide();
+        }
+        
+        $(body).dialog({
+            title: filtertype.child(".title").cText(),
+            close: onclose,
+            open: function(){
+            }
+        });
+        
+        $(".ui-button.ui-corner-all.ui-widget.ui-button-icon-only.ui-dialog-titlebar-close").html("<i class='fa fa-reply'></i>").css("text-indent","0");
+        filtertype.child(".to-window-btn.fa-window-maximize").hide();
+        filtertype.child(".to-window-btn.fa-reply").show().removeAllClickEvents().click(onclose);
+        
+        placeholder.click(onclose).appendTo(filtertype);
+    }
+
     var listfilters = cUI.catchElement("filter-list").childlist(".filter-type");
 
     for (var key in listfilters) {
         var value = listfilters[key].getAttribute("name");
         var selectAll = listfilters[key].child(".select-all");
         var selectOne = listfilters[key].child(".select-one");
+        var towindowbtn = listfilters[key].child(".to-window-btn.fa-window-maximize");
+
+        towindowbtn.click(this.toWindowBtnEvent, {filtertype: listfilters[key]});
 
         selectOne.checked = false;
         var listinput = listfilters[key].childlist("input");
@@ -275,4 +306,10 @@ function cFilterControl() {
             input.click(this.filterBtnEvent, {source: input, selectOne: selectOne, filtertype: listfilters[key], list: listinput});
         }
     }
+
+    $("#filter-list").sortable({
+        items: "> li",
+        handle: ".fa-ellipsis-v.draggable-sortable-btn"
+    });
+
 }

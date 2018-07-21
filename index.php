@@ -61,7 +61,6 @@ if(isset($_GET['savedconfig'])){
         <script src='<?= resource_script("polyfill.js"); ?>'></script>
 
         <script src="https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/markerclusterer.js"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/5.5.0/d3.min.js"></script>
         <script defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC6A2l8RrNfmBdbVI-kMjRHBoZmBa1e4IU&libraries=places&callback=initMap"></script>
 
         <link async rel="stylesheet" href="<?= resource_css("font.css"); ?>">
@@ -71,6 +70,10 @@ if(isset($_GET['savedconfig'])){
         <script src="https://unpkg.com/promise-polyfill"></script>
 
         <link rel="stylesheet" href="<?= resource_css("principal.css"); ?>"/>
+        
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/5.5.0/d3.min.js"></script>
+        <script async src='<?= resource_script("thirdparty/Donut3D.js"); ?>'></script>
+        <link async src='<?= resource_css("thirdparty/Donut3D.css"); ?>'/>
     </head>
     <body id='body' class='day-theme'>
         <div id="input-group-search" class="input-group">
@@ -136,8 +139,17 @@ if(isset($_GET['savedconfig'])){
                         <br/>
                         Educação Superior<br/>		
                         Relação dos Cursos de COMPUTAÇÃO - GRADUAÇÃO E SEQUENCIAIS - PRESENCIAIS E A DISTÂNCIA, segundo as Instituições de Ensino e o Curso<br/>			
-                        <a target="_blank" rel="noopener" href="https://www.linkedin.com/in/joão-gabriel-gomes-nogueira-96133040/">João Gabriel Gomes Nogueira @2018</a>
+                        <hr/>
+                        <h4>2018</h4>
+                        Desenvolvedor:
+                        <a target="_blank" rel="noopener" href="https://www.linkedin.com/in/joão-gabriel-gomes-nogueira-96133040/">João Gabriel Gomes Nogueira</a>
+                        <br/>
+                        Coordenador:
+                        <a target="_blank" rel="noopener" href="http://www.unesp.br/PortalPROPe/unesp/fct/dmec/ronaldo-celso-messias-correia/informacoes/">Ronaldo Celso Messias Correia</a>
                     </div>
+                    <hr/>
+                    <img sync style="padding: 5px" src="./images/logotipos/sbc.png" width="69" height="100"/>
+                    <img sync style="padding: 5px" src="./images/logotipos/unesp-white.svg" width="300" height="100"/>
                 </div>
                 <div class="theater-about" id="theater-visualizacao">
                     <div class="theater-about-title">
@@ -504,10 +516,21 @@ if(isset($_GET['savedconfig'])){
                         </table>
                     </div>
                     <div class="tab" id="graphs-tab">
-
+                        <ul>
+                            <?PHP
+                            resource_component("Graph.php", array("id" => "grau", "title" => "Grau", "type" => "sector"));
+                            resource_component("Graph.php", array("id" => "rede", "title" => "Rede", "type" => "sector"));
+                            resource_component("Graph.php", array("id" => "modalidade", "title" => "Modalidade", "type" => "bars"));
+                            resource_component("Graph.php", array("id" => "natureza", "title" => "Natureza Privada", "type" => "sector"));
+                            resource_component("Graph.php", array("id" => "naturezadep", "title" => "Natureza Pública", "type" => "sector"));
+                            resource_component("Graph.php", array("id" => "nivel", "title" => "Nível", "type" => "sector"));
+                            resource_component("Graph.php", array("id" => "programa", "title" => "Programa do Curso", "type" => "bars"));
+                            resource_component("Graph.php", array("id" => "tipoorganizacao", "title" => "Tipo da Organização", "type" => "sector"));
+                            resource_component("Graph.php", array("id" => "estado", "title" => "Estado", "type" => "bars"));
+                            ?>
+                        </ul>
                     </div>
                     <div class="tab" id="export-tab">
-
                     </div>
                 </div>
             </div>
