@@ -75,12 +75,20 @@
                     font-size: 16px;
                     margin-bottom: 15px;
                 }
-                .button-toggle-theater{
+                .button-theater{
                     padding: 10px 30px;
                     display: block;
                     margin-top: 10px;
                     font-weight: 700;
                     width: 260px;
+                }
+                .button-addon-theater{
+                    position: absolute;
+                    margin-top: -35px;
+                    margin-left: 270px;
+                    height: 35px;
+                    width: 20px;
+                    padding-left: 20px;
                 }
                 .button-toggle-theater:disabled:before{
                     font-family: FontAwesome;
@@ -345,18 +353,17 @@ $size: 160px;
 
 .btn-toggle-filter{
     font-family: 'Montserrat', sans-serif;
-    top: 0px !important;
-    width: 50px;
-    height: 30px;
+    top: 11.5px !important;
+    width: 40px;
+    height: 50px;
     text-align: center;
-    left: calc(50% - 25px) !important;
+    left: 60px !important;
     cursor: pointer;
     transition: top ease-out 0.2s;
     i{
-        width: 50px;
         font-size: 25px;
-        height: 30px;
-        line-height: 30px;
+        height: 27.5px;
+        line-height: 50px;
     }
 }
 
@@ -623,6 +630,17 @@ input[type='checkbox']:checked:after{
 }
 
 .notebook{
+    .subtitle{
+        margin-bottom: 2px;
+        font-size: 16px;
+        text-align: center;
+        @include no-select();
+    }
+    .empty{
+        text-align: center;
+        margin-top: 30px;
+        font-style: italic;
+    }
     .tabs-header{
         width: calc(100% - 10px);
         padding: 5px;
@@ -640,6 +658,10 @@ input[type='checkbox']:checked:after{
             text-align: center;
             font-size: 16px;
             margin-top: -1px;
+            @include no-select();
+        }
+        .tab-header:not(:first-child){
+            margin-left: -1px;
         }
         .btn-close{
             float: right;
@@ -668,7 +690,7 @@ input[type='checkbox']:checked:after{
 }
 #input-group-search {
     left: 60px !important;
-    top: 11.5px !important;
+    top: 12.5px !important;
     .input-group-addon{
         position: absolute;
         width: 50px;
@@ -756,22 +778,32 @@ input[type='checkbox']:checked:after{
     }
 }
 
+#selected-mode{
+    top: 70px !important;
+    left: 15px !important;
+    position: absolute;
+}
+
 .tree-process-selector{
     padding-top:3px;
-    .title{
-        height: 20px;
-        line-height: 20px;
-        font-size: 16px;
-        padding-left: 10px;
+    button{
+        border-radius: 5px;
+        height: 25px;
+        line-height: 25px; 
+        float: right;
+        border: none;
+        margin-left: 10px;
+        cursor: pointer;
     }
     .content{
+        float: left;
         ul{
             height: 25px;
             line-height: 25px; 
             @include ul-reset();
             > li{
                 font-size: 16px;
-                float: left;
+                float: right;
                 @include li-reset();
                 @include no-select();
                 padding-right: 5px;
@@ -900,17 +932,25 @@ input[type='checkbox']:checked:after{
     }
     .ui-dialog-content{
     //    padding: 0px;
-        .options{
-            margin-left: -1em;
-            width: calc(100% + 2em);
+        .options,.subtitle{
             margin-top: -0.5em;
             button{
                 width: calc(50% - 2.5px) !important;
             }
         }
-        .content{
+        .content,.options,.tabs-header,.tabs,.subtitle{
             margin-left: -1em;
             width: calc(100% + 2em);
+        }
+        .tabs{
+            padding: 30px;
+            padding-bottom: 10px;
+            padding-top: 10px;
+            width: calc(100% + 2em - 60px);
+        }
+        .tabs-header{
+            @include no-select();
+            width: calc(100% + 2em - 10px);
         }
     }
 

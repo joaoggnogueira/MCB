@@ -60,6 +60,8 @@ if(isset($_GET['savedconfig'])){
         <script src='<?= resource_script("app.js"); ?>'></script>
         <script src='<?= resource_script("polyfill.js"); ?>'></script>
 
+        <script src='<?= resource_script("cUserConfig.js"); ?>'></script>
+        
         <script src="https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/markerclusterer.js"></script>
         <script defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC6A2l8RrNfmBdbVI-kMjRHBoZmBa1e4IU&libraries=places&callback=initMap"></script>
 
@@ -77,8 +79,7 @@ if(isset($_GET['savedconfig'])){
     </head>
     <body id='body' class='day-theme'>
         <div id="input-group-search" class="input-group">
-            <span id="icon-search" class="input-group-addon"><i class="fa fa-search"></i></span>
-            <label for="pac-input" style="position: absolute">Pesquisar: </label>
+            <label for="pac-input" style="position: absolute"></label>
             <select name="select-search" id="select-search">
                 <option value="municipio">Pesquisar por Localização</option>
                 <option value="instituicao">Pesquisar por Instituição</option>
@@ -92,6 +93,9 @@ if(isset($_GET['savedconfig'])){
             </a>
         </div>
         <div class="tree-process-selector" id="selected-mode">
+            <button id="config-visualizacao">
+                <i class="fa fa-cog"></i>
+            </button>
             <div class="content">
                 <ul>
                     <li>
@@ -127,18 +131,21 @@ if(isset($_GET['savedconfig'])){
                     <h4 class="theater-about-content">
                         Esta ferramenta traz a relação de cursos de computação (ou similares) com os municípios onde foram ou estão sendo realizados dentro o território nacional. A ferramenta traz várias técnicas de visualização de dados para tornar transparente a concentração dos cursos, junto com um controle de diversos filtros. 
                         <br/><br/>
-                        O mapa não traz nenhuma informação sobre questões orçamentárias, número de estudantes, número de vagas ofertadas, resultados de avaliações de ensino, e nem informação critica, como dados pessoais sobre os educandos, educadores, coordenadores, diretores, entre outros.
+                        O mapa não traz nenhuma informação sobre questões orçamentárias, número de estudantes, número de vagas ofertadas, e dados pessoais sobre os educandos, educadores, coordenadores, diretores, entre outros.
                         <br/><br/>
-                        Os dados foram obtidos a partir de um relatório do Censo de 2015, e modelados para modelo de banco de dados.
+                        
                     </h4>
                     <hr/>
                     <div class="theater-about-footer">
-                        Dados obtidos a partir do Relatório do Censo de 2015<br/>
-                        Ministério da Educação<br/>
-                        Instituto Nacional de Estudos e Pesquisas Educacionais Anísio Teixeira<br/>	
+                        Os dados foram obtidos a partir de um relatório do Censo de 2015, e modelados para de banco de dados.
                         <br/>
-                        Educação Superior<br/>		
-                        Relação dos Cursos de COMPUTAÇÃO - GRADUAÇÃO E SEQUENCIAIS - PRESENCIAIS E A DISTÂNCIA, segundo as Instituições de Ensino e o Curso<br/>			
+                        <details>
+                            <summary>Mais informações sobre a fonte dos dados:</summary>
+                            <br/>
+                            Ministério da Educação - Instituto Nacional de Estudos e Pesquisas Educacionais Anísio Teixeira<br/>	
+                            <br/>
+                            Educação Superior - Relação dos Cursos de COMPUTAÇÃO - GRADUAÇÃO E SEQUENCIAIS - PRESENCIAIS E A DISTÂNCIA, segundo as Instituições de Ensino e o Curso<br/>			
+                        </details>
                         <hr/>
                         <h4>2018</h4>
                         Desenvolvedor:
@@ -166,7 +173,7 @@ if(isset($_GET['savedconfig'])){
                                 <td style="vertical-align: top"> 
                                     <div class="label-title">Com agrupamento</div>
                                     <div class="label-content">Marcadores muito próximos serão agrupados</div>
-                                    <button class="button-toggle-theater" disabled title="Selecionar"></button>
+                                    <button class="button-theater button-toggle-theater" disabled title="Selecionar"></button><button class="button-theater button-addon-theater"><i class="fa fa-cog"></i></button>
                                 </td>
                             </tr>
                             <tr>
@@ -176,7 +183,7 @@ if(isset($_GET['savedconfig'])){
                                 <td style="vertical-align: top"> 
                                     <div class="label-title">Sem agrupamento</div>
                                     <div class="label-content">Pode levar muito tempo para processar devido a quantidade de marcadores</div>
-                                    <button class="button-toggle-theater" title="Selecionar"></button>
+                                    <button class="button-theater button-toggle-theater" title="Selecionar"></button><button class="button-theater button-addon-theater"><i class="fa fa-cog"></i></button>
                                 </td>
                             </tr>
                             <tr>
@@ -186,7 +193,7 @@ if(isset($_GET['savedconfig'])){
                                 <td> 
                                     <div class="label-title">Circulo Ponderado</div>
                                     <div class="label-content">Não possui interação, mas permite ver a concentração de caracterizações</div>
-                                    <button class="button-toggle-theater" title="Selecionar"></button>
+                                    <button class="button-theater button-toggle-theater" title="Selecionar"></button><button class="button-theater button-addon-theater"><i class="fa fa-cog"></i></button>
                                 </td>
                             </tr>
                         </table>
@@ -207,7 +214,7 @@ if(isset($_GET['savedconfig'])){
                                 <td style="vertical-align: top"> 
                                     <div class="label-title">Por Município</div>
                                     <div class="label-content">Cada marcador representa um múnicipio</div>
-                                    <button class="button-toggle-theater" disabled title="Selecionar"></button>
+                                    <button class="button-theater button-toggle-theater" disabled title="Selecionar"></button>
                                 </td>
                             </tr>
                             <tr>
@@ -217,7 +224,7 @@ if(isset($_GET['savedconfig'])){
                                 <td style="vertical-align: top"> 
                                     <div class="label-title">Por Estado</div>
                                     <div class="label-content">Cada marcador representa um estado</div>
-                                    <button class="button-toggle-theater" title="Selecionar"></button>
+                                    <button class="button-theater button-toggle-theater" title="Selecionar"></button>
                                 </td>
                             </tr>
                             <tr>
@@ -227,7 +234,7 @@ if(isset($_GET['savedconfig'])){
                                 <td> 
                                     <div class="label-title">Por Região</div>
                                     <div class="label-content">Cada marcador representa uma região</div>
-                                    <button class="button-toggle-theater" title="Selecionar"></button>
+                                    <button class="button-theater button-toggle-theater" title="Selecionar"></button>
                                 </td>
                             </tr>
                         </table>
@@ -346,6 +353,13 @@ if(isset($_GET['savedconfig'])){
                         <?PHP
                         resource_component(
                             "buttonSidebar.php", array("id" => "markers", "fa-icon" => "fa-map-marker", "text" => "Modo de Marcador")
+                        );
+                        ?>
+                    </li>     
+                    <li class='item-list-buttons-sidebar'>
+                        <?PHP
+                        resource_component(
+                            "buttonSidebar.php", array("id" => "estatistica", "fa-icon" => "fa-file", "text" => "Estatística")
                         );
                         ?>
                     </li>     
@@ -535,6 +549,7 @@ if(isset($_GET['savedconfig'])){
                 </div>
             </div>
         </div>
-
+        <a class="logotipo" id="logotipo_unesp"><img width="100" height="36" src="images/logotipos/unesp-placeholder-mini.png" /></a>
+        <a class="logotipo" id="logotipo_sbc"><img width="30" height="36" src="images/logotipos/sbc_placeholder_mini_2.png"/></a>
     </body>
 </html>

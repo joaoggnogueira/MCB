@@ -20,3 +20,20 @@
 @import "pink.scss";
 
 @import "reset.scss"; 
+
+.logotipo{
+    margin: 5px;
+    border-radius: 10px;
+    padding: 2px;
+    bottom: 20px !important;
+    position: absolute;
+}
+
+#logotipo_unesp{
+    right: 80px !important;
+}
+
+#logotipo_sbc{
+    right: 40px !important;
+    background: white;
+}

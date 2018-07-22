@@ -9,8 +9,8 @@ function cMapControl() {
     this.inputsearchinst = cUI.catchElement("inst-input");
     this.selectsearch = cUI.catchElement("select-search");
     this.closeFilterInstBtn = cUI.catchElement("close-filter-inst-btn");
-    this.iconSearch = cUI.catchElement("icon-search");
     this.treeSelectMode = cUI.catchElement("selected-mode");
+    this.configVisualBtn = cUI.catchElement("config-visualizacao");
 
     this.hashMarkers = false;
     this.markerCluster = false;
@@ -54,6 +54,13 @@ function cMapControl() {
             console.log("Objeto no Append é nulo");
         }
     };
+    this.appendLogo = function (domelem) {
+        if (domelem) {
+            ctrl.googlemap.controls[google.maps.ControlPosition.BOTTOM_RIGHT].push(domelem);
+        } else {
+            console.log("Objeto no Append é nulo");
+        }
+    };
 
     this.changeMarkerType = function (ind) {
         ctrl.oldMarkerType = ctrl.markerType;
@@ -61,17 +68,31 @@ function cMapControl() {
         if (ctrl.visualType === 0 && (ctrl.markerType === 1 || ctrl.markerType === 2)) {
             ctrl.visualType = 1;
             cUI.sidebarCtrl.setSelectedVisual(1);
-        }
-        if ((ctrl.visualType === 1 && (ctrl.markerType === 0))) {
+            window.cUserConfig.close_dialog();
+        } else if ((ctrl.visualType === 1 && (ctrl.markerType === 0))) {
             ctrl.visualType = 0;
             cUI.sidebarCtrl.setSelectedVisual(0);
+            window.cUserConfig.close_dialog();
         }
         ctrl.requestUpdate(cUI.filterCtrl.getFilters());
     };
 
     this.changeVisualType = function (ind) {
+        window.cUserConfig.close_dialog();
         ctrl.visualType = ind;
         ctrl.requestUpdate(cUI.filterCtrl.getFilters());
+    };
+
+    this.updateVisualType = function () {
+        if (ctrl.visualType === 0) {
+
+        } else if (ctrl.visualType === 1) {
+
+        } else if (ctrl.visualType === 2) {
+            for (var key in ctrl.hashMarkers) {
+                ctrl.hashMarkers[key].setRadius(parseInt(ctrl.hashMarkers[key].label.text) * cUserConfig.data[2].cs[ctrl.markerType].vs.fator.valor + cUserConfig.data[2].cs[ctrl.markerType].vs.min.valor);
+            }
+        }
     };
 
     this.requestUpdate = function (filters) {
@@ -84,7 +105,7 @@ function cMapControl() {
         }
         filters.markerType = ctrl.markerType;
         cUI.filterCtrl.disableFilters();
-        
+
         $("#visual-selected-text").val(ctrl.visualType);
         $("#marker-selected-text").val(ctrl.markerType);
         $("#visual-selected-text").selectmenu("refresh");
@@ -151,9 +172,9 @@ function cMapControl() {
     };
 
     this.setData = function (data) {
-        
-        if(ctrl.oldMarkerType !== ctrl.markerType){
-            if(ctrl.shapes) {
+
+        if (ctrl.oldMarkerType !== ctrl.markerType) {
+            if (ctrl.shapes) {
                 for (var key in ctrl.shapes) {
                     if (ctrl.shapes[key].setMap) {
                         ctrl.shapes[key].setMap(null);
@@ -163,12 +184,12 @@ function cMapControl() {
             ctrl.shapes.length = 0;
             ctrl.shapes = [];
         }
-        
+
         if (ctrl.markerType === 1) {
             var regiaoKML = ["all2"];
-            for(var i=0;i<regiaoKML.length;i++){
-                var src = "https://portaldoprofessor.fct.unesp.br/projetos/mcb/shapes/estado/"+regiaoKML[i]+".kml";
-                var kmlLayer = new google.maps.KmlLayer(src , {
+            for (var i = 0; i < regiaoKML.length; i++) {
+                var src = "https://portaldoprofessor.fct.unesp.br/projetos/mcb/shapes/estado/" + regiaoKML[i] + ".kml";
+                var kmlLayer = new google.maps.KmlLayer(src, {
                     suppressInfoWindows: true,
                     preserveViewport: true,
                     map: ctrl.googlemap
@@ -176,11 +197,11 @@ function cMapControl() {
                 ctrl.shapes.push(kmlLayer);
             }
         } else if (ctrl.markerType === 2) {
-            
-            var regiaoKML = ["SUL","CENTRO-OESTE","NORTE03","NORDESTE","SUDESTE"];
-            for(var i=0;i<regiaoKML.length;i++){
-                var src = "https://portaldoprofessor.fct.unesp.br/projetos/mcb/shapes/regiao/fill/"+regiaoKML[i]+".kml";
-                var kmlLayer = new google.maps.KmlLayer(src , {
+
+            var regiaoKML = ["SUL", "CENTRO-OESTE", "NORTE03", "NORDESTE", "SUDESTE"];
+            for (var i = 0; i < regiaoKML.length; i++) {
+                var src = "https://portaldoprofessor.fct.unesp.br/projetos/mcb/shapes/regiao/fill/" + regiaoKML[i] + ".kml";
+                var kmlLayer = new google.maps.KmlLayer(src, {
                     suppressInfoWindows: true,
                     preserveViewport: true,
                     map: ctrl.googlemap
@@ -188,11 +209,7 @@ function cMapControl() {
                 ctrl.shapes.push(kmlLayer);
             }
         }
-//        var kmlLayer = new google.maps.KmlLayer("https://portaldoprofessor.fct.unesp.br/projetos/mcb/shapes/test.kml", {
-//            suppressInfoWindows: true,
-//            preserveViewport: true,
-//            map: ctrl.googlemap
-//        });
+
         if (ctrl.markerCluster) {
             ctrl.markerCluster.clearMarkers();
             ctrl.markerCluster = null;
@@ -225,7 +242,7 @@ function cMapControl() {
                         },
                         map: ctrl.googlemap,
                         center: {lng: parseFloat(mun[1]), lat: parseFloat(mun[2])},
-                        radius: mun[0] * 100 + 10000
+                        radius: mun[0] * cUserConfig.data[2].cs[ctrl.markerType].vs.fator.valor + cUserConfig.data[2].cs[ctrl.markerType].vs.min.valor
                     });
                 } else {
                     var marker_data = {
@@ -274,6 +291,7 @@ function cMapControl() {
     };
 
     this.HabiliarModoInstituicao = function (id_inst, sigla_inst, nome_inst) {
+        cUI.filterCtrl.fadeOut(400);
         cUI.filterCtrl.resetFilters(false);
         ctrl.instModeId = id_inst;
         ctrl.requestUpdate(cUI.filterCtrl.getFilters());
@@ -282,26 +300,35 @@ function cMapControl() {
         ctrl.closeFilterInstBtn.show();
         ctrl.inputsearchinst.hide();
         ctrl.selectsearch.hide();
-        ctrl.iconSearch.hide();
     };
 
     this.DesabilitarModoInstituicao = function () {
         if (ctrl.instModeId !== false) {
+            cUI.filterCtrl.fadeOut(400);
             ctrl.instModeId = false;
             ctrl.requestUpdate(cUI.filterCtrl.getFilters());
             ctrl.closeFilterInstBtn.hide();
             ctrl.inputsearchinst.show();
             ctrl.selectsearch.show();
-            ctrl.iconSearch.show();
             ctrl.inputsearchinst.value = "";
             cUI.markerDialogCtrl.close();
         }
+    };
+
+    this.ShowAtualVisualConfigDialog = function (event, data) {
+        window.cUserConfig.config_dialog(ctrl.visualType, ctrl.updateVisualType);
+    };
+
+    this.ShowVisualConfigDialog = function (event, data) {
+        window.cUserConfig.config_dialog(data.ind, ctrl.updateVisualType);
     };
 
     this.closeFilterInstBtn.hide();
     this.selectsearch.change(this.onchangeSelectSearch);
     this.appendLeft(this.searchdiv);
     this.appendLeft(this.treeSelectMode);
+    this.appendLogo(cUI.catchElement("logotipo_unesp"));
+    this.appendLogo(cUI.catchElement("logotipo_sbc"));
     var options = {
         componentRestrictions: {country: 'br'}
     };
@@ -313,22 +340,22 @@ function cMapControl() {
     autocomplete.addListener('place_changed', ctrl.buscar);
 
     this.closeFilterInstBtn.click(this.DesabilitarModoInstituicao);
-    
+    this.configVisualBtn.click(this.ShowAtualVisualConfigDialog);
+
     $("#visual-selected-text").selectmenu({
-        change:function(event,ui){
-            var index = parseInt(ui.item.value); 
+        change: function (event, ui) {
+            var index = parseInt(ui.item.value);
             ctrl.changeVisualType(index);
             cUI.sidebarCtrl.setSelectedVisual(index);
         }
     });
     $("#marker-selected-text").selectmenu({
-        change:function(event,ui){
-            var index = parseInt(ui.item.value); 
+        change: function (event, ui) {
+            var index = parseInt(ui.item.value);
             ctrl.changeMarkerType(index);
             cUI.sidebarCtrl.setSelectedMarker(index);
         }
     });
-        
     cData.listInstituicoes(function (list) {
 
         for (var i = 0; i < list.length; i++) {

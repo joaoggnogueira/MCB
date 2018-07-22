@@ -49,10 +49,13 @@ function parser_data($data) {
 <div class="notebook" id="details-dialog">
     <div class="tabs-header">
         <div class="tab-header selected">
-            Sobre o Curso
+            Curso
         </div>
         <div class="tab-header">
-            Sobre a Instituição
+            Instituição
+        </div>
+        <div class="tab-header">
+            Avaliações
         </div>
         <button class="btn-close"><i class="fa fa-times"></i> Fechar</button>
     </div>
@@ -119,6 +122,9 @@ function parser_data($data) {
             <div class="value"><?= utf8_encode($data['nome_do_estado']) ?> (<?= $data['sigla_do_estado'] ?>)</div>
             <div class="label">Região</div>
             <div class="value"><?= utf8_encode($data['nome_da_regiao']) ?></div>
+        </div>
+        <div class="tab">
+            
         </div>
     </div>
 </div>

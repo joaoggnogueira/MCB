@@ -201,6 +201,12 @@ input[type="checkbox"]:hover + label,input[type="checkbox"]:focus + label{
 }
 
 .tree-process-selector{
+    button:hover{
+        background: $hex4;
+    }
+    button:active{
+        background: $hex5;
+    }
     .content{
         ul{
             > li:hover{

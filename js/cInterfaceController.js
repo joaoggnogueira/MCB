@@ -41,7 +41,8 @@
                 d = document.getElementById(elem);
 
                 if (d === null || d === undefined) {
-                    alert(elem + " não encontrado");
+                    alert("Um erro grave ocorreu\nOu os arquivos não foram atualizados ainda ou talvez seja necessário atualizar a memória cache e cookies (CTRL+SHIFT+C e depois F5)");
+                    console.log(elem + " não encontrado");
                 }
             }
             if (d.cInterfaceInitialized) {

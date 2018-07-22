@@ -10,6 +10,7 @@ function cSidebarControl() {
 
     this.filter_btn = cUI.catchElement("sidebar-filters-btn");
     this.visualizacao_btn = cUI.catchElement("sidebar-visualizacao-btn");
+    this.estatisticas_btn = cUI.catchElement("sidebar-estatistica-btn");
     this.marcador_btn = cUI.catchElement("sidebar-markers-btn");
     this.help_btn = cUI.catchElement("sidebar-help-btn");
     this.save_btn = cUI.catchElement("sidebar-save-btn");
@@ -42,6 +43,10 @@ function cSidebarControl() {
         ctrl.toggle();
         cUI.filterCtrl.show();
     };
+    
+    this.showEstatisticasTheater = function(){
+        window.open("./RelatorioComputacaoINEP2016.pdf",'_blank');
+    }
 
     this.showMarkersTheater = function () {
         ctrl.showTheater("theater-markers", ctrl.marcador_btn);
@@ -244,7 +249,8 @@ function cSidebarControl() {
     this.save_btn.click(this.showSaveTheater);
     this.load_btn.click(this.loadData);
     this.ok_save.click(this.saveData);
-
+    this.estatisticas_btn.click(this.showEstatisticasTheater);
+    
     this.hide();
 
     var theaterslist = cUI.catchElement("theater-content").childlist(".theater-about");
@@ -259,17 +265,21 @@ function cSidebarControl() {
         }
     }
     
-    var buttonlistVisualizacao = theaterslist[1].childlist("button");
+    var buttonlistVisualizacao = theaterslist[1].childlist(".button-addon-theater");
+    for (var i = 0; i < buttonlistVisualizacao.length; i++) {
+        buttonlistVisualizacao[i].click(cUI.mapCtrl.ShowVisualConfigDialog, {ind: i});
+    }
+    
+    var buttonlistVisualizacao = theaterslist[1].childlist(".button-toggle-theater");
     for (var i = 0; i < buttonlistVisualizacao.length; i++) {
         buttonlistVisualizacao[i].click(this.btnVisualEvent, {ind: i});
     }
 
-    var buttonlistMarker = theaterslist[2].childlist("button");
+    var buttonlistMarker = theaterslist[2].childlist(".button-toggle-theater");
     for (var i = 0; i < buttonlistMarker.length; i++) {
         buttonlistMarker[i].click(this.btnMarkerEvent, {ind: i});
     }
     
     this.btn_list_visualizacao = buttonlistVisualizacao;
     this.btn_list_marker = buttonlistMarker;
-
 }

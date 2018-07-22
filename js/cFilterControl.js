@@ -85,6 +85,7 @@ function cFilterControl() {
 
     this.fadeOut = function (time) {
         ctrl.filterbar.slideUp(time);
+        $(".ui-dialog .body").dialog( "close" );
         ctrl.togglefilterbar.toggleSlideVeritical(time);
         ctrl.visiblefilters = false;
         ctrl.togglefilterbar.html('<i class="fa fa-filter"></i>');
@@ -270,13 +271,13 @@ function cFilterControl() {
             filtertype.append(body);
             filtertype.child(".to-window-btn.fa-window-maximize").show();
             filtertype.child(".to-window-btn.fa-reply").hide();
-        }
+        };
         
         $(body).dialog({
             title: filtertype.child(".title").cText(),
             close: onclose,
-            open: function(){
-            }
+            maxHeight: 600,
+            position: { my: "right-10 top+10", at: "right-10 top+10", of: window  }
         });
         
         $(".ui-button.ui-corner-all.ui-widget.ui-button-icon-only.ui-dialog-titlebar-close").html("<i class='fa fa-reply'></i>").css("text-indent","0");
@@ -284,7 +285,7 @@ function cFilterControl() {
         filtertype.child(".to-window-btn.fa-reply").show().removeAllClickEvents().click(onclose);
         
         placeholder.click(onclose).appendTo(filtertype);
-    }
+    };
 
     var listfilters = cUI.catchElement("filter-list").childlist(".filter-type");
 
