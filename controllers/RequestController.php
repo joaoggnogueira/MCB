@@ -5,8 +5,16 @@ if (!defined('VIEW_CTRL')) {
 }
 
 function encode_all_strings($arr) {
-    foreach($arr as $key => $value) {
-        $arr[$key] = utf8_encode($value);
+    if(!is_array($arr)){
+       return utf8_decode($arr);
+    } else {
+        foreach($arr as $key => $value) {
+            if(!is_array($value)){
+                $arr[$key] = utf8_encode($value);
+            } else {
+                $arr[$key] = encode_all_strings($value);
+            }
+        }
     }
     return $arr;
 }

@@ -22,6 +22,16 @@ if(isset($_GET['savedconfig'])){
     $savedconfig = (int)$_GET['savedconfig'];
 }
 
+$conceito_enade = array(
+    array("id" => 0, "nome" => "INDEFINIDO"),
+    array("id" => 1, "nome" => utf8_decode("1 (0.0 até 1.0)")),
+    array("id" => 2, "nome" => utf8_decode("2 (1.0 até 2.0)")),
+    array("id" => 3, "nome" => utf8_decode("3 (2.0 até 3.0)")),
+    array("id" => 4, "nome" => utf8_decode("4 (3.0 até 4.0)")),
+    array("id" => 5, "nome" => utf8_decode("5 (4.0 até 5.0)"))
+);
+
+
 ?>
 <html lang="pt-BR">
     <head>
@@ -41,6 +51,7 @@ if(isset($_GET['savedconfig'])){
                 <?PHP else: ?>
                     cUI.mapCtrl.requestUpdate(cUI.filterCtrl.getFilters());
                 <?PHP endif; ?>
+                
             }
         </script>
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.0/jquery.min.js"></script>
@@ -61,6 +72,7 @@ if(isset($_GET['savedconfig'])){
         <script src='<?= resource_script("polyfill.js"); ?>'></script>
 
         <script src='<?= resource_script("cUserConfig.js"); ?>'></script>
+        <script async src='<?= resource_script("cGraphs.js"); ?>'></script>
         
         <script src="https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/markerclusterer.js"></script>
         <script defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC6A2l8RrNfmBdbVI-kMjRHBoZmBa1e4IU&libraries=places&callback=initMap"></script>
@@ -73,7 +85,7 @@ if(isset($_GET['savedconfig'])){
 
         <link rel="stylesheet" href="<?= resource_css("principal.css"); ?>"/>
         
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/5.5.0/d3.min.js"></script>
+        <script async src="https://d3js.org/d3.v3.min.js"></script>
         <script async src='<?= resource_script("thirdparty/Donut3D.js"); ?>'></script>
         <link async src='<?= resource_css("thirdparty/Donut3D.css"); ?>'/>
     </head>
@@ -137,7 +149,7 @@ if(isset($_GET['savedconfig'])){
                     </h4>
                     <hr/>
                     <div class="theater-about-footer">
-                        Os dados foram obtidos a partir de um relatório do Censo de 2015, e modelados para de banco de dados.
+                        Os dados foram obtidos a partir de um relatório do Censo de 2015, e do conceito Enade de 2014, modelados para de banco de dados.
                         <br/>
                         <details>
                             <summary>Mais informações sobre a fonte dos dados:</summary>
@@ -335,55 +347,15 @@ if(isset($_GET['savedconfig'])){
                     DASHBOARD
                 </div>
                 <ul class='list-buttons-sidebar'>
-                    <li class='item-list-buttons-sidebar'>
-                        <?PHP
-                        resource_component(
-                            "buttonSidebar.php", array("id" => "filters", "fa-icon" => "fa-filter", "text" => "Filtros")
-                        );
-                        ?>
-                    </li>
-                    <li class='item-list-buttons-sidebar'>
-                        <?PHP
-                        resource_component(
-                            "buttonSidebar.php", array("id" => "visualizacao", "fa-icon" => "fa-map", "text" => "Visualização")
-                        );
-                        ?>
-                    </li>     
-                    <li class='item-list-buttons-sidebar'>
-                        <?PHP
-                        resource_component(
-                            "buttonSidebar.php", array("id" => "markers", "fa-icon" => "fa-map-marker", "text" => "Modo de Marcador")
-                        );
-                        ?>
-                    </li>     
-                    <li class='item-list-buttons-sidebar'>
-                        <?PHP
-                        resource_component(
-                            "buttonSidebar.php", array("id" => "estatistica", "fa-icon" => "fa-file", "text" => "Estatística")
-                        );
-                        ?>
-                    </li>     
-                    <li class='item-list-buttons-sidebar'>
-                        <?PHP
-                        resource_component(
-                            "buttonSidebar.php", array("id" => "help", "fa-icon" => "fa-question", "text" => "Ajuda")
-                        );
-                        ?>
-                    </li> 
-                    <li class='item-list-buttons-sidebar'>
-                        <?PHP
-                        resource_component(
-                            "buttonSidebar.php", array("id" => "save", "fa-icon" => "fa-save", "text" => "Salvar")
-                        );
-                        ?>
-                    </li> 
-                    <li class='item-list-buttons-sidebar'>
-                        <?PHP
-                        resource_component(
-                            "buttonSidebar.php", array("id" => "load", "fa-icon" => "fa-folder-open", "text" => "Carregar")
-                        );
-                        ?>
-                    </li> 
+                    <?PHP
+                    resource_component("buttonSidebar.php", array("id" => "filters", "fa-icon" => "fa-filter", "text" => "Filtros"));
+                    resource_component("buttonSidebar.php", array("id" => "visualizacao", "fa-icon" => "fa-map", "text" => "Visualização"));
+                    resource_component("buttonSidebar.php", array("id" => "markers", "fa-icon" => "fa-map-marker", "text" => "Modo de Marcador"));
+                    resource_component("buttonSidebar.php", array("id" => "estatistica", "fa-icon" => "fa-file", "text" => "Estatística"));
+                    resource_component("buttonSidebar.php", array("id" => "help", "fa-icon" => "fa-question", "text" => "Ajuda"));
+                    resource_component("buttonSidebar.php", array("id" => "save", "fa-icon" => "fa-save", "text" => "Salvar"));
+                    resource_component("buttonSidebar.php", array("id" => "load", "fa-icon" => "fa-folder-open", "text" => "Carregar"));
+                    ?>
                 </ul>
                 <div class='sidebar-footer'>
                     <button id='random-theme-btn' class='simple-btn' title="Alterar cor tema"><i class='fa fa-paint-brush'></i></button>
@@ -409,7 +381,14 @@ if(isset($_GET['savedconfig'])){
                         <li name="grau" class="filter-type">
                             <?PHP
                             resource_component(
-                                    "Filter.php", array("id" => "grau", "title" => "Grau", "lista" => $listGrau)
+                                    "Filter.php", array("id" => "grau", "title" => "Grau Académico", "lista" => $listGrau)
+                            );
+                            ?>
+                        </li>
+                        <li name="enade" class="filter-type">
+                            <?PHP
+                            resource_component(
+                                "Filter.php", array("id" => "enade", "title" => "Conceito Enade", "lista" => $conceito_enade)
                             );
                             ?>
                         </li>
@@ -455,13 +434,6 @@ if(isset($_GET['savedconfig'])){
                             );
                             ?>
                         </li>
-                        <li name="tipoorganizacao" class="filter-type">
-                            <?PHP
-                            resource_component(
-                                    "Filter.php", array("id" => "tipoorganizacao", "title" => "Tipo de Organização", "lista" => $listTipoOrganizacao)
-                            );
-                            ?>
-                        </li>
                         <li name="estado" class="filter-type">
                             <?PHP
                             resource_component(
@@ -473,6 +445,13 @@ if(isset($_GET['savedconfig'])){
                             <?PHP
                             resource_component(
                                     "Filter.php", array("id" => "regiao", "title" => "Região", "lista" => $listRegiao)
+                            );
+                            ?>
+                        </li>
+                        <li name="tipoorganizacao" class="filter-type">
+                            <?PHP
+                            resource_component(
+                                    "Filter.php", array("id" => "tipoorganizacao", "title" => "Tipo de Organização", "lista" => $listTipoOrganizacao)
                             );
                             ?>
                         </li>
@@ -532,9 +511,10 @@ if(isset($_GET['savedconfig'])){
                     <div class="tab" id="graphs-tab">
                         <ul>
                             <?PHP
-                            resource_component("Graph.php", array("id" => "grau", "title" => "Grau", "type" => "sector"));
+                            resource_component("Graph.php", array("id" => "grau", "title" => "Grau Académico", "type" => "sector"));
                             resource_component("Graph.php", array("id" => "rede", "title" => "Rede", "type" => "sector"));
                             resource_component("Graph.php", array("id" => "modalidade", "title" => "Modalidade", "type" => "bars"));
+                            resource_component("Graph.php", array("id" => "enade", "title" => "Conceito Enade", "type" => "bars"));
                             resource_component("Graph.php", array("id" => "natureza", "title" => "Natureza Privada", "type" => "sector"));
                             resource_component("Graph.php", array("id" => "naturezadep", "title" => "Natureza Pública", "type" => "sector"));
                             resource_component("Graph.php", array("id" => "nivel", "title" => "Nível", "type" => "sector"));
@@ -551,5 +531,6 @@ if(isset($_GET['savedconfig'])){
         </div>
         <a class="logotipo" id="logotipo_unesp"><img width="100" height="36" src="images/logotipos/unesp-placeholder-mini.png" /></a>
         <a class="logotipo" id="logotipo_sbc"><img width="30" height="36" src="images/logotipos/sbc_placeholder_mini_2.png"/></a>
+        <div id="splash"></div>
     </body>
 </html>

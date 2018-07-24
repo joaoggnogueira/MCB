@@ -31,7 +31,6 @@
         this.createSidebar = function () {
             this.sidebarCtrl = new cSidebarControl();
         };
-
         this.catchElement = function (elem) {
             var d;
 

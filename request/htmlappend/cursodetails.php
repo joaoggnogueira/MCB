@@ -4,6 +4,7 @@ if (!isset($data)) {
     exit();
 }
 
+include_once './htmlappend/generator.php';
 $periodo_definido = $data['eh_matutino'] === '1' || $data['eh_vespertino'] === '1' || $data['eh_noturno'] === '1' || $data['eh_integral'] === '1';
 
 function parser_data($data) {
@@ -38,12 +39,14 @@ function parser_data($data) {
             default: $mes = "???";
         }
         $ano = substr($data, 5, 4);
-        
+
         return "$dia de $mes de $ano";
     } else {
         return "Não Definido";
     }
 }
+
+$conceito_enade_campus = $data['conceito_enade_campus'];
 ?>
 
 <div class="notebook" id="details-dialog">
@@ -55,7 +58,7 @@ function parser_data($data) {
             Instituição
         </div>
         <div class="tab-header">
-            Avaliações
+            Conceito Enade
         </div>
         <button class="btn-close"><i class="fa fa-times"></i> Fechar</button>
     </div>
@@ -104,6 +107,8 @@ function parser_data($data) {
             <div class="value"><?= utf8_encode($data['area_geral']) ?></div>
         </div>
         <div class="tab">
+            <div class="label">Código da Instituição</div>
+            <div class="value"><?= $data['id_instituicao'] ?></div>
             <div class="label">Nome da Instituição</div>
             <div class="value"><?= utf8_encode($data['nome_da_instituicao']) ?> (<?= utf8_encode($data['sigla_da_instituicao']) ?>)</div>
             <div class="label">Tipo da Organização</div>
@@ -124,7 +129,53 @@ function parser_data($data) {
             <div class="value"><?= utf8_encode($data['nome_da_regiao']) ?></div>
         </div>
         <div class="tab">
-            
+            <div class="controlgroup_vertical">
+                <div class="label">Nome da Instituição</div>
+                <div class="value"><?= utf8_encode($data['nome_da_instituicao']) ?> (<?= utf8_encode($data['sigla_da_instituicao']) ?>)</div>
+                <?PHP if (!is_array($conceito_enade_campus)): ?>
+                    <div class="label"><i>Falha ao Consultar o Banco</i></div>
+                <?PHP else: ?>
+                    <?PHP if (empty($conceito_enade_campus) === 0): ?>
+                        <div class="label"><i>Nenhuma avaliação disponível para esta instituição</i></div>
+                    <?PHP else: ?>
+                        <label for="ano_enade" class="w-200 ui-controlgroup-label">Campus</label>
+                        <?PHP select("campus_enade", $conceito_enade_campus, "cod_municipio", "nome_municipio", ""); ?>
+                        <hr/>
+                        <label disabled for="ano_enade" class="w-200 ui-controlgroup-label">Ano do Enade</label>
+                        <?PHP select("ano_enade", false, false, false, ""); ?>
+                        <hr/>
+                        <label disabled for="area_enade" class="w-200 ui-controlgroup-label">Área de Enquadramento</label>
+                        <?PHP select("area_enade", false, false, false, ""); ?>
+                        <hr/>
+                    <?PHP endif; ?>
+                <?PHP endif; ?>
+            </div>
+            <div id="enade-details" style="display: none">
+                <div class="clabel label-100">
+                    <div class="clabel label-33 f16 bold">Conceito ENADE: </div>
+                    <div class="clabel label-33 f16"><h1><span name="conceito_enade_faixa">2</span></h1> (<span name="conceito_enade_continuo">1.69</span>)</div>
+                </div>
+                <div class="clabel horizontal-space"></div>
+                <div class="clabel label-100 f15 bold">Formação Geral (25%)</div>
+                <div class="clabel label-100">
+                    <div class="clabel label-33 f12 tabulation"><b>Bruta:</b> <span name="nota_bruta_fg">50.5</span></div>
+                    <div class="clabel label-33 f12"><b>Padronizada:</b> <span name="nota_padronizada_fg">1.5</span></div>
+                </div>
+                <div class="clabel horizontal-space"></div>
+                <div class="clabel label-100 f15 bold">Componente Específico (75%)</div>
+                <div class="clabel label-100">
+                    <div class="clabel label-33 f12 tabulation"><b>Bruta:</b> <span name="nota_bruta_ce">50.5</span></div>
+                    <div class="clabel label-33 f12"><b>Padronizada:</b> <span name="nota_padronizada_ce">1.5</span></div>
+                </div>
+                <div class="clabel horizontal-space"></div>
+                <div class="clabel label-100 f15 bold">Nota GERAL</div>
+                <div class="clabel label-100">
+                    <div class="clabel label-33 f12 tabulation"><b>Bruta:</b>  <span name="nota_bruta_geral">50.5</span></div>
+                    <div class="clabel label-33 f12"><b>Padronizada:</b> <span name="nota_padronizada_geral">1.5</span></div>
+                </div>
+                <div class="clabel horizontal-space"></div>
+                <div class="clabel label-100 f12"><span name="n_inscritos">42</span> inscritos e <span name="n_participantes">40</span> participantes</div>
+            </div>
         </div>
     </div>
 </div>

@@ -37,3 +37,25 @@
     right: 40px !important;
     background: white;
 }
+
+#splash{
+    background-image: url(../images/splash.svg);
+    background-position: center center;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+    background-repeat: no-repeat;
+    width: calc(100% + 10px);
+    height: 100%;
+    position: fixed;
+    left: -5px;
+    top: 0px;
+    z-index: 999999;
+}
+
+.ui-selectmenu-button-pre-wrap{
+    .ui-selectmenu-text{
+        white-space: pre-wrap;
+    }
+}

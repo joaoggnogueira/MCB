@@ -61,6 +61,11 @@
             .tabs{
                 background: $background;
             }
+            label.ui-controlgroup-label[disabled=""]{
+                color: #d0d0d0;
+                background: #fcfcfc;
+                border-color: $gray7;
+            }
         }
     }
 
@@ -395,10 +400,15 @@ a{
 
 .wrapper-graph{
     summary{
-        color: $background;
-    }
-    .visual{
         background: $background;
+    }
+    .graph-content{
+        background: $background;
+        svg{
+            text.percent{
+                fill: white;
+            }
+        }
     }
 }
 

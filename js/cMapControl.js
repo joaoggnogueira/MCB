@@ -288,6 +288,11 @@ function cMapControl() {
             ctrl.markerCluster = new MarkerClusterer(ctrl.googlemap, markers, {imagePath: 'https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/m'});
         }
         cUI.filterCtrl.enableFilters();
+        setTimeout(function(){
+            $("#splash").fadeOut(1000,function(){
+                $("#splash").remove();
+            });
+        },500);
     };
 
     this.HabiliarModoInstituicao = function (id_inst, sigla_inst, nome_inst) {

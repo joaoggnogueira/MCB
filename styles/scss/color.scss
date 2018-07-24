@@ -233,10 +233,12 @@ input[type="checkbox"]:hover + label,input[type="checkbox"]:focus + label{
 
 .wrapper-graph{
     summary{
-         background: $hex3;
+        color: $hex3;
     }
-    .visual{
-        border: 1px solid $hex3;
+    .graph-content{
+        .legenda{
+            border-left: 3px solid $hex3;
+        }
     }
 }
 

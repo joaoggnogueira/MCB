@@ -113,6 +113,7 @@ class RelatorioModel {
                 e.nome as 'nome_do_estado',
                 e.sigla as 'sigla_do_estado',
                 r.nome as 'nome_da_regiao',
+                i.id as 'id_instituicao',
                 i.nome as 'nome_da_instituicao',
                 i.sigla as 'sigla_da_instituicao',
                 cg.nome as 'grau_academico',
@@ -173,11 +174,11 @@ class RelatorioModel {
                 . "INNER JOIN registro_inep ri ON ri.id = c.id_registro_inep "
                 . "INNER JOIN instituicao i ON i.id = c.id_instituicao ";
 
-        $stmt = $this->append_filter_to_query($filters, $query, false, " c.cod_municipio = :cod_mun ");
+        $stmt = $this->append_filter_to_query($filters, $query, false, " c.cod_municipio = :cod_mun ", false);
         $stmt->bindString("cod_mun", $cod_mun);
         return $stmt->fetchAll();
     }
-    
+
     public function listCursosByEstado($id_estado, $filters) {
         $query = "SELECT "
                 . "c.id as id "
@@ -190,11 +191,11 @@ class RelatorioModel {
                 . "INNER JOIN registro_inep ri ON ri.id = c.id_registro_inep "
                 . "INNER JOIN instituicao i ON i.id = c.id_instituicao ";
 
-        $stmt = $this->append_filter_to_query($filters, $query, false, " m.id_estado = :id_estado ");
+        $stmt = $this->append_filter_to_query($filters, $query, false, " m.id_estado = :id_estado ", false);
         $stmt->bindString("id_estado", $id_estado);
         return $stmt->fetchAll();
     }
-    
+
     public function listCursosByRegiao($id_regiao, $filters) {
         $query = "SELECT "
                 . "c.id as id "
@@ -207,7 +208,7 @@ class RelatorioModel {
                 . "INNER JOIN registro_inep ri ON ri.id = c.id_registro_inep "
                 . "INNER JOIN instituicao i ON i.id = c.id_instituicao ";
 
-        $stmt = $this->append_filter_to_query($filters, $query, false, " e.id_regiao = :id_regiao ");
+        $stmt = $this->append_filter_to_query($filters, $query, false, " e.id_regiao = :id_regiao ", false);
         $stmt->bindString("id_regiao", $id_regiao);
         return $stmt->fetchAll();
     }
@@ -225,9 +226,10 @@ class RelatorioModel {
                 . "INNER JOIN cidade m ON c.cod_municipio = m.cod "
                 . "INNER JOIN estado e ON e.id = m.id_estado ";
 
-        $stmt = $this->append_filter_to_query($filters, $query,"c.cod_municipio", false);
+        $stmt = $this->append_filter_to_query($filters, $query, "c.cod_municipio", false, false);
         return $stmt->fetchAll();
     }
+
     public function listMarkersEstado($filters) {
 
         $query = "SELECT "
@@ -241,9 +243,10 @@ class RelatorioModel {
                 . "INNER JOIN cidade m ON c.cod_municipio = m.cod "
                 . "INNER JOIN estado e ON e.id = m.id_estado ";
 
-        $stmt = $this->append_filter_to_query($filters, $query,"e.id", false);
+        $stmt = $this->append_filter_to_query($filters, $query, "e.id", false, false);
         return $stmt->fetchAll();
     }
+
     public function listMarkersRegiao($filters) {
 
         $query = "SELECT "
@@ -258,11 +261,108 @@ class RelatorioModel {
                 . "INNER JOIN estado e ON e.id = m.id_estado "
                 . "INNER JOIN regiao r ON r.id = e.id_regiao ";
 
-        $stmt = $this->append_filter_to_query($filters, $query,"e.id_regiao", false);
+        $stmt = $this->append_filter_to_query($filters, $query, "e.id_regiao", false, false);
         return $stmt->fetchAll();
     }
 
-    private function append_filter_to_query($filters, $query, $group_by , $adictional) {
+    function totais($table, $cod, $filters, $markerType) {
+        $query = "";
+        $order_by = "";
+        if ($table == "grau") {
+            $query .= "SELECT cg.nome as nome, "
+                    . "COUNT(c.id) as total "
+                    . "FROM curso c "
+                    . "INNER JOIN cidade m ON c.cod_municipio = m.cod "
+                    . "INNER JOIN estado e ON e.id = m.id_estado "
+                    . "INNER JOIN curso_grau_academico cg ON cg.id = c.id_grau ";
+            $order_by = " c.id_grau ";
+        } else if ($table == "rede") {
+            $query .= "SELECT cr.nome as nome, "
+                    . "COUNT(c.id) as total "
+                    . "FROM curso c "
+                    . "INNER JOIN cidade m ON c.cod_municipio = m.cod "
+                    . "INNER JOIN estado e ON e.id = m.id_estado "
+                    . "INNER JOIN curso_rede cr ON cr.id = c.id_rede ";
+            $order_by = " c.id_rede ";
+        } else if ($table == "modalidade") {
+            $query .= "SELECT cm.nome as nome, "
+                    . "COUNT(c.id) as total "
+                    . "FROM curso c "
+                    . "INNER JOIN cidade m ON c.cod_municipio = m.cod "
+                    . "INNER JOIN estado e ON e.id = m.id_estado "
+                    . "INNER JOIN curso_modalidade cm ON cm.id = c.id_modalidade ";
+            $order_by = " c.id_modalidade ";
+        } else if ($table == "natureza") {
+            $query .= "SELECT cn.nome as nome, "
+                    . "COUNT(c.id) as total "
+                    . "FROM curso c "
+                    . "INNER JOIN cidade m ON c.cod_municipio = m.cod "
+                    . "INNER JOIN estado e ON e.id = m.id_estado "
+                    . "INNER JOIN curso_natureza cn ON cn.id = c.id_natureza ";
+            $order_by = " c.id_natureza ";
+        } else if ($table == "naturezadep") {
+            $query .= "SELECT cnd.nome as nome, "
+                    . "COUNT(c.id) as total "
+                    . "FROM curso c "
+                    . "INNER JOIN cidade m ON c.cod_municipio = m.cod "
+                    . "INNER JOIN estado e ON e.id = m.id_estado "
+                    . "INNER JOIN curso_natureza_departamento cnd ON cnd.id = c.id_natureza_departamento ";
+            $order_by = " c.id_natureza_departamento ";
+        } else if ($table == "nivel") {
+            $query .= "SELECT cn.nome as nome, "
+                    . "COUNT(c.id) as total "
+                    . "FROM curso c "
+                    . "INNER JOIN cidade m ON c.cod_municipio = m.cod "
+                    . "INNER JOIN estado e ON e.id = m.id_estado "
+                    . "INNER JOIN curso_nivel cn ON cn.id = c.id_nivel ";
+            $order_by = " c.id_nivel ";
+        } else if ($table == "programa") {
+            $query .= "SELECT cp.nome as nome, "
+                    . "COUNT(c.id) as total "
+                    . "FROM curso c "
+                    . "INNER JOIN cidade m ON c.cod_municipio = m.cod "
+                    . "INNER JOIN estado e ON e.id = m.id_estado "
+                    . "INNER JOIN curso_programa cp ON cp.cod = c.id_programa ";
+            $order_by = " c.id_programa ";
+        } else if ($table == "tipoorganizacao") {
+            $query .= "SELECT t.nome as nome, "
+                    . "COUNT(c.id) as total "
+                    . "FROM curso c "
+                    . "INNER JOIN cidade m ON c.cod_municipio = m.cod "
+                    . "INNER JOIN estado e ON e.id = m.id_estado "
+                    . "INNER JOIN tipo_organizacao t ON t.id = c.id_tipo_organizacao ";
+            $order_by = " c.id_tipo_organizacao ";
+        } else if ($table == "enade") {
+            $query .= "SELECT c.temp_faixa_enade as nome, "
+                    . "COUNT(c.id) as total "
+                    . "FROM curso c "
+                    . "INNER JOIN cidade m ON c.cod_municipio = m.cod "
+                    . "INNER JOIN estado e ON e.id = m.id_estado ";
+            $order_by = " c.temp_faixa_enade ";
+        } else if ($table == "estado") {
+            $query .= "SELECT CONCAT(e.nome,' (',e.sigla,')') as nome, "
+                    . "COUNT(c.id) as total "
+                    . "FROM curso c "
+                    . "INNER JOIN cidade m ON c.cod_municipio = m.cod "
+                    . "INNER JOIN estado e ON e.id = m.id_estado ";
+            $order_by = " e.id ";
+        }
+
+        if ($markerType == 0) {
+            $stmt = $this->append_filter_to_query($filters, $query, $order_by, "c.cod_municipio = :cod_mun ","total DESC");
+            $stmt->bindInt("cod_mun", $cod);
+        } else if ($markerType == 1) {
+            $stmt = $this->append_filter_to_query($filters, $query, $order_by, "m.id_estado = :id_estado ","total DESC");
+            $stmt->bindInt("id_estado", $cod);
+        } else if ($markerType == 2) {
+            $stmt = $this->append_filter_to_query($filters, $query, $order_by, "e.id_regiao = :id_regiao ","total DESC");
+            $stmt->bindInt("id_regiao", $cod);
+        }
+
+        return $stmt->fetchAllAssoc();
+    }
+
+    private function append_filter_to_query($filters, $query, $group_by, $adictional, $order_by) {
 
         $first = true;
         $this->log = array();
@@ -279,17 +379,23 @@ class RelatorioModel {
         $query .= $this->append_filter($filters->tipoorganizacao, "c.id_tipo_organizacao", "tipoorganizacao", $first);
         $query .= $this->append_filter($filters->regiao, "e.id_regiao", "regiao", $first);
         $query .= $this->append_filter($filters->estado, "m.id_estado", "estado", $first);
+        $query .= $this->append_filter($filters->enade, "c.temp_faixa_enade", "enade", $first);
 
         if ($adictional) {
             if ($first) {
-                $query .= "WHERE ";
+                $query .= " WHERE ";
             } else {
-                $query .= "AND ";
+                $query .= " AND ";
             }
             $query .= $adictional . " ";
-        } else {
-            $query .= "GROUP BY $group_by";
         }
+        if ($group_by) {
+            $query .= " GROUP BY $group_by ";
+        }
+        if ($order_by) {
+            $query .= " ORDER BY $order_by ";
+        }
+        $this->log = array($query);
         $stmt = $this->controller->query($query);
         if (isset($filters->instituicao)) {
             $this->bind_array_to_param($stmt, $filters->instituicao, "instituicao");
@@ -304,6 +410,8 @@ class RelatorioModel {
         $this->bind_array_to_param($stmt, $filters->tipoorganizacao, "tipoorganizacao");
         $this->bind_array_to_param($stmt, $filters->regiao, "regiao");
         $this->bind_array_to_param($stmt, $filters->estado, "estado");
+        $this->bind_array_to_param($stmt, $filters->enade, "enade");
+
 
         return $stmt;
     }
