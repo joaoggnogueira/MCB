@@ -1,0 +1,57 @@
+/* 
+    Created on : 26/07/2018, 12:26:30
+    Author     : Acer
+*/
+
+.pac-input{
+    max-width: calc(100vw - 120px);
+}
+#marker-dialog{
+    max-width: 100vw;
+    height: 100%;
+}
+#theater-details .modal-content{
+    left: 0px !important;
+    max-width: 100vw;
+    padding: 0px !important;
+    top: 5px !important;
+}
+
+.filterbar-div.filterbar-content{
+    left: 60px !important;
+    width: calc(100% - 70px) !important;
+}
+
+.filterbar-div.filterbar-header{
+    width: 0px !important;
+    display: none;
+}
+
+#sidebar{
+    width: 60px !important;
+    .sidebar-content{
+        .sidebar-title{
+            font-size: 0px !important;
+        }
+        width: 60px !important;
+        .sidebar-button-icon{
+            width: 60px !important;
+        }
+        .sidebar-button-text{
+            display: none !important;
+        }
+    }
+}
+
+.theater-content{
+    width: calc(100% - 60px) !important;
+    padding: 10px !important;
+    left: 60px !important;
+    .theater-about{
+        overflow-y: auto;
+    }
+} 
+
+.logotipo{
+    display: none;
+}

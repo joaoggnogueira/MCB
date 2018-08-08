@@ -12,13 +12,36 @@ function cMapControl() {
     this.treeSelectMode = cUI.catchElement("selected-mode");
     this.configVisualBtn = cUI.catchElement("config-visualizacao");
 
+    this.orange_marker = {
+        url: ROOT_APP + "images/marker/spotlight-poi-dotless-orange.png",
+        size: new google.maps.Size(27, 43),
+        origin: new google.maps.Point(0, 0),
+        anchor: new google.maps.Point(13.5, 43),
+        labelOrigin: new google.maps.Point(13.5, 15)
+    };
+    this.blue_marker = {
+        url: ROOT_APP + "images/marker/spotlight-poi-dotless-blue.png",
+        size: new google.maps.Size(27, 43),
+        origin: new google.maps.Point(0, 0),
+        anchor: new google.maps.Point(13.5, 43),
+        labelOrigin: new google.maps.Point(13.5, 15)
+    };
+    this.orange_circle = {
+        strokeColor: '#FF1111',
+        fillColor: '#FF1111'
+    };
+    this.blue_circle = {
+        strokeColor: "#1111FF",
+        fillColor: "#1111FF"
+    };
+
     this.hashMarkers = false;
     this.markerCluster = false;
     this.visualType = 0;
     this.markerType = 0;
     this.instModeId = false;
-
-    this.shapes = [];
+    this.KMLAtual = false;
+    this.markerSelected = false;
 
     this.inputsearchinst.hide();
 
@@ -62,6 +85,73 @@ function cMapControl() {
         }
     };
 
+    this.unselectMarker = function () {
+        if (ctrl.markerSelected) {
+            if (ctrl.markerSelected.setIcon) {
+                ctrl.markerSelected.setIcon(ctrl.orange_marker);
+            } else {
+                ctrl.markerSelected.setOptions(ctrl.orange_circle);
+            }
+            ctrl.markerSelected = false;
+        }
+        ctrl.hideKML();
+    };
+    this.hideKML = function(){
+        if (ctrl.KMLAtual && ctrl.KMLAtual.setMap) {
+            ctrl.KMLAtual.setMap(null);
+            ctrl.KMLAtual = false;
+        }
+    };
+    this.showKML = function (id) {
+        var kmlArray = false;
+        var prefix = false;
+        ctrl.hideKML();
+        if (ctrl.markerType === 0) {
+            return;
+        } else if (ctrl.markerType === 1) {
+            kmlArray = {
+                "11": "RO",
+                "12": "AC",
+                "13": "AM",
+                "14": "RR",
+                "15": "PA",
+                "16": "AP",
+                "17": "TO",
+                "21": "MA",
+                "22": "PI",
+                "23": "CE",
+                "24": "RN",
+                "25": "PB",
+                "26": "PE",
+                "27": "AL",
+                "28": "SE",
+                "29": "BA",
+                "31": "MG",
+                "32": "ES",
+                "33": "RJ",
+                "35": "SP",
+                "41": "PR",
+                "42": "SC",
+                "43": "RS",
+                "50": "MS",
+                "51": "MT",
+                "52": "GO",
+                "53": "DF"
+            };
+            prefix = "estado/";
+        } else if (ctrl.markerType === 2) {
+            prefix = "regiao/v2/";
+            kmlArray = {"1": "NORTE", "2": "NORDESTE", "3": "SUDESTE", "4": "SUL", "5": "CENTRO-OESTE2"};
+        }
+
+        var src = "http://www2.sbc.org.br/mapas/shapes/" + prefix + kmlArray[id] + ".kml";
+        ctrl.KMLAtual = new google.maps.KmlLayer(src, {
+            suppressInfoWindows: true,
+            preserveViewport: true,
+            map: ctrl.googlemap
+        });
+    };
+
     this.changeMarkerType = function (ind) {
         ctrl.oldMarkerType = ctrl.markerType;
         ctrl.markerType = ind;
@@ -75,6 +165,7 @@ function cMapControl() {
             window.cUserConfig.close_dialog();
         }
         ctrl.requestUpdate(cUI.filterCtrl.getFilters());
+        ctrl.hideKML();
     };
 
     this.changeVisualType = function (ind) {
@@ -89,8 +180,15 @@ function cMapControl() {
         } else if (ctrl.visualType === 1) {
 
         } else if (ctrl.visualType === 2) {
+            var fator = cUserConfig.data[2].cs[ctrl.markerType].vs.fator.valor;
+            var min = cUserConfig.data[2].cs[ctrl.markerType].vs.min.valor;
+            var opacity = cUserConfig.data[2].cs[ctrl.markerType].vs.opacity.valor;
+
             for (var key in ctrl.hashMarkers) {
-                ctrl.hashMarkers[key].setRadius(parseInt(ctrl.hashMarkers[key].label.text) * cUserConfig.data[2].cs[ctrl.markerType].vs.fator.valor + cUserConfig.data[2].cs[ctrl.markerType].vs.min.valor);
+                var marker = ctrl.hashMarkers[key];
+                var radius = parseInt(marker.label.text) * fator + min;
+                marker.setRadius(radius);
+                marker.setOptions({fillOpacity: opacity / 100.0});
             }
         }
     };
@@ -135,6 +233,16 @@ function cMapControl() {
                 ctrl.inputsearchinst.slideDown(400);
                 break;
         }
+        setTimeout(function () {
+            switch (ctrl.selectsearch.value) {
+                case "municipio":
+                    ctrl.inputsearchmun.focus();
+                    break;
+                case "instituicao":
+                    ctrl.inputsearchinst.focus();
+                    break;
+            }
+        }, 500);
     };
 
     this.buscar = function () {
@@ -171,44 +279,21 @@ function cMapControl() {
         }
     };
 
+    this.enableZoomCluster = function () {
+        setTimeout(function () {
+            if (ctrl.markerCluster) {
+                ctrl.markerCluster.zoomOnClick_ = true;
+            }
+        }, 50);
+    };
+
+    this.disableZoomCluster = function () {
+        if (ctrl.markerCluster) {
+            ctrl.markerCluster.zoomOnClick_ = false;
+        }
+    };
+
     this.setData = function (data) {
-
-        if (ctrl.oldMarkerType !== ctrl.markerType) {
-            if (ctrl.shapes) {
-                for (var key in ctrl.shapes) {
-                    if (ctrl.shapes[key].setMap) {
-                        ctrl.shapes[key].setMap(null);
-                    }
-                }
-            }
-            ctrl.shapes.length = 0;
-            ctrl.shapes = [];
-        }
-
-        if (ctrl.markerType === 1) {
-            var regiaoKML = ["all2"];
-            for (var i = 0; i < regiaoKML.length; i++) {
-                var src = "https://portaldoprofessor.fct.unesp.br/projetos/mcb/shapes/estado/" + regiaoKML[i] + ".kml";
-                var kmlLayer = new google.maps.KmlLayer(src, {
-                    suppressInfoWindows: true,
-                    preserveViewport: true,
-                    map: ctrl.googlemap
-                });
-                ctrl.shapes.push(kmlLayer);
-            }
-        } else if (ctrl.markerType === 2) {
-
-            var regiaoKML = ["SUL", "CENTRO-OESTE", "NORTE03", "NORDESTE", "SUDESTE"];
-            for (var i = 0; i < regiaoKML.length; i++) {
-                var src = "https://portaldoprofessor.fct.unesp.br/projetos/mcb/shapes/regiao/fill/" + regiaoKML[i] + ".kml";
-                var kmlLayer = new google.maps.KmlLayer(src, {
-                    suppressInfoWindows: true,
-                    preserveViewport: true,
-                    map: ctrl.googlemap
-                });
-                ctrl.shapes.push(kmlLayer);
-            }
-        }
 
         if (ctrl.markerCluster) {
             ctrl.markerCluster.clearMarkers();
@@ -227,33 +312,38 @@ function cMapControl() {
             ctrl.hashMarkers = [];
         }
 
+        const fator = cUserConfig.data[2].cs[ctrl.markerType].vs.fator.valor;
+        const min = cUserConfig.data[2].cs[ctrl.markerType].vs.min.valor;
+        const opacity = cUserConfig.data[2].cs[ctrl.markerType].vs.opacity.valor / 100.0;
+        var count = -1;
         var markers = data.map(function (mun) {
+            count++;
             if (typeof (google) !== "undefined") {
                 var marker;
                 if (ctrl.visualType === 2) {
                     marker = new google.maps.Circle({
-                        strokeColor: '#FF0000',
+                        strokeColor: ctrl.orange_circle.strokeColor,
                         strokeOpacity: 0.8,
                         strokeWeight: 2,
-                        fillColor: '#FF0000',
-                        fillOpacity: 0.35,
-                        label: {
-                            text: mun[0]
-                        },
+                        fillColor: ctrl.orange_circle.fillColor,
+                        fillOpacity: opacity,
+                        label: {text: mun[0]},
                         map: ctrl.googlemap,
                         center: {lng: parseFloat(mun[1]), lat: parseFloat(mun[2])},
-                        radius: mun[0] * cUserConfig.data[2].cs[ctrl.markerType].vs.fator.valor + cUserConfig.data[2].cs[ctrl.markerType].vs.min.valor
+                        radius: mun[0] * fator + min,
+                        zIndex: count
                     });
                 } else {
                     var marker_data = {
                         position: {lng: parseFloat(mun[1]), lat: parseFloat(mun[2])},
+                        icon: ctrl.orange_marker,
                         label: {
                             text: mun[0],
                             color: 'white',
                             fontSize: '12px',
                             x: '30',
-                            y: '70'
-                        }
+                            y: '10'
+                        },
                     };
                     if (ctrl.visualType === 1) {
                         marker_data.map = ctrl.googlemap;
@@ -266,12 +356,19 @@ function cMapControl() {
                 const cod_mun = mun[3];
                 const name_mun = mun[4];
                 const uf_mun = mun[5];
-                marker.addListener('click', function () {
+                marker.addListener('click', function (data) {
+                    ctrl.unselectMarker();
+                    ctrl.showKML(cod_mun);
+                    if (marker.setIcon) {
+                        marker.setIcon(ctrl.blue_marker);
+                    } else {
+                        marker.setOptions(ctrl.blue_circle);
+                    }
+
+                    ctrl.markerSelected = marker;
                     var filters = cUI.filterCtrl.getFilters();
                     if (ctrl.instModeId === false) {
-                        filters.instituicao = {
-                            all: true
-                        };
+                        filters.instituicao = {all: true};
                     } else {
                         filters.instituicao = [ctrl.instModeId];
                     }
@@ -288,11 +385,7 @@ function cMapControl() {
             ctrl.markerCluster = new MarkerClusterer(ctrl.googlemap, markers, {imagePath: 'https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/m'});
         }
         cUI.filterCtrl.enableFilters();
-        setTimeout(function(){
-            $("#splash").fadeOut(1000,function(){
-                $("#splash").remove();
-            });
-        },500);
+        $("#splash").remove();
     };
 
     this.HabiliarModoInstituicao = function (id_inst, sigla_inst, nome_inst) {
@@ -388,4 +481,6 @@ function cMapControl() {
         };
     });
 
+    google.maps.event.addListener(this.googlemap, 'dragstart', this.disableZoomCluster);
+    google.maps.event.addListener(this.googlemap, 'mouseup', this.enableZoomCluster);
 }

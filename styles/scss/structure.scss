@@ -30,7 +30,7 @@
 #map{
     width: 100%;
     height: 100%;
-    position: absolute;
+    position: absolute !important;
     left: 0px;
     top: 0px;
 
@@ -41,6 +41,18 @@
 /**
 *   SIDEBAR
 **/
+#theater-details{
+    z-index: 2 !important;
+    .modal-content{
+        max-height: calc(100% - 50px);
+        .notebook{
+            height: 100vh;
+            .tabs{
+                max-height: calc(100% - 80px);
+            }
+        }
+    }
+}
 
 .theater{
     position: absolute;
@@ -162,12 +174,17 @@
             .theater-about-footer{
                 font-size: 16px;
             }
-            .theater-about-title{
+            .theater-about-title,
+            .theater-about-subtitle{
                 margin-bottom: 50px;
                 font-family: 'Montserrat', sans-serif;
                 font-size: 30px;
                 font-style: normal;
                 font-weight: 200;
+            }
+            .theater-about-subtitle{
+                font-size: 20px;
+                margin-bottom: 20px;
             }
         }
     }
@@ -183,7 +200,7 @@
         .tab{
             width: calc(100% - 20px) !important;
             padding: 10px;
-            
+
             label{
                 font-size: 16px;
             }
@@ -249,7 +266,7 @@
             width: 100%;
             .item-list-buttons-sidebar{
                 margin-bottom: 5px;
-                
+
                 .sidebar-button.selected::after{
                     width: 30;
                     height: 30;
@@ -261,7 +278,7 @@
                     margin-top: -35px;
                     z-index: -1;
                 }
-                
+
                 .sidebar-button{
                     $button_height: 40px;
 
@@ -331,6 +348,24 @@
     text-align: center;
 }
 
+.btn-toggle-filter:not([notifyCount="0"]):not(.active):before{
+    content: attr(notifyCount);
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    box-shadow: 0px 0px 5px rgba(0,0,0,0.4);
+    color: black;
+    position: absolute;
+    margin-top: -5px;
+    margin-right: -5px;
+    top: 0px;
+    right: 0px;
+    background: blue;
+    line-height: 20px;
+    color: white;
+    font-size: 14px;
+}
+
 .simple-btn{
     padding: 10px;
     border-radius: 10px;
@@ -394,7 +429,7 @@ $size: 160px;
             top: 0px;
             height: $headercontentsize;
             .title{
-                
+
                 font-family: 'MontserratThin', sans-serif;
                 width: 100%;
                 text-align: center;
@@ -470,6 +505,7 @@ $size: 160px;
                     min-width: 256px;
                     margin-left: 5px;
                     display: inline-block;
+                    display: inline-table;
                     white-space: normal;
                     font-family: 'Montserrat', sans-serif;
                     .title{
@@ -481,7 +517,7 @@ $size: 160px;
                         text-transform: uppercase;
                         font-size: 16px;
                     }
-                    
+
                     .placeholder{
                         display: block;
                         height: calc(100% - 20px);
@@ -527,12 +563,31 @@ input[type='checkbox']:checked:after{
     content: "\f046";
 } 
 
+.ui-dialog-content{
+    .tabs-header{
+        .tab-header:not(:first-child){
+            margin-left: -1px !important;
+        }
+    }
+}
+
 .marker-dialog{
+    z-index: 1 !important; 
     width: 550px;
     padding: 0px;
     right: 0px;
     position: absolute;
-
+    .description{
+        color: #444;
+        margin-top: 5px;
+        margin-left: 5px;
+        margin-bottom: -10px;
+        font-size: 13px;
+    }
+    .alert{
+        margin-bottom: 0px;
+        margin-top: 0px;
+    }
     .header{
         height: 30px;
         width: 100%;
@@ -567,11 +622,13 @@ input[type='checkbox']:checked:after{
             }
         }
     }
-
     .tabs{
-        height: calc(100vh - 160px);
+        height: calc(100vh - 130px);
         overflow-y: auto;
         .tab{
+            .clabel{
+                color: #444;
+            }
             .table-list{
                 position: relative;
                 width: 550px !important;
@@ -602,15 +659,15 @@ input[type='checkbox']:checked:after{
                     tr{
                         cursor: pointer;
                         font-size: 16px;
-                        
+
                         td:first-child{
                             max-width: 350px !important;
                         }
-                        
+
                         td:last-child{
                             max-width: 150px !important;
                         }
-                        
+
                     }
                 }
             }
@@ -660,7 +717,7 @@ input[type='checkbox']:checked:after{
             @include no-select();
         }
         .tab-header:not(:first-child){
-            margin-left: -1px;
+            margin-left: -5px;
         }
         .btn-close{
             float: right;
@@ -676,7 +733,6 @@ input[type='checkbox']:checked:after{
     .tabs{
         width: 100%;
         position: relative;
-        max-height: calc(100vh - 100px);
         overflow-y: auto;
         .tab{
             position: relative;
@@ -716,12 +772,14 @@ input[type='checkbox']:checked:after{
         height: 30px;
         z-index: 12;
         text-transform: none;
+        margin-top: 20px !important;
         border: none;
     }
     .pac-input:focus {
         border-color: #4d90fe;
     }
     #select-search{
+        position: absolute;
         z-index: 13;
         height: 20px;
         line-height: 20px;
@@ -774,6 +832,7 @@ input[type='checkbox']:checked:after{
         line-height: 30px;
         width: max-content;
         display: inline-block;
+        display: -moz-inline-box;
     }
 }
 
@@ -813,6 +872,7 @@ input[type='checkbox']:checked:after{
                 .ui-selectmenu-button{
                     padding: 0px;
                     width: min-content;
+                    width: -moz-min-content;
                     float: left;
                     height: 25px;
                     line-height: 25px;
@@ -872,9 +932,18 @@ input[type='checkbox']:checked:after{
     border-bottom-left-radius: 5px;
     border-bottom-right-radius: 5px;
 }
-
+#graphs-tab{
+    ul{
+        @include ul-reset;
+    }
+    li{
+        @include li-reset;
+        margin: 5px;
+    }
+}
 .wrapper-graph{
     border-radius: 7px;
+
     summary{
         font-size: 16px;
         padding: 10px;
@@ -899,16 +968,21 @@ input[type='checkbox']:checked:after{
             float: right;
             width: 300px;
             display: inline-block;
-            height: 150px;
+            height: 180px;
             padding: 10px;
             margin: 25px;
-            margin-top: 12.5px;
             margin-left: 0px;
             overflow: auto;
+            margin-bottom: 0px;
+            margin-top: -1px;
+            .cor_legenda:hover{
+                font-weight: bold;
+            }
             .cor_legenda{
                 width: calc(100% - 20px);
                 height: 20px;
                 margin-left: 5px;
+                cursor: default;
                 .text{
                     height: 20px;
                     line-height: 20px;
@@ -967,7 +1041,7 @@ input[type='checkbox']:checked:after{
         }
     }
     .ui-dialog-content{
-    //    padding: 0px;
+        //    padding: 0px;
         .options,.subtitle{
             margin-top: -0.5em;
             button{
@@ -1007,7 +1081,7 @@ input[type='checkbox']:checked:after{
         }
     }
     .content{
-        height: calc(100% - 46px);
+        height: 90px;
         overflow-x: auto;
         overflow-y: auto;
         ul{
@@ -1087,4 +1161,8 @@ input[type='checkbox']:checked:after{
 
 .clabel.tabulation{
     margin-left: 25px;
+}
+
+.DataTables_sort_icon{
+    display: none;
 }

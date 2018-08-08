@@ -9,12 +9,15 @@ function cSidebarControl() {
     this.sidebarBtn.child("i").setStates(["fa-bars", "fa-times"]);
 
     this.filter_btn = cUI.catchElement("sidebar-filters-btn");
-    this.visualizacao_btn = cUI.catchElement("sidebar-visualizacao-btn");
+    this.configuracao_btn = cUI.catchElement("sidebar-configuracao-btn");
     this.estatisticas_btn = cUI.catchElement("sidebar-estatistica-btn");
-    this.marcador_btn = cUI.catchElement("sidebar-markers-btn");
     this.help_btn = cUI.catchElement("sidebar-help-btn");
     this.save_btn = cUI.catchElement("sidebar-save-btn");
     this.load_btn = cUI.catchElement("sidebar-load-btn");
+
+    this.save_btn.hide();
+    this.load_btn.hide();
+    this.help_btn.hide();
 
     this.ok_save = cUI.catchElement("ok-save");
 
@@ -43,9 +46,9 @@ function cSidebarControl() {
         ctrl.toggle();
         cUI.filterCtrl.show();
     };
-    
-    this.showEstatisticasTheater = function(){
-        window.open("./RelatorioComputacaoINEP2016.pdf",'_blank');
+
+    this.showEstatisticasTheater = function () {
+        window.open("./RelatorioComputacaoINEP2016.pdf", '_blank');
     }
 
     this.showMarkersTheater = function () {
@@ -54,6 +57,9 @@ function cSidebarControl() {
 
     this.showVisualizacaoTheater = function () {
         ctrl.showTheater("theater-visualizacao", ctrl.visualizacao_btn);
+    };
+    this.showConfiguracaoTheater = function () {
+        ctrl.showTheater("theater-configuracao", ctrl.configuracao_btn);
     };
 
     this.showHelpTheater = function () {
@@ -227,30 +233,29 @@ function cSidebarControl() {
         ctrl.toggle();
     };
 
-    this.setSelectedVisual = function(ind){
+    this.setSelectedVisual = function (ind) {
         for (var i = 0; i < ctrl.btn_list_visualizacao.length; i++) {
-           ctrl.btn_list_visualizacao[i].enable();
+            ctrl.btn_list_visualizacao[i].enable();
         }
         ctrl.btn_list_visualizacao[ind].disable();
     };
-    this.setSelectedMarker = function(ind){
+    this.setSelectedMarker = function (ind) {
         for (var i = 0; i < ctrl.btn_list_marker.length; i++) {
-           ctrl.btn_list_marker[i].enable();
-        } 
+            ctrl.btn_list_marker[i].enable();
+        }
         ctrl.btn_list_marker[ind].disable();
     };
-        
+
     this.filter_btn.click(this.showFilters);
     this.sidebarBtn.click(this.toggle);
     this.randomTheme.click(this.nextTheme);
-    this.visualizacao_btn.click(this.showVisualizacaoTheater);
-    this.marcador_btn.click(this.showMarkersTheater);
+    this.configuracao_btn.click(this.showConfiguracaoTheater);
     this.help_btn.click(this.showHelpTheater);
     this.save_btn.click(this.showSaveTheater);
     this.load_btn.click(this.loadData);
     this.ok_save.click(this.saveData);
     this.estatisticas_btn.click(this.showEstatisticasTheater);
-    
+
     this.hide();
 
     var theaterslist = cUI.catchElement("theater-content").childlist(".theater-about");
@@ -264,22 +269,22 @@ function cSidebarControl() {
             theaterslist[i].style.display = "none";
         }
     }
-    
+
     var buttonlistVisualizacao = theaterslist[1].childlist(".button-addon-theater");
-    for (var i = 0; i < buttonlistVisualizacao.length; i++) {
+    for (var i = 0; i < 3; i++) {
         buttonlistVisualizacao[i].click(cUI.mapCtrl.ShowVisualConfigDialog, {ind: i});
     }
-    
+
     var buttonlistVisualizacao = theaterslist[1].childlist(".button-toggle-theater");
-    for (var i = 0; i < buttonlistVisualizacao.length; i++) {
+    for (var i = 0; i < 3; i++) {
         buttonlistVisualizacao[i].click(this.btnVisualEvent, {ind: i});
     }
 
-    var buttonlistMarker = theaterslist[2].childlist(".button-toggle-theater");
-    for (var i = 0; i < buttonlistMarker.length; i++) {
-        buttonlistMarker[i].click(this.btnMarkerEvent, {ind: i});
+    var buttonlistMarker = theaterslist[1].childlist(".button-toggle-theater");
+    for (var i = 3; i < 6; i++) {
+        buttonlistMarker[i].click(this.btnMarkerEvent, {ind: i - 3});
     }
-    
-    this.btn_list_visualizacao = buttonlistVisualizacao;
-    this.btn_list_marker = buttonlistMarker;
+
+    this.btn_list_visualizacao = [buttonlistMarker[0], buttonlistMarker[1], buttonlistMarker[2]];
+    this.btn_list_marker = [buttonlistMarker[3], buttonlistMarker[4], buttonlistMarker[5]];
 }

@@ -31,7 +31,6 @@ $conceito_enade = array(
     array("id" => 5, "nome" => utf8_decode("5 (4.0 até 5.0)"))
 );
 
-
 ?>
 <html lang="pt-BR">
     <head>
@@ -51,7 +50,15 @@ $conceito_enade = array(
                 <?PHP else: ?>
                     cUI.mapCtrl.requestUpdate(cUI.filterCtrl.getFilters());
                 <?PHP endif; ?>
+                if(!localStorage.getItem("first-view")){
+                    setTimeout(function(){
+                        cUI.sidebarCtrl.toggle(400);
+                        localStorage.setItem("first-view",true);
+                    },400);
+                }
                 
+                $("#graph-item-enade").hide();
+                $(".filter-type[name='enade']").hide();
             }
         </script>
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.0/jquery.min.js"></script>
@@ -84,20 +91,23 @@ $conceito_enade = array(
         <script src="https://unpkg.com/promise-polyfill"></script>
 
         <link rel="stylesheet" href="<?= resource_css("principal.css"); ?>"/>
-        
+        <link async href="<?= resource_css("responsive.css"); ?>" rel="stylesheet" media="(max-width: 510px)"/>
+        <link async rel="stylesheet" href='<?= resource_css("thirdparty/tipsy.css"); ?>'/>
+
         <script async src="https://d3js.org/d3.v3.min.js"></script>
         <script async src='<?= resource_script("thirdparty/Donut3D.js"); ?>'></script>
         <link async src='<?= resource_css("thirdparty/Donut3D.css"); ?>'/>
+        <script async src='<?= resource_script("thirdparty/jquery.tipsy.js"); ?>'></script>
     </head>
     <body id='body' class='day-theme'>
         <div id="input-group-search" class="input-group">
             <label for="pac-input" style="position: absolute"></label>
-            <select name="select-search" id="select-search">
-                <option value="municipio">Pesquisar por Localização</option>
+            <select autocomplete="off" name="select-search" id="select-search">
+                <option selected value="municipio">Pesquisar por Localização</option>
                 <option value="instituicao">Pesquisar por Instituição</option>
             </select>
-            <input id="pac-input" class="pac-input" type="text" placeholder="Nome do Local, Município e Organização">
-            <input id="inst-input" class="pac-input" type="text" placeholder="Sigla ou Nome da Instituição">
+            <input autocomplete="off"  id="pac-input" class="pac-input" type="text" placeholder="Nome do Local, Município e Organização">
+            <input autocomplete="off"  id="inst-input" class="pac-input" type="text" placeholder="Sigla ou Nome da Instituição">
             <a class="pac-button" id="close-filter-inst-btn">
                 <i class='pac-addon-icon fa fa-times'></i>
                 <div class="pac-addon-header"></div>
@@ -105,22 +115,22 @@ $conceito_enade = array(
             </a>
         </div>
         <div class="tree-process-selector" id="selected-mode">
-            <button id="config-visualizacao">
+            <button id="config-visualizacao" class="tipsy-boot" title="Configurações da visualização atual">
                 <i class="fa fa-cog"></i>
             </button>
             <div class="content">
                 <ul>
                     <li>
-                        <select class="text" id="visual-selected-text">
-                            <option value="0">Marcadores com agrupamento</option>
-                            <option value="1">Marcadores sem agrupamento</option>
+                        <select autocomplete="off" class="text" id="visual-selected-text">
+                            <option value="0" selected>Com agrupamento</option>
+                            <option value="1">Sem agrupamento</option>
                             <option value="2">Circulo Ponderado</option>
                         </select>
                         <div class="next"></div>
                     </li>
                     <li>
-                        <select class="text" id="marker-selected-text">
-                            <option value="0">Por município</option>
+                        <select autocomplete="off" class="text" id="marker-selected-text">
+                            <option value="0" selected>Por município</option>
                             <option value="1">Por estado</option>
                             <option value="2">Por região</option>
                         </select>
@@ -131,25 +141,28 @@ $conceito_enade = array(
         <div class='theater' id="theater-details">
             <div class="modal-content"></div>
         </div>
-        <div class='theater' id="theater-search">
-            <div class="modal-content"></div>
-        </div>
         <div class='theater' id="theater-sidebar">
             <div class="theater-content" id="theater-content">
                 <div class="theater-about" id="theater-overview">
                     <h1 class="theater-about-title">
-                        Mapa dos Cursos de Computação e Similares no Território Nacional
+                        Mapas dos cursos superiores em computação no Brasil
                     </h1>
                     <h4 class="theater-about-content">
-                        Esta ferramenta traz a relação de cursos de computação (ou similares) com os municípios onde foram ou estão sendo realizados dentro o território nacional. A ferramenta traz várias técnicas de visualização de dados para tornar transparente a concentração dos cursos, junto com um controle de diversos filtros. 
+                       	Este trabalho surgiu a partir da iniciativa do Prof. Ronaldo Celso Messias Correia da UNESP Campus de Presidente Prudente, membro da Comissão de Educação da SBC. Atualmente está sob a responsabilidade da Diretoria de Educação. 
                         <br/><br/>
-                        O mapa não traz nenhuma informação sobre questões orçamentárias, número de estudantes, número de vagas ofertadas, e dados pessoais sobre os educandos, educadores, coordenadores, diretores, entre outros.
+                        Os mapas apresentam os seguintes dados sobre os cursos superiores de computação no Brasil, que podem ser filtrados e assim visualizados:
+                    	<br/>- Instituição responsável
+						<br/>- Modalidade do Curso
+						<br/>- Ano de início
+						<br/>- Grau Acadêmico
+						<br/>- Período de Oferta
                         <br/><br/>
-                        
+                        	O projeto está em fase de desenvolvimento, testes e consolidação.
+                        <br/><br/>
                     </h4>
                     <hr/>
                     <div class="theater-about-footer">
-                        Os dados foram obtidos a partir de um relatório do Censo de 2015, e do conceito Enade de 2014, modelados para de banco de dados.
+                        Os dados foram obtidos a partir de um relatório do Censo de 2015, modelados para de banco de dados.
                         <br/>
                         <details>
                             <summary>Mais informações sobre a fonte dos dados:</summary>
@@ -167,11 +180,15 @@ $conceito_enade = array(
                         <a target="_blank" rel="noopener" href="http://www.unesp.br/PortalPROPe/unesp/fct/dmec/ronaldo-celso-messias-correia/informacoes/">Ronaldo Celso Messias Correia</a>
                     </div>
                     <hr/>
-                    <img sync style="padding: 5px" src="./images/logotipos/sbc.png" width="69" height="100"/>
-                    <img sync style="padding: 5px" src="./images/logotipos/unesp-white.svg" width="300" height="100"/>
+                    <img sync style="padding: 5px" title="Logotipo da Sociedade Brasileira de Computação" src="./images/logotipos/sbc.png" width="69" height="100"/>
+                    <img sync style="padding: 5px" title="Logotipo da UNESP" src="./images/logotipos/unesp-white.svg" width="300" height="100"/>
+                    <img sync style="padding: 5px;background: white;border-radius: 10px;" title="Logotipo do LAPESCA" src="http://www2.fct.unesp.br/wrva2015/assets/images/apoio/lapesca_300px.png" width="100" height="100"/>
                 </div>
-                <div class="theater-about" id="theater-visualizacao">
+                <div class="theater-about" style="overflow-y: auto;" id="theater-configuracao">
                     <div class="theater-about-title">
+                        <i class="fa fa-cog"></i>&nbsp;&nbsp;&nbsp;Configuração
+                    </div>
+                    <div class="theater-about-subtitle">
                         <i class="fa fa-map"></i>&nbsp;&nbsp;&nbsp;Visualização
                     </div>
                     <div class="theater-about-content max-content">
@@ -210,9 +227,7 @@ $conceito_enade = array(
                             </tr>
                         </table>
                     </div>
-                </div>
-                <div class="theater-about" id="theater-markers">
-                    <div class="theater-about-title">
+                    <div class="theater-about-subtitle" style="margin-top: 30px;">
                         <i class="fa fa-map-marker"></i>&nbsp;&nbsp;&nbsp;Modo de Marcador
                     </div>
                     <div class="theater-about-content max-content">
@@ -349,9 +364,8 @@ $conceito_enade = array(
                 <ul class='list-buttons-sidebar'>
                     <?PHP
                     resource_component("buttonSidebar.php", array("id" => "filters", "fa-icon" => "fa-filter", "text" => "Filtros"));
-                    resource_component("buttonSidebar.php", array("id" => "visualizacao", "fa-icon" => "fa-map", "text" => "Visualização"));
-                    resource_component("buttonSidebar.php", array("id" => "markers", "fa-icon" => "fa-map-marker", "text" => "Modo de Marcador"));
-                    resource_component("buttonSidebar.php", array("id" => "estatistica", "fa-icon" => "fa-file", "text" => "Estatística"));
+                    resource_component("buttonSidebar.php", array("id" => "configuracao", "fa-icon" => "fa-cog", "text" => "Configurações"));
+                    resource_component("buttonSidebar.php", array("id" => "estatistica", "fa-icon" => "fa-file", "text" => "Estatísticas"));
                     resource_component("buttonSidebar.php", array("id" => "help", "fa-icon" => "fa-question", "text" => "Ajuda"));
                     resource_component("buttonSidebar.php", array("id" => "save", "fa-icon" => "fa-save", "text" => "Salvar"));
                     resource_component("buttonSidebar.php", array("id" => "load", "fa-icon" => "fa-folder-open", "text" => "Carregar"));
@@ -362,7 +376,7 @@ $conceito_enade = array(
                 </div>
             </div>
         </div>
-        <div class='btn-toggle-filter' id='btn-toggle-filter'>
+        <div title="Filtros" class='btn-toggle-filter tipsy-boot' id='btn-toggle-filter' notifyCount="0">
             <i class="fa fa-filter"></i>
         </div>
         <div class="filterbar" id="filterbar">
@@ -474,6 +488,7 @@ $conceito_enade = array(
             <div class="header">
                 <button class="close-btn"><i class="fa fa-chevron-up"></i> FECHAR</button>
             </div>
+            <div class="description">Mostrando resultados para o Município</div>
             <table class="overview">
                 <tr>
                     <td class="value" id="name-mun">
@@ -484,15 +499,16 @@ $conceito_enade = array(
                     </td>
                 </tr>  
             </table>
+            <div class="description alert"><i class="fa fa-exclamation-triangle"></i> Os resultados estão sobre influência dos filtros selecionados</div>
             <div class="notebook" id="notebook-marker-dialog">
                 <div class="tabs-header">
                     <div class="tab-header selected">
-                        Lista de Cursos no Município
+                        Cursos
                     </div>
                     <div class="tab-header">
                         Gráficos
                     </div>
-                    <div class="tab-header">
+                    <div class="tab-header" style="display: none">
                         Exportar
                     </div>
                 </div>
@@ -507,30 +523,31 @@ $conceito_enade = array(
                                 </tr>
                             </thead>
                         </table>
+                        <div class="clabel tabulation f12"> (*) Cursos ofertados na modalidade a distância (EAD)</div>
                     </div>
                     <div class="tab" id="graphs-tab">
                         <ul>
                             <?PHP
                             resource_component("Graph.php", array("id" => "grau", "title" => "Grau Académico", "type" => "sector"));
                             resource_component("Graph.php", array("id" => "rede", "title" => "Rede", "type" => "sector"));
-                            resource_component("Graph.php", array("id" => "modalidade", "title" => "Modalidade", "type" => "bars"));
+                            resource_component("Graph.php", array("id" => "modalidade", "title" => "Modalidade", "type" => "sector"));
                             resource_component("Graph.php", array("id" => "enade", "title" => "Conceito Enade", "type" => "bars"));
                             resource_component("Graph.php", array("id" => "natureza", "title" => "Natureza Privada", "type" => "sector"));
                             resource_component("Graph.php", array("id" => "naturezadep", "title" => "Natureza Pública", "type" => "sector"));
                             resource_component("Graph.php", array("id" => "nivel", "title" => "Nível", "type" => "sector"));
                             resource_component("Graph.php", array("id" => "programa", "title" => "Programa do Curso", "type" => "bars"));
                             resource_component("Graph.php", array("id" => "tipoorganizacao", "title" => "Tipo da Organização", "type" => "sector"));
-                            resource_component("Graph.php", array("id" => "estado", "title" => "Estado", "type" => "bars"));
+                            resource_component("Graph.php", array("id" => "estado", "title" => "Estado", "type" => "sector"));
                             ?>
                         </ul>
                     </div>
-                    <div class="tab" id="export-tab">
+                    <div class="tab" id="export-tab" style="display: none">
                     </div>
                 </div>
             </div>
         </div>
-        <a class="logotipo" id="logotipo_unesp"><img width="100" height="36" src="images/logotipos/unesp-placeholder-mini.png" /></a>
-        <a class="logotipo" id="logotipo_sbc"><img width="30" height="36" src="images/logotipos/sbc_placeholder_mini_2.png"/></a>
+        <a class="logotipo" id="logotipo_unesp"><img title="Logotipo da UNESP" width="100" height="36" src="images/logotipos/unesp-placeholder-mini.png" /></a>
+        <a class="logotipo" id="logotipo_sbc"><img title="Logotipo do Sociedade Brasileira de Computação" width="30" height="36" src="images/logotipos/sbc_placeholder_mini_2.png"/></a>
         <div id="splash"></div>
     </body>
 </html>

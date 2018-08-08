@@ -1,36 +1,55 @@
 (function () {
 
     ENUM_TIPOS = {
-        inteiro: {
+        numero: {
             id: 0
-        }, real: {
-            id: 1
         }, boleano: {
+            id: 1
+        }, intervalo: {
             id: 2
-        }, intervalo_inteiro: {
-            id: 3
-        }, intervalo_real: {
-            id: 4
         }, select: {
-            id: 5
+            id: 3
         }, color: {
-            id: 6
+            id: 4
         }
     };
 
     //value
-    function v(titulo, valor_default, tipo, min, max, step, unit) {
-        return {titulo: titulo, valor: valor_default, valor_default: valor_default, tipo: tipo, min: min, max: max, step: step, unit: unit, level: "entrada"};
+    function v(titulo, valor_default, tipo, min, max, step, unit, chunckunit) {
+        return {
+            titulo: titulo,
+            valor: valor_default,
+            valor_default: valor_default,
+            tipo: tipo,
+            min: min,
+            max: max,
+            step: (step !== undefined ? step : 1),
+            unit: (unit !== undefined ? unit : ""),
+            chunckunit: (chunckunit !== undefined ? parseFloat(chunckunit) : 1)
+        };
     }
 
     //categoria
     function c(titulo, vs) {
-        return  {titulo: titulo, vs: vs, level: "categoria"};
+        return  {
+            titulo: titulo,
+            vs: vs
+        };
     }
 
     //registro
     function r(titulo, subtitulo, childdesc, cs, fs) {
-        return {titulo: titulo, subtitulo: subtitulo, childdesc: childdesc, cs: cs, fs: fs, level: "raiz"};
+        return {
+            titulo: titulo,
+            subtitulo: subtitulo,
+            childdesc: childdesc,
+            cs: cs,
+            fs: fs
+        };
+    }
+
+    function format2AD(value) {
+        return parseFloat(Math.round(value * 10) / 10).toFixed(1);
     }
 
     window.cUserConfig = {
@@ -59,22 +78,27 @@
         input_insert_dialog: function (id, input, tab, onchange) {
             $("<label/>").attr("for", id).addClass("ui-controlgroup-label").html(input.titulo).appendTo(tab);
             var handle = $("<div/>").addClass("ui-slider-handle").css("margin-left", "-25px").css("width", "3em").css("text-align", "center");
+
+            var updateValue = function (valueBrute) {
+                var value = parseFloat(valueBrute);
+                if (input.chunckunit !== 1) {
+                    value /= input.chunckunit;
+                }
+                handle.text(value + input.unit);
+            };
             input.instance = $("<div/>")
                     .attr("id", id)
                     .append(handle)
                     .appendTo(tab)
                     .slider({min: input.min, max: input.max, step: input.step, value: input.valor,
                         create: function () {
-                            handle.text((parseInt($(this).slider("value"))/1000.0)+input.unit);
+                            updateValue($(this).slider("value"));
                         },
                         slide: function (event, ui) {
-                            if (event && ui) {
-                                handle.text((parseInt(ui.value)/1000.0)+input.unit);
-                            } else {
-                                handle.text((parseInt($(this).slider("value"))/1000.0)+input.unit);
-                            }
+                            updateValue($(this).slider("value"));
                         },
                         stop: function (event, ui) {
+                            updateValue($(this).slider("value"));
                             if (event && ui) {
                                 input.valor = parseInt(ui.value);
                             }
@@ -144,16 +168,19 @@
             1: r("Configuração de visualização", "Marcadores sem Agrupamento"),
             2: r("Configuração de visualização", "Circulo Ponderado", "Para o modo de: ", [
                 c("Município", {
-                    min: v("Raio mínimo", 5000, ENUM_TIPOS.inteiro, 100, 50000, 100, "km"),
-                    fator: v("Acréscimo do raio por unidade", 500, ENUM_TIPOS.inteiro, 0, 1000, 10, "km")
+                    min: v("Raio mínimo", 5000, ENUM_TIPOS.numero, 100, 50000, 100, "km", 1000),
+                    fator: v("Acréscimo do raio por unidade", 500, ENUM_TIPOS.numero, 0, 1000, 10, "km", 1000),
+                    opacity: v("Opacidade", 40, ENUM_TIPOS.numero, 0, 100, 1, "%")
                 }),
                 c("Estado", {
-                    min: v("Raio mínimo", 10000, ENUM_TIPOS.inteiro, 100, 50000, 100, "km"),
-                    fator: v("Acréscimo do raio por unidade", 100, ENUM_TIPOS.inteiro, 0, 1000, 10, "km")
+                    min: v("Raio mínimo", 10000, ENUM_TIPOS.numero, 100, 50000, 100, "km", 1000),
+                    fator: v("Acréscimo do raio por unidade", 100, ENUM_TIPOS.numero, 0, 1000, 10, "km", 1000),
+                    opacity: v("Opacidade", 35, ENUM_TIPOS.numero, 0, 100, 1, "%")
                 }),
                 c("Região", {
-                    min: v("Raio mínimo", 10000, ENUM_TIPOS.inteiro, 100, 50000, 100, "km"),
-                    fator: v("Acréscimo do raio por unidade", 100, ENUM_TIPOS.inteiro, 0, 1000, 10, "km")
+                    min: v("Raio mínimo", 10000, ENUM_TIPOS.numero, 100, 50000, 100, "km", 1000),
+                    fator: v("Acréscimo do raio por unidade", 100, ENUM_TIPOS.numero, 0, 1000, 10, "km", 1000),
+                    opacity: v("Opacidade", 30, ENUM_TIPOS.numero, 0, 100, 1, "%")
                 })
             ])
 

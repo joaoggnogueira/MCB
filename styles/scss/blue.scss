@@ -3,17 +3,17 @@
     Author     : Acer
 */
 
-$hex0: #e5e5ff;
-$hex1: #b3b3ff;
-$hex2: #8080ff;
-$hex3: #4d4dff;
-$hex4: #1a1aff;
-$hex5: #0000e6;
-$hex6: #0000b3;
-$hex7: #000080;
-$hex8: #00004d;
-$hex9: #00001a;
-$hex30: rgba(0,0,255,0.5);
+$hex0: #E9F0FC;
+$hex1: #BDD3F7;
+$hex2: #91B5F2;
+$hex3: #6598ED;
+$hex4: #397BE8;
+$hex5: #0D5EE4;
+$hex6: #0B4DBB;
+$hex7: #093C92;
+$hex8: #062B68;
+$hex9: #041A3F;
+$hex30: rgba(13, 94, 228,0.5);
 
 body.blue-theme{
     @import "color.scss";

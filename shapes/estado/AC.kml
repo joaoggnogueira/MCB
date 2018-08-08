@@ -1,18 +1,22 @@
-<?xml version="1.0" encoding="UTF-8"?>
+﻿<?xml version="1.0" encoding="UTF-8"?>
 <kml xmlns="http://earth.google.com/kml/2.1">
-<Folder>
-	<name>AC</name>
-	<Placemark>
-		<name>track</name>
-		<Style>
-			<LineStyle>
-				<color>cc0000cc</color>
-				<width>4</width>
-			</LineStyle>
-		</Style>
-		<LineString>
-			<altitudeMode>clampToGround</altitudeMode>
-			<coordinates>-69.1186405,-8.6451916,0
+  <Folder>
+    <name>AC</name>
+    <Placemark>
+      <name>track</name>
+      <Style>
+        <LineStyle>
+          <color>cc0000cc</color>
+          <width>4</width>
+        </LineStyle>
+        <BalloonStyle>
+          <bgColor>FFFFFFFF</bgColor>
+          <textColor>FF000000</textColor>
+        </BalloonStyle>
+      </Style>
+      <LineString id="KMLe_6">
+        <altitudeMode>clampToGround</altitudeMode>
+        <coordinates>-69.1186405,-8.6451916,0
 -68.6471864,-9.0494166,0
 -67.5168820,-9.5609067,0
 -67.3258172,-9.5923815,0
@@ -123,6 +127,13 @@
 -70.0549793,-7.8451491,0
 -69.1186405,-8.6451916,0
 			</coordinates>
-		</LineString>
-	</Placemark></Folder>
+      </LineString>
+    </Placemark>
+    <Style>
+      <BalloonStyle>
+        <bgColor>FFFFFFFF</bgColor>
+        <textColor>FF000000</textColor>
+      </BalloonStyle>
+    </Style>
+  </Folder>
 </kml>

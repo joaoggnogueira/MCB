@@ -7,6 +7,8 @@ function cMarkerDialogControl() {
     this.close_btn = this.dialog.child(".close-btn");
     this.notebook = new cNotebookControl("notebook-marker-dialog");
     this.theater = cUI.catchElement("theater-details");
+    this.description = this.dialog.child(".description");
+    this.alert = this.dialog.child(".alert");
     var ctrl = this;
 
     this.showTheater = function (html) {
@@ -21,6 +23,22 @@ function cMarkerDialogControl() {
 
     this.open = function (data) {
         ctrl.dialog.slideDown(400);
+        switch (cUI.mapCtrl.markerType) {
+            case 0:
+                ctrl.description.cText("Mostrando resultados para o Município");
+                break;
+            case 1:
+                ctrl.description.cText("Mostrando resultados para o Estado");
+                break;
+            case 2:
+                ctrl.description.cText("Mostrando resultados para a Macrorregião");
+                break;
+        }
+        if ($("#counter-filters").find(".total").text() !== "") {
+            this.alert.show();
+        } else {
+            this.alert.hide();
+        }
 
         var local = data.name_mun;
 
@@ -41,6 +59,11 @@ function cMarkerDialogControl() {
         for (var key in data.data) {
             var row = data.data[key];
             list[key] = [];
+
+            if (row[4] === "2") {
+                row[1] += " *";
+            }
+
             list[key][0] = row[0];
             list[key][1] = row[1];
             if (row[2].length > 2) {
@@ -180,6 +203,7 @@ function cMarkerDialogControl() {
 
     this.close = function () {
         ctrl.dialog.slideUp(400);
+        cUI.mapCtrl.unselectMarker();
     };
 
     $("#graphs-tab ul").sortable({

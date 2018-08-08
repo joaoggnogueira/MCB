@@ -26,15 +26,16 @@ function cFilterControl() {
             totaldiv.html("");
             textdiv.html("");
         } else {
+            
             countertotal.show();
             totaldiv.html(total);
-
             if (total === 1) {
                 textdiv.html("Filtro ativo");
             } else {
                 textdiv.html("Filtros ativos");
             }
         }
+        this.togglefilterbar.setAttribute("notifyCount",total);
     };
 
     this.setFiltersDisabled = function (value) {

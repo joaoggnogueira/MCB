@@ -57,7 +57,7 @@ $conceito_enade_campus = $data['conceito_enade_campus'];
         <div class="tab-header">
             Instituição
         </div>
-        <div class="tab-header">
+        <div class="tab-header" style="display: none">
             Conceito Enade
         </div>
         <button class="btn-close"><i class="fa fa-times"></i> Fechar</button>
@@ -128,7 +128,7 @@ $conceito_enade_campus = $data['conceito_enade_campus'];
             <div class="label">Região</div>
             <div class="value"><?= utf8_encode($data['nome_da_regiao']) ?></div>
         </div>
-        <div class="tab">
+        <div class="tab" style="display: none">
             <div class="controlgroup_vertical">
                 <div class="label">Nome da Instituição</div>
                 <div class="value"><?= utf8_encode($data['nome_da_instituicao']) ?> (<?= utf8_encode($data['sigla_da_instituicao']) ?>)</div>

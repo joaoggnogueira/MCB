@@ -1,31 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<kml xmlns="http://earth.google.com/kml/2.1">
-<Folder>
-	<name>CENTRO-OESTE</name>
-	<Placemark>
-		<name>track</name>
-		<Style>
-			<LineStyle>
-				<color>cc0000cc</color>
-				<width>4</width>
-			</LineStyle>
-		</Style>
-		<LineString>
-			<altitudeMode>clampToGround</altitudeMode>
-			<coordinates>-57.9969631,-7.4952047,0
--58.0613607,-7.3951912,0
-			</coordinates>
-		</LineString>
-	</Placemark>	<Placemark>
-		<name>track</name>
-		<Style>
-			<LineStyle>
-				<color>cc0000cc</color>
-				<width>4</width>
-			</LineStyle>
-		</Style>
-		<LineString>
-			<altitudeMode>clampToGround</altitudeMode>
+<kml xmlns="http://www.opengis.net/kml/2.2">
+	<Document>
+		<Folder>
+			<name>Tracks</name>
+			<Folder>
+				<name>Regiao</name>
+				<Placemark>
+					<name>Track Segment #1</name>
+					<Style>
+						<LineStyle>
+							<color>FFFF0000</color>
+<width>6</width>
+						</LineStyle>
+					</Style>
+					<LineString>
+<tessellate>1</tessellate>
 			<coordinates>-58.1370543,-7.3561244,0
 -58.213059,-7.4585347,0
 -58.2021697,-7.6208543,0
@@ -512,6 +501,10 @@
 -57.9969631,-7.4952047,0
 -58.0613607,-7.3951912,0
 			</coordinates>
-		</LineString>
-	</Placemark></Folder>
+					</LineString>
+				</Placemark>
+			</Folder>
+		</Folder>
+
+	</Document>
 </kml>

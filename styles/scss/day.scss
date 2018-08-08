@@ -19,6 +19,4 @@ $foreground: rgb(0,0,0);
 $foreground_50: rgba(0,0,0,0.5);
 $foreground_80: rgba(0,0,0,0.8);
 
-body.day-theme{
-    @import "day-night-template.scss";
-}
+@import "day-night-template.scss";

@@ -235,11 +235,6 @@ input[type="checkbox"]:hover + label,input[type="checkbox"]:focus + label{
     summary{
         color: $hex3;
     }
-    .graph-content{
-        .legenda{
-            border-left: 3px solid $hex3;
-        }
-    }
 }
 
 .body-filter{

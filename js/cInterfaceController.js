@@ -49,11 +49,11 @@
             }
             d.append = function(child){
                 $(d).append(child);
-            }
+            };
             d.removeAllClickEvents = function(){
                 $(d).off("click");
                 return d;
-            }
+            };
             d.setStates = function (arr) {
                 var item;
                 if (d.id.length !== 0) {
