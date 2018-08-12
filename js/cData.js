@@ -33,8 +33,14 @@
             });
         };
 
-        this.getDetailsHTML = function (id, callback) {
+        this.getCursoDetailsHTML = function (id, callback) {
             cRequest.postJson("getCursoDetailsHTML.php", {id: id}, function (data) {
+                callback(data.data);
+            });
+        };
+
+        this.getMunicipioDetailsHTML = function (id, markerType, callback) {
+            cRequest.postJson("getMunicipioDetailsHTML.php", {id: id, markerType: markerType}, function (data) {
                 callback(data.data);
             });
         };
@@ -63,7 +69,7 @@
             });
         };
 
-        this.getTotais = function (cod, filters, markerType, table,callback) {
+        this.getTotais = function (cod, filters, markerType, table, callback) {
             cRequest.postJson("getTotais.php", {cod: cod, filters: JSON.stringify(filters), markerType: markerType, table: table}, function (data) {
                 callback(data.data);
             });

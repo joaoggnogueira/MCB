@@ -96,7 +96,7 @@ function cMapControl() {
         }
         ctrl.hideKML();
     };
-    this.hideKML = function(){
+    this.hideKML = function () {
         if (ctrl.KMLAtual && ctrl.KMLAtual.setMap) {
             ctrl.KMLAtual.setMap(null);
             ctrl.KMLAtual = false;
@@ -315,11 +315,31 @@ function cMapControl() {
         const fator = cUserConfig.data[2].cs[ctrl.markerType].vs.fator.valor;
         const min = cUserConfig.data[2].cs[ctrl.markerType].vs.min.valor;
         const opacity = cUserConfig.data[2].cs[ctrl.markerType].vs.opacity.valor / 100.0;
+        var bounds = new google.maps.LatLngBounds();
+
         var count = -1;
+        var min_rect = {lng: 99999, lat: 99999};
+        var max_rect = {lng: -999999, lat: -999999};
         var markers = data.map(function (mun) {
             count++;
             if (typeof (google) !== "undefined") {
                 var marker;
+                var lat = parseFloat(mun[2]);
+                var lng = parseFloat(mun[1]);
+
+                if (min_rect.lng > lng) {
+                    min_rect.lng = lng;
+                }
+                if (min_rect.lat > lat) {
+                    min_rect.lat = lat;
+                }
+                if (max_rect.lng < lng) {
+                    max_rect.lng = lng;
+                }
+                if (max_rect.lat < lat) {
+                    max_rect.lat = lat;
+                }
+                bounds.extend({lng: lng, lat: lat});
                 if (ctrl.visualType === 2) {
                     marker = new google.maps.Circle({
                         strokeColor: ctrl.orange_circle.strokeColor,
@@ -329,13 +349,13 @@ function cMapControl() {
                         fillOpacity: opacity,
                         label: {text: mun[0]},
                         map: ctrl.googlemap,
-                        center: {lng: parseFloat(mun[1]), lat: parseFloat(mun[2])},
+                        center: {lng: lng, lat: lat},
                         radius: mun[0] * fator + min,
                         zIndex: count
                     });
                 } else {
                     var marker_data = {
-                        position: {lng: parseFloat(mun[1]), lat: parseFloat(mun[2])},
+                        position: {lng: lng, lat: lat},
                         icon: ctrl.orange_marker,
                         label: {
                             text: mun[0],
@@ -351,7 +371,6 @@ function cMapControl() {
 
                     marker = new google.maps.Marker(marker_data);
                 }
-
                 ctrl.hashMarkers[mun[3]] = marker;
                 const cod_mun = mun[3];
                 const name_mun = mun[4];
@@ -381,6 +400,18 @@ function cMapControl() {
             }
             return marker;
         });
+
+        var media = {};
+        media.lng = (min_rect.lng + max_rect.lng) / 2.0;
+        media.lat = (min_rect.lat + max_rect.lat) / 2.0;
+
+        if (ctrl.googlemap.getZoom() >= 10) {
+            ctrl.googlemap.setZoom(10);
+        }
+
+        ctrl.googlemap.fitBounds(bounds);
+        ctrl.googlemap.setCenter(media);
+
         if (typeof (google) !== "undefined" && ctrl.visualType === 0) {
             ctrl.markerCluster = new MarkerClusterer(ctrl.googlemap, markers, {imagePath: 'https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/m'});
         }
@@ -389,6 +420,8 @@ function cMapControl() {
     };
 
     this.HabiliarModoInstituicao = function (id_inst, sigla_inst, nome_inst) {
+        ctrl.visualType = 1;
+        ctrl.markerType = 0;
         cUI.filterCtrl.fadeOut(400);
         cUI.filterCtrl.resetFilters(false);
         ctrl.instModeId = id_inst;
@@ -402,6 +435,9 @@ function cMapControl() {
 
     this.DesabilitarModoInstituicao = function () {
         if (ctrl.instModeId !== false) {
+            if (ctrl.visualType === 1) {
+                ctrl.visualType = 0;
+            }
             cUI.filterCtrl.fadeOut(400);
             ctrl.instModeId = false;
             ctrl.requestUpdate(cUI.filterCtrl.getFilters());
@@ -443,8 +479,27 @@ function cMapControl() {
     $("#visual-selected-text").selectmenu({
         change: function (event, ui) {
             var index = parseInt(ui.item.value);
-            ctrl.changeVisualType(index);
-            cUI.sidebarCtrl.setSelectedVisual(index);
+            if (index === 1 && ctrl.markerType === 0) {
+                swal({
+                    title: 'Alerta',
+                    text: "Marcadores sem agrupamentos podem levar um tempo maior para carregar! Deseja continuar?",
+                    showCancelButton: true,
+                    confirmButtonColor: '#777',
+                    cancelButtonColor: '#3085d6',
+                    confirmButtonText: 'OK',
+                    cancelButtonText: 'Cancelar'
+                }).then((result) => {
+                    if (result.value) {
+                        ctrl.changeVisualType(index);
+                        cUI.sidebarCtrl.setSelectedVisual(index);
+                    } else {
+                        $("#visual-selected-text").val(ctrl.visualType).selectmenu("refresh");
+                    }
+                });
+            } else {
+                ctrl.changeVisualType(index);
+                cUI.sidebarCtrl.setSelectedVisual(index);
+            }
         }
     });
     $("#marker-selected-text").selectmenu({

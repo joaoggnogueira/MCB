@@ -18,8 +18,8 @@ $listRegiao = $model->listRegiao();
 $listTipoOrganizacao = $model->listTipoOrganizacao();
 
 $savedconfig = false;
-if(isset($_GET['savedconfig'])){
-    $savedconfig = (int)$_GET['savedconfig'];
+if (isset($_GET['savedconfig'])) {
+    $savedconfig = (int) $_GET['savedconfig'];
 }
 
 $conceito_enade = array(
@@ -30,7 +30,6 @@ $conceito_enade = array(
     array("id" => 4, "nome" => utf8_decode("4 (3.0 até 4.0)")),
     array("id" => 5, "nome" => utf8_decode("5 (4.0 até 5.0)"))
 );
-
 ?>
 <html lang="pt-BR">
     <head>
@@ -44,26 +43,26 @@ $conceito_enade = array(
         <link rel="manifest" href="manifest.json"/>
         <script>
             ROOT_APP = "<?= constant('ROOT_APP'); ?>";
-            window.onload_all = function () { 
-                <?PHP if($savedconfig): ?>
+            window.onload_all = function () {
+<?PHP if ($savedconfig): ?>
                     cUI.mapCtrl.loadData(<?= $savedconfig ?>);
-                <?PHP else: ?>
+<?PHP else: ?>
                     cUI.mapCtrl.requestUpdate(cUI.filterCtrl.getFilters());
-                <?PHP endif; ?>
-                if(!localStorage.getItem("first-view")){
-                    setTimeout(function(){
+<?PHP endif; ?>
+                if (!localStorage.getItem("first-view")) {
+                    setTimeout(function () {
                         cUI.sidebarCtrl.toggle(400);
-                        localStorage.setItem("first-view",true);
-                    },400);
+                        localStorage.setItem("first-view", true);
+                    }, 400);
                 }
-                
-                $("#graph-item-enade").hide();
-                $(".filter-type[name='enade']").hide();
+
+                //$("#graph-item-enade").hide();
+                //$(".filter-type[name='enade']").hide();
             }
         </script>
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.0/jquery.min.js"></script>
         <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
-        
+
         <link async rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/ju/dt-1.10.18/datatables.min.css"/>
         <script async type="text/javascript" src="https://cdn.datatables.net/v/ju/dt-1.10.18/datatables.min.js"></script>
         <script src='https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/7.24.1/sweetalert2.min.js'></script>
@@ -79,8 +78,7 @@ $conceito_enade = array(
         <script src='<?= resource_script("polyfill.js"); ?>'></script>
 
         <script src='<?= resource_script("cUserConfig.js"); ?>'></script>
-        <script async src='<?= resource_script("cGraphs.js"); ?>'></script>
-        
+
         <script src="https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/markerclusterer.js"></script>
         <script defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC6A2l8RrNfmBdbVI-kMjRHBoZmBa1e4IU&libraries=places&callback=initMap"></script>
 
@@ -97,7 +95,8 @@ $conceito_enade = array(
         <script async src="https://d3js.org/d3.v3.min.js"></script>
         <script async src='<?= resource_script("thirdparty/Donut3D.js"); ?>'></script>
         <link async src='<?= resource_css("thirdparty/Donut3D.css"); ?>'/>
-        <script async src='<?= resource_script("thirdparty/jquery.tipsy.js"); ?>'></script>
+        <script src='<?= resource_script("thirdparty/jquery.tipsy.js"); ?>'></script>
+        <script async src='<?= resource_script("cGraphs.js"); ?>'></script>
     </head>
     <body id='body' class='day-theme'>
         <div id="input-group-search" class="input-group">
@@ -151,18 +150,18 @@ $conceito_enade = array(
                        	Este trabalho surgiu a partir da iniciativa do Prof. Ronaldo Celso Messias Correia da UNESP Campus de Presidente Prudente, membro da Comissão de Educação da SBC. Atualmente está sob a responsabilidade da Diretoria de Educação. 
                         <br/><br/>
                         Os mapas apresentam os seguintes dados sobre os cursos superiores de computação no Brasil, que podem ser filtrados e assim visualizados:
-                    	<br/>- Instituição responsável
-						<br/>- Modalidade do Curso
-						<br/>- Ano de início
-						<br/>- Grau Acadêmico
-						<br/>- Período de Oferta
+                        <br/>- Instituição responsável
+                        <br/>- Modalidade do Curso
+                        <br/>- Ano de início
+                        <br/>- Grau Acadêmico
+                        <br/>- Período de Oferta
                         <br/><br/>
-                        	O projeto está em fase de desenvolvimento, testes e consolidação.
+                        O projeto está em fase de desenvolvimento, testes e consolidação.
                         <br/><br/>
                     </h4>
                     <hr/>
                     <div class="theater-about-footer">
-                        Os dados foram obtidos a partir de um relatório do Censo de 2015, modelados para de banco de dados.
+                        Os dados foram obtidos a partir de um relatório do Censo de 2016 e Enade 2014, modelados para de banco de dados.
                         <br/>
                         <details>
                             <summary>Mais informações sobre a fonte dos dados:</summary>
@@ -321,11 +320,11 @@ $conceito_enade = array(
                         <hr/>
                         <div class="label-title">Filtros Ativados</div>
                         <div class="label-content" id="filters-to-save">
-                            
+
                         </div>
                         <div class="label-title">Tipo de Marcador</div>
                         <div class="label-content" id="marker-to-save">
-                            
+
                         </div>
                         <div class="label-title">Rótulo</div>
                         <div class="label-content">Insira o rótulo para identificar a configurações a ser salva</div>
@@ -359,7 +358,7 @@ $conceito_enade = array(
         <div class="sidebar" id="sidebar">
             <div class='sidebar-content'>
                 <div class='sidebar-title'>
-                    DASHBOARD
+                    MCB
                 </div>
                 <ul class='list-buttons-sidebar'>
                     <?PHP
@@ -390,8 +389,14 @@ $conceito_enade = array(
                         <div class="text"></div>
                     </div>
                 </div>
-                <div class="filterbar-div filterbar-content">
-                    <ul class='filter-list' id="filter-list">
+                <div class="filterbar-tab-headers">
+                    <div class="filterbar-tab-header selected" title="Sobre o curso"><i class="fa fa-book"></i></div>
+                    <div class="filterbar-tab-header" title="Sobre a instituição"><i class="fa fa-university"></i></div>
+                    <div class="filterbar-tab-header" title="Sobre o localização"><i class="fa fa-map"></i></div>
+                    <div class="filterbar-tab-header" title="Sobre as avaliações"><i class="fa fa-tasks"></i></div>
+                </div>
+                <div class="filterbar-div filterbar-content" id="filter-list">
+                    <ul class='filter-list'>
                         <li name="grau" class="filter-type">
                             <?PHP
                             resource_component(
@@ -399,38 +404,10 @@ $conceito_enade = array(
                             );
                             ?>
                         </li>
-                        <li name="enade" class="filter-type">
-                            <?PHP
-                            resource_component(
-                                "Filter.php", array("id" => "enade", "title" => "Conceito Enade", "lista" => $conceito_enade)
-                            );
-                            ?>
-                        </li>
-                        <li name="rede" class="filter-type">
-                            <?PHP
-                            resource_component(
-                                    "Filter.php", array("id" => "rede", "title" => "Rede", "lista" => $listRede)
-                            );
-                            ?>
-                        </li>
                         <li name="modalidades" class="filter-type">
                             <?PHP
                             resource_component(
                                     "Filter.php", array("id" => "modalidade", "title" => "Modalidade", "lista" => $listModalidade)
-                            );
-                            ?>
-                        </li>
-                        <li name="natureza" class="filter-type">
-                            <?PHP
-                            resource_component(
-                                    "Filter.php", array("id" => "natureza", "title" => "Natureza Privada", "lista" => $listNatureza)
-                            );
-                            ?>
-                        </li>
-                        <li name="naturezadep" class="filter-type">
-                            <?PHP
-                            resource_component(
-                                    "Filter.php", array("id" => "natureza_departamento", "title" => "Natureza Pública", "lista" => $listNaturezaDepartamento)
                             );
                             ?>
                         </li>
@@ -448,6 +425,39 @@ $conceito_enade = array(
                             );
                             ?>
                         </li>
+                    </ul>
+                    <ul class='filter-list' style="display: none">
+                        <li name="rede" class="filter-type">
+                            <?PHP
+                            resource_component(
+                                    "Filter.php", array("id" => "rede", "title" => "Rede", "lista" => $listRede)
+                            );
+                            ?>
+                        </li>
+
+                        <li name="natureza" class="filter-type">
+                            <?PHP
+                            resource_component(
+                                    "Filter.php", array("id" => "natureza", "title" => "Natureza Privada", "lista" => $listNatureza)
+                            );
+                            ?>
+                        </li>
+                        <li name="naturezadep" class="filter-type">
+                            <?PHP
+                            resource_component(
+                                    "Filter.php", array("id" => "natureza_departamento", "title" => "Natureza Pública", "lista" => $listNaturezaDepartamento)
+                            );
+                            ?>
+                        </li>
+                        <li name="tipoorganizacao" class="filter-type">
+                            <?PHP
+                            resource_component(
+                                    "Filter.php", array("id" => "tipoorganizacao", "title" => "Tipo de Organização", "lista" => $listTipoOrganizacao)
+                            );
+                            ?>
+                        </li>
+                    </ul>
+                    <ul class='filter-list' style="display: none">
                         <li name="estado" class="filter-type">
                             <?PHP
                             resource_component(
@@ -462,10 +472,12 @@ $conceito_enade = array(
                             );
                             ?>
                         </li>
-                        <li name="tipoorganizacao" class="filter-type">
+                    </ul>
+                    <ul class='filter-list' style="display: none">
+                        <li name="enade" class="filter-type">
                             <?PHP
                             resource_component(
-                                    "Filter.php", array("id" => "tipoorganizacao", "title" => "Tipo de Organização", "lista" => $listTipoOrganizacao)
+                                    "Filter.php", array("id" => "enade", "title" => "Conceito Enade", "lista" => $conceito_enade)
                             );
                             ?>
                         </li>
@@ -489,16 +501,9 @@ $conceito_enade = array(
                 <button class="close-btn"><i class="fa fa-chevron-up"></i> FECHAR</button>
             </div>
             <div class="description">Mostrando resultados para o Município</div>
-            <table class="overview">
-                <tr>
-                    <td class="value" id="name-mun">
-                        %Município%(%UF%)
-                    </td>
-                    <td class="value" id="cod-mun">
-                        %COD_MUN%
-                    </td>
-                </tr>  
-            </table>
+            <div class="overview" id="name-mun">
+                %Município%(%UF%)
+            </div>
             <div class="description alert"><i class="fa fa-exclamation-triangle"></i> Os resultados estão sobre influência dos filtros selecionados</div>
             <div class="notebook" id="notebook-marker-dialog">
                 <div class="tabs-header">
@@ -507,6 +512,9 @@ $conceito_enade = array(
                     </div>
                     <div class="tab-header">
                         Gráficos
+                    </div>
+                    <div class="tab-header" id="tabheadermun">
+                        Sobre o %LOCAL%
                     </div>
                     <div class="tab-header" style="display: none">
                         Exportar
@@ -540,6 +548,8 @@ $conceito_enade = array(
                             resource_component("Graph.php", array("id" => "estado", "title" => "Estado", "type" => "sector"));
                             ?>
                         </ul>
+                    </div>
+                    <div class="tab" id="local-tab">
                     </div>
                     <div class="tab" id="export-tab" style="display: none">
                     </div>

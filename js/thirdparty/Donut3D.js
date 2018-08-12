@@ -1,6 +1,6 @@
 /**
-* http://bl.ocks.org/NPashaP/9994181
-**/
+ * http://bl.ocks.org/NPashaP/9994181
+ **/
 
 !function () {
     var Donut3D = {};
@@ -116,7 +116,7 @@
         var slices = d3.select("#" + id).append("g").attr("transform", "translate(" + x + "," + y + ")")
                 .attr("class", "slices");
 
-        slices.selectAll(".innerSlice").data(_data).enter().append("path").attr("class", "innerSlice")
+        var slices_inner = slices.selectAll(".innerSlice").data(_data).enter().append("path").attr("class", "innerSlice")
                 .style("fill", function (d) {
                     return d3.hsl(d.data.color).darker(0.7);
                 })
@@ -127,7 +127,7 @@
                     this._current = d;
                 });
 
-        slices.selectAll(".topSlice").data(_data).enter().append("path").attr("class", "topSlice")
+        var slices_top = slices.selectAll(".topSlice").data(_data).enter().append("path").attr("class", "topSlice")
                 .style("fill", function (d) {
                     return d.data.color;
                 })
@@ -141,7 +141,7 @@
                     this._current = d;
                 });
 
-        slices.selectAll(".outerSlice").data(_data).enter().append("path").attr("class", "outerSlice")
+        var slices_outer = slices.selectAll(".outerSlice").data(_data).enter().append("path").attr("class", "outerSlice")
                 .style("fill", function (d) {
                     return d3.hsl(d.data.color).darker(0.7);
                 })
@@ -152,7 +152,7 @@
                     this._current = d;
                 });
 
-        slices.selectAll(".percent").data(_data).enter().append("text").attr("class", "percent")
+        var percents = slices.selectAll(".percent").data(_data).enter().append("text").attr("class", "percent")
                 .attr("x", function (d) {
                     return 0.6 * rx * Math.cos(0.5 * (d.startAngle + d.endAngle));
                 })
@@ -162,6 +162,45 @@
                 .text(getPercent).each(function (d) {
             this._current = d;
         });
+
+        for (var i = 0; i < slices_outer[0].length; i++) {
+            const index = i;
+            
+            var enter = function(){
+                $(slices_outer[0][index]).css("fill",d3.hsl(data[index].hover_color).darker(0.7));
+                $(slices_top[0][index]).css("fill",data[index].hover_color);
+                $(data[index].labelobj).tipsy(true).show();
+                $(data[index].labelobj).find(".cor").css("background", data[index].hover_color);
+            };
+            
+            var out = function(){
+                $(slices_outer[0][index]).css("fill",d3.hsl(data[index].color).darker(0.7));
+                $(slices_top[0][index]).css("fill",data[index].color);
+                $(data[index].labelobj).tipsy(true).hide();
+                $(data[index].labelobj).find(".cor").css("background", data[index].color);
+            };
+            
+            $(slices_top[0][i]).mouseenter(enter).mouseleave(out);
+            $(slices_outer[0][i]).mouseenter(enter).mouseleave(out);
+            $(slices_inner[0][i]).mouseenter(enter).mouseleave(out);
+            $(percents[0][i]).mouseenter(enter).mouseleave(out).css("cursor","default");
+            
+            var enterlabel = function(){
+                $(slices_outer[0][index]).css("fill",d3.hsl(data[index].hover_color).darker(0.7));
+                $(slices_top[0][index]).css("fill",data[index].hover_color);
+                $(data[index].labelobj).find(".cor").css("background", data[index].hover_color);
+            };
+            
+            var outlabel = function(){
+                $(slices_outer[0][index]).css("fill",d3.hsl(data[index].color).darker(0.7));
+                $(slices_top[0][index]).css("fill",data[index].color);
+                $(data[index].labelobj).find(".cor").css("background", data[index].color);
+            };
+            
+            $(data[index].labelobj).mouseenter(enterlabel).mouseleave(outlabel);
+            
+        }
+
     }
 
     this.Donut3D = Donut3D;

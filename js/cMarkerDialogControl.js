@@ -9,6 +9,9 @@ function cMarkerDialogControl() {
     this.theater = cUI.catchElement("theater-details");
     this.description = this.dialog.child(".description");
     this.alert = this.dialog.child(".alert");
+    this.tabheadermun = this.dialog.child("#tabheadermun");
+    this.localtab = this.dialog.child("#local-tab");
+    this.atual_data = false;
     var ctrl = this;
 
     this.showTheater = function (html) {
@@ -22,16 +25,20 @@ function cMarkerDialogControl() {
     };
 
     this.open = function (data) {
+        ctrl.atual_data = data;
         ctrl.dialog.slideDown(400);
         switch (cUI.mapCtrl.markerType) {
             case 0:
                 ctrl.description.cText("Mostrando resultados para o Município");
+                ctrl.tabheadermun.cText("Município");
                 break;
             case 1:
                 ctrl.description.cText("Mostrando resultados para o Estado");
+                ctrl.tabheadermun.cText("Estado (UF)");
                 break;
             case 2:
-                ctrl.description.cText("Mostrando resultados para a Macrorregião");
+                ctrl.description.cText("Mostrando resultados para a Região");
+                ctrl.tabheadermun.cText("Região");
                 break;
         }
         if ($("#counter-filters").find(".total").text() !== "") {
@@ -45,9 +52,7 @@ function cMarkerDialogControl() {
         if (data.uf.length === 2) {
             local += " (" + data.uf + ")";
         }
-
         cUI.catchElement("name-mun").html(local);
-        cUI.catchElement("cod-mun").html(data.cod_mun);
         if (ctrl.datatable) {
             ctrl.datatable.destroy(true);
             cUI.catchElement("cursos-tab").innerHTML = ctrl.copytable;
@@ -105,7 +110,7 @@ function cMarkerDialogControl() {
         $('#table-cursos tbody').on('click', 'tr', function () {
             var row = ctrl.datatable.row(this).data();
             var id_curso = row[0];
-            cData.getDetailsHTML(id_curso, function (data_enade) {
+            cData.getCursoDetailsHTML(id_curso, function (data_enade) {
                 ctrl.showTheater(data_enade.view);
                 new cNotebookControl("details-dialog");
                 ctrl.theater.child(".btn-close").click(ctrl.closeTheater);
@@ -198,6 +203,11 @@ function cMarkerDialogControl() {
         cGraph("graph-content-tipoorganizacao", data.cod_mun);
         cGraph("graph-content-enade", data.cod_mun);
         cGraph("graph-content-estado", data.cod_mun);
+        ctrl.localtab.html("Carregando ...");
+        cData.getMunicipioDetailsHTML(data.cod_mun,cUI.mapCtrl.markerType,function(data){
+            ctrl.localtab.html(data.view);
+        });
+
 
     };
 
@@ -210,7 +220,6 @@ function cMarkerDialogControl() {
         items: "> li",
         handle: ".fa-ellipsis-v.draggable-sortable-btn"
     });
-
     this.close_btn.click(this.close);
     this.dialog.hide();
     this.theater.hide();

@@ -57,8 +57,11 @@ $conceito_enade_campus = $data['conceito_enade_campus'];
         <div class="tab-header">
             Instituição
         </div>
-        <div class="tab-header" style="display: none">
+        <div class="tab-header">
             Conceito Enade
+        </div>
+        <div class="tab-header" style="display: none">
+            Metadados
         </div>
         <button class="btn-close"><i class="fa fa-times"></i> Fechar</button>
     </div>
@@ -74,8 +77,12 @@ $conceito_enade_campus = $data['conceito_enade_campus'];
             <div class="value"><?= utf8_encode($data['nivel']) ?></div>
             <div class="label">Grau Acadêmico</div>
             <div class="value"><?= utf8_encode($data['grau_academico']) ?></div>
-            <div class="label">Periodo</div>
-            <ul>
+            <div class="label">Total de Alunos Vinculados</div>
+            <div class="value"><?= utf8_encode($data['total_de_alunos']) ?></div>
+            <div class="label">Carga Horária</div>
+            <div class="value"><?= utf8_encode($data['carga_horaria']) ?> horas</div>
+<!--        <div class="label">Periodo</div>
+                <ul>
                 <li>            
                     <input type="checkbox" <?= $data['eh_matutino'] === '1' ? "checked" : "" ?> onclick="return false;"/>
                     <label>Matutino</label>
@@ -96,7 +103,7 @@ $conceito_enade_campus = $data['conceito_enade_campus'];
                     <input type="checkbox" <?= $periodo_definido ? "" : "checked" ?> onclick="return false;"/>
                     <label>Não se aplica</label>
                 </li>
-            </ul>
+            </ul>-->
             <div class="label">Programa</div>
             <div class="value"><?= utf8_encode($data['codigo_do_programa']) ?> - <?= utf8_encode($data['nome_do_programa']) ?></div>
             <div class="label">Área Detalhada</div>
@@ -107,12 +114,14 @@ $conceito_enade_campus = $data['conceito_enade_campus'];
             <div class="value"><?= utf8_encode($data['area_geral']) ?></div>
         </div>
         <div class="tab">
-            <div class="label">Código da Instituição</div>
-            <div class="value"><?= $data['id_instituicao'] ?></div>
-            <div class="label">Nome da Instituição</div>
-            <div class="value"><?= utf8_encode($data['nome_da_instituicao']) ?> (<?= utf8_encode($data['sigla_da_instituicao']) ?>)</div>
+            <div class="label">Instituição</div>
+            <div class="value"><?= $data['id_instituicao'] ?> - <?= utf8_encode($data['nome_da_instituicao']) ?> (<?= utf8_encode($data['sigla_da_instituicao']) ?>)</div>
             <div class="label">Tipo da Organização</div>
             <div class="value"><?= utf8_encode($data['tipo_da_organizacao']) ?></div>
+            <div class="label">Campus / Local de Oferta do Curso</div>
+            <div class="value"><?= utf8_encode($data['local_de_oferta']) ?></div>
+            <div class="label">Mantenedora - CNPJ</div>
+            <div class="value"><?= utf8_encode($data['mantenedora'])?> - <?= utf8_encode($data['cnpj']) ?></div>
             <div class="label">Rede</div>
             <div class="value"><?= utf8_encode($data['rede']) ?></div>
             <div class="label">Natureza Pública</div>
@@ -120,15 +129,9 @@ $conceito_enade_campus = $data['conceito_enade_campus'];
             <div class="label">Natureza Privada</div>
             <div class="value"><?= utf8_encode($data['natureza_privada']) ?></div>
             <div class="label">Múnicipio</div>
-            <div class="value"><?= utf8_encode($data['codigo_municipio']) ?> - <?= utf8_encode($data['nome_do_municipio']) ?></div>
-            <div class="label">Geolocalização do Múnicipio</div>
-            <div class="value">latitude: <i><?= $data['latitude_municipio'] ?></i> e longitude: <i><?= $data['longitude_municipio'] ?></i></div>
-            <div class="label">Estado</div>
-            <div class="value"><?= utf8_encode($data['nome_do_estado']) ?> (<?= $data['sigla_do_estado'] ?>)</div>
-            <div class="label">Região</div>
-            <div class="value"><?= utf8_encode($data['nome_da_regiao']) ?></div>
+            <div class="value"><?= utf8_encode($data['codigo_municipio']) ?> - <?= utf8_encode($data['nome_do_municipio']) ?> (<?= $data['sigla_do_estado'] ?>)</div>
         </div>
-        <div class="tab" style="display: none">
+        <div class="tab">
             <div class="controlgroup_vertical">
                 <div class="label">Nome da Instituição</div>
                 <div class="value"><?= utf8_encode($data['nome_da_instituicao']) ?> (<?= utf8_encode($data['sigla_da_instituicao']) ?>)</div>
@@ -176,6 +179,9 @@ $conceito_enade_campus = $data['conceito_enade_campus'];
                 <div class="clabel horizontal-space"></div>
                 <div class="clabel label-100 f12"><span name="n_inscritos">42</span> inscritos e <span name="n_participantes">40</span> participantes</div>
             </div>
+        </div>
+        <div class="tab">
+            <?= utf8_encode(print_r($data,true)) ?>
         </div>
     </div>
 </div>

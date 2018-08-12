@@ -26,7 +26,7 @@ function cFilterControl() {
             totaldiv.html("");
             textdiv.html("");
         } else {
-            
+
             countertotal.show();
             totaldiv.html(total);
             if (total === 1) {
@@ -35,7 +35,7 @@ function cFilterControl() {
                 textdiv.html("Filtros ativos");
             }
         }
-        this.togglefilterbar.setAttribute("notifyCount",total);
+        this.togglefilterbar.setAttribute("notifyCount", total);
     };
 
     this.setFiltersDisabled = function (value) {
@@ -86,7 +86,7 @@ function cFilterControl() {
 
     this.fadeOut = function (time) {
         ctrl.filterbar.slideUp(time);
-        $(".ui-dialog .body").dialog( "close" );
+        $(".ui-dialog .body").dialog("close");
         ctrl.togglefilterbar.toggleSlideVeritical(time);
         ctrl.visiblefilters = false;
         ctrl.togglefilterbar.html('<i class="fa fa-filter"></i>');
@@ -266,25 +266,25 @@ function cFilterControl() {
         var filtertype = data.filtertype;
         var body = filtertype.child(".body");
         var placeholder = $("<a/>").addClass("placeholder").html("Restaurar");
-        var onclose = function( event, ui ) {
+        var onclose = function (event, ui) {
             placeholder.remove();
             $(body).dialog("destroy");
             filtertype.append(body);
             filtertype.child(".to-window-btn.fa-window-maximize").show();
             filtertype.child(".to-window-btn.fa-reply").hide();
         };
-        
+
         $(body).dialog({
             title: filtertype.child(".title").cText(),
             close: onclose,
             maxHeight: 600,
-            position: { my: "right-10 top+10", at: "right-10 top+10", of: window  }
+            position: {my: "right-10 top+10", at: "right-10 top+10", of: window}
         });
-        
-        $(".ui-button.ui-corner-all.ui-widget.ui-button-icon-only.ui-dialog-titlebar-close").html("<i class='fa fa-reply'></i>").css("text-indent","0");
+
+        $(".ui-button.ui-corner-all.ui-widget.ui-button-icon-only.ui-dialog-titlebar-close").html("<i class='fa fa-reply'></i>").css("text-indent", "0");
         filtertype.child(".to-window-btn.fa-window-maximize").hide();
         filtertype.child(".to-window-btn.fa-reply").show().removeAllClickEvents().click(onclose);
-        
+
         placeholder.click(onclose).appendTo(filtertype);
     };
 
@@ -309,9 +309,27 @@ function cFilterControl() {
         }
     }
 
-    $("#filter-list").sortable({
+    var listtabs = this.filterbar.childlist(".filterbar-tab-header");
+    var listfilterlists = this.filterbar.childlist(".filter-list");
+
+    function selectTab(event, data) {
+        for (var i = 0; i < listtabs.length; i++) {
+            listtabs[i].classList.remove("selected");
+            listfilterlists[i].hide();
+        }
+        listtabs[data.index].classList.add("selected");
+        listfilterlists[data.index].show();
+    }
+
+    for (var i = 0; i < listtabs.length; i++) {
+        listtabs[i].click(selectTab, {index: i});
+    }
+
+    $(".filter-list").sortable({
         items: "> li",
         handle: ".fa-ellipsis-v.draggable-sortable-btn"
     });
+
+    $(".filterbar-tab-header").tipsy({gravity: "w"});
 
 }

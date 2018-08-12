@@ -98,37 +98,84 @@ class RelatorioModel {
         return $stmt->execute();
     }
 
+    public function getMarkerDetails($id, $markerType) {
+        $query = "";
+        if ($markerType === 0) {
+            $query = "SELECT "
+                    . "c.`nome` as 'nome_municipio', "
+                    . "c.`cod` as 'codigo_municipio', "
+                    . "c.`latitude` as 'latitude', "
+                    . "c.`longitude` as 'longitude', "
+                    . "e.`nome` as 'nome_estado', "
+                    . "e.`sigla` as 'sigla_estado', "
+                    . "r.`nome` as 'nome_regiao', "
+                    . "c.`populacao` as 'populacao' "
+                    . "FROM cidade c "
+                    . "INNER JOIN estado e ON e.id = c.id_estado "
+                    . "INNER JOIN regiao r ON r.id = e.id_regiao "
+                    . "WHERE c.cod = :id";
+        } else if ($markerType === 1) {
+            $query = "SELECT "
+                    . "e.`nome` as 'nome_estado', "
+                    . "e.`sigla` as 'sigla_estado', "
+                    . "e.`populacao` as 'populacao', "
+                    . "r.`nome` as 'nome_regiao' "
+                    . "FROM estado e "
+                    . "INNER JOIN regiao r ON r.id = e.id_regiao "
+                    . "WHERE e.id = :id";
+        } else if ($markerType === 2) {
+            $query = "SELECT "
+                    . "r.`nome` as 'nome_regiao', "
+                    . "r.`populacao` as 'populacao' "
+                    . "FROM regiao r "
+                    . "WHERE r.id = :id";
+        }
+
+        $stmt = $this->controller->query($query);
+
+        $stmt->bindInt("id", $id);
+
+        return $stmt->fetchAssoc();
+    }
+
     public function getCursoDetails($id) {
         $query = "SELECT 
+                man.`nome` as 'mantenedora',
+                man.`cnpj` as 'cnpj',
+                clo.`nome` as 'local_de_oferta',
+                c.`total_de_alunos` as 'total_de_alunos',
+                c.`carga_horaria` as 'carga_horaria',
                 c.`matutino` as 'eh_matutino',
                 c.`vespertino` as 'eh_vespertino',
                 c.`noturno` as 'eh_noturno',
                 c.`integral` as 'eh_integral',
-                ri.nome as 'nome_do_curso',
-                ri.inicio_funcionamento as 'inicio_do_funcionamento',
-                m.nome as 'nome_do_municipio',
-                m.latitude as 'latitude_municipio',
-                m.longitude as 'longitude_municipio',
-                m.cod as 'codigo_municipio',
-                e.nome as 'nome_do_estado',
-                e.sigla as 'sigla_do_estado',
-                r.nome as 'nome_da_regiao',
-                i.id as 'id_instituicao',
-                i.nome as 'nome_da_instituicao',
-                i.sigla as 'sigla_da_instituicao',
-                cg.nome as 'grau_academico',
-                cm.nome as 'modalidade',
-                cn.nome as 'nivel',
-                o.nome as 'tipo_da_organizacao',
-                cp.nome as 'nome_do_programa',
-                cp.cod as 'codigo_do_programa',
-                ad.nome as 'area_detalhada',
-                ae.nome as 'area_especifica',
-                ag.nome as 'area_geral',
-                cr.nome as 'rede',
-                cnpr.nome as 'natureza_privada',
-                cnpu.nome as 'natureza_publica'
+                ri.`nome` as 'nome_do_curso',
+                ri.`inicio_funcionamento` as 'inicio_do_funcionamento',
+                m.`nome` as 'nome_do_municipio',
+                m.`latitude` as 'latitude_municipio',
+                m.`longitude` as 'longitude_municipio',
+                m.`cod` as 'codigo_municipio',
+                e.`nome` as 'nome_do_estado',
+                e.`sigla` as 'sigla_do_estado',
+                r.`nome` as 'nome_da_regiao',
+                i.`id` as 'id_instituicao',
+                i.`nome` as 'nome_da_instituicao',
+                i.`sigla` as 'sigla_da_instituicao',
+                cg.`nome` as 'grau_academico',
+                cm.`nome` as 'modalidade',
+                cn.`nome` as 'nivel',
+                o.`nome` as 'tipo_da_organizacao',
+                cp.`nome` as 'nome_do_programa',
+                cp.`cod` as 'codigo_do_programa',
+                ad.`nome` as 'area_detalhada',
+                ae.`nome` as 'area_especifica',
+                ag.`nome` as 'area_geral',
+                cr.`nome` as 'rede',
+                cnpr.`nome` as 'natureza_privada',
+                cnpu.`nome` as 'natureza_publica'
                 FROM `curso` c
+                LEFT JOIN `mantenedora` man ON man.id = c.id_mantenedora 
+                LEFT JOIN `curso_local_oferta` clo ON clo.id = c.id_local_de_oferta 
                 LEFT JOIN `registro_inep` ri ON ri.`id` = c.`id_registro_inep`
                 LEFT JOIN `cidade` m ON m.`cod` = c.`cod_municipio` 
                 LEFT JOIN `estado` e ON e.`id` = m.`id_estado`

@@ -49,6 +49,11 @@
                 }
             }
         }
+        .theater-about-footer{
+            a{
+                color: white;
+            }
+        }
         .modal-content{
             color: $foreground;
             .tabs-header{
@@ -232,10 +237,6 @@
 .marker-dialog{
     background: $background;
     box-shadow: 0px 0px 5px $foreground_50;
-}
-
-a{
-    color: white;
 }
 
 .marker-dialog{

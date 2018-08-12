@@ -14,7 +14,6 @@
     left: 0px !important;
     max-width: 100vw;
     padding: 0px !important;
-    top: 5px !important;
 }
 
 .filterbar-div.filterbar-content{
@@ -26,7 +25,9 @@
     width: 0px !important;
     display: none;
 }
-
+.filterbar-tab-headers{
+    margin-left: 61px !important;
+}
 #sidebar{
     width: 60px !important;
     .sidebar-content{
