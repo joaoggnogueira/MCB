@@ -6,13 +6,13 @@ Error: Undefined variable: "$hex5".
 11: *   BUTTON
 12: **\/
 13: 
-14: .btn-toggle-sidebar:hover{
-15:     background: $hex5;
+14: .simple-btn{
+15:     color: $hex5;
 16: }
 17: 
-18: .btn-toggle-sidebar:active{
-19:     background: $hex2;
-20: }
+18: .simple-btn:hover{
+19:     background: $hex5;
+20:     color: unset;
 
 Backtrace:
 C:\Users\Acer\Dropbox\MapaDAComputacao\styles\scss\color.scss:15
@@ -62,4 +62,4 @@ C:/Ruby24-x64/bin/sass:23:in `<main>'
 body:before {
   white-space: pre;
   font-family: monospace;
-  content: "Error: Undefined variable: \"$hex5\".\A         on line 15 of C:\Users\Acer\Dropbox\MapaDAComputacao\styles\scss\color.scss\A \A 10: /**\A 11: *   BUTTON\A 12: **/\A 13: \A 14: .btn-toggle-sidebar:hover{\A 15:     background: $hex5;\A 16: }\A 17: \A 18: .btn-toggle-sidebar:active{\A 19:     background: $hex2;\A 20: }"; }
+  content: "Error: Undefined variable: \"$hex5\".\A         on line 15 of C:\Users\Acer\Dropbox\MapaDAComputacao\styles\scss\color.scss\A \A 10: /**\A 11: *   BUTTON\A 12: **/\A 13: \A 14: .simple-btn{\A 15:     color: $hex5;\A 16: }\A 17: \A 18: .simple-btn:hover{\A 19:     background: $hex5;\A 20:     color: unset;"; }

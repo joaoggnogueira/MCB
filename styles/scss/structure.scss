@@ -60,134 +60,6 @@
     top: 0px !important;
     width: 100%;
     height: 100%;
-    .theater-content{
-        width: calc(100% - 290px);
-        height: calc(100% - 40px);
-        padding: 20px;
-        left: 250px;
-        position: absolute;
-        .theater-about{
-            width: calc(100% - 40px);
-            height: calc(100% - 40px);
-            position: absolute;
-            .max-content{
-                width: max-content;
-            }
-            .theater-about-content{
-                font-family: sans-serif;
-                font-size: 16px;
-                font-style: normal;
-                font-weight: 500;
-                text-align: justify;
-                .label-title{
-                    font-size: 23px;
-                }
-                .label-content{
-                    font-size: 16px;
-                    margin-bottom: 15px;
-                }
-                .button-theater{
-                    padding: 10px 30px;
-                    display: block;
-                    margin-top: 10px;
-                    font-weight: 700;
-                    width: 260px;
-                }
-                .button-addon-theater{
-                    position: absolute;
-                    margin-top: -35px;
-                    margin-left: 270px;
-                    height: 35px;
-                    width: 20px;
-                    padding-left: 20px;
-                }
-                .button-toggle-theater:disabled:before{
-                    font-family: FontAwesome;
-                    content: "\f105";
-                }
-                .button-toggle-theater:disabled:after{
-                    content: " SELECIONADO";
-                }
-                .button-toggle-theater:after{
-                    content: " Selecionar";
-                }
-                input{
-                    padding: 10px;
-                    text-transform: uppercase;
-                }
-                #rotulo{
-                    width: 500px;
-                    font-size:16px;
-                }
-                .badge{
-                    margin: 2px;
-                    padding: 2px 5px;
-                    border-radius: 5px;
-                    font-family: 'MontserratBold', sans-serif;
-                    display: inline-block;
-                }
-                .badge.badge-edit{
-                    font-family: 'Montserrat', sans-serif;
-                    content: "editar";
-                    font-style: italic;
-                    cursor: pointer;
-                }
-                .dataTables_wrapper {
-                    .fg-toolbar{
-                        margin-bottom: 40px;
-                    }
-                    thead{
-                        th{
-                            .DataTables_sort_wrapper{
-                                display: inline-block;
-                                margin-left: 5px;
-                            }
-                        }
-                        th::before{
-                            font-family: FontAwesome;
-                        }
-                        th.sorting_asc::before{
-                            content: "\f160";
-                        }
-                        th.sorting_desc::before{
-                            content: "\f161";
-                        }
-                    }
-                    .dataTable{
-                        width: 100% !important;
-                        tr{
-                            cursor: pointer;
-                            td{
-                                font-family:  'Montserrat', sans-serif;
-                            }
-                            td.text-center{
-                                text-align: center;
-                            }
-                        }
-
-                    }
-                    .fg-button{
-                        font-family:  'Montserrat', sans-serif;
-                    }
-                }
-            }
-            .theater-about-footer{
-                font-size: 16px;
-            }
-            .theater-about-title,
-            .theater-about-subtitle{
-                margin-bottom: 50px;
-                font-family: 'Montserrat', sans-serif;
-                font-size: 30px;
-                font-style: normal;
-                font-weight: 200;
-            }
-            .theater-about-subtitle{
-                font-size: 20px;
-                margin-bottom: 20px;
-            }
-        }
-    }
     .modal-content{
         position: absolute;
         left: calc(50% - 250px);
@@ -237,116 +109,10 @@
     }
 }
 
-#sidebar{
-    top: 0px !important;
-    left: 0px !important;
-    width: 250px;
-    height: 100%;
-    box-shadow: 0px 0px 20px black;
-    position: absolute;
-    .sidebar-content{
-        width: 250px;
-        height: 100%;
-        position: absolute;
-        .sidebar-title{
-            font-size: 25px;
-            font-family: 'MontserratThin', sans-serif;
-            widows: 100%;
-            text-align: right;
-            padding-top: 15px;
-            padding-bottom: 15px;
-            height: 45px;
-            line-height: 45px;
-            padding-right: 10px;
-        }
-        .list-buttons-sidebar{
-            padding: 0px;
-            margin: 0px;
-            position: relative;
-            width: 100%;
-            .item-list-buttons-sidebar{
-                margin-bottom: 5px;
-
-                .sidebar-button.selected::after{
-                    width: 30;
-                    height: 30;
-                    right: -14px;
-                    content: "";
-                    transform: rotate(45deg);
-                    display: block;
-                    position: absolute;
-                    margin-top: -35px;
-                    z-index: -1;
-                }
-
-                .sidebar-button{
-                    $button_height: 40px;
-
-                    width: 100%;
-                    height: $button_height;
-                    text-align: left;
-                    padding: 0px;
-                    border: 0px;
-                    .sidebar-button-icon{
-                        margin: 0px;
-                        width: 50px;
-                        height: $button_height;
-                        line-height: $button_height;
-                        position: relative;
-                        display: inline-block;
-                        text-align: center;
-                        i{
-                            width: 100%;
-                            height: 100%;
-                            line-height: $button_height;
-                            font-size: 20px;
-                        }
-                    }
-                    .sidebar-button-text{
-                        margin: 0px;
-                        font-family: 'Montserrat', sans-serif;
-                        text-align: center;
-                        display: inline-block;
-                        width: calc(100% - 50px);
-                        height: $button_height;
-                        position: absolute;
-                        line-height: $button_height;
-                        text-transform: uppercase;
-                        font-size: 16px;
-                    }
-                    .sidebar-button-text:hover{
-                        font-family: 'MontserratBold', sans-serif;
-                    }
-                }
-            }
-        }
-    }
-    .sidebar-footer {
-        height:40px;
-        width:100%;
-        position:absolute;
-        bottom:0px;
-        #random-theme-btn{
-            right: 10px;
-            position: absolute;
-        }
-    }
-}
-
 /**
 *   BUTTONS
 **/
 //mostra e esconde a berra lateral
-.btn-toggle-sidebar{ 
-    top: 10px !important;
-    left: 10px !important;
-    padding: 13.5px 10px;
-    border: none;
-    box-shadow: 0px 0px 10px black;
-    border-radius: 10px;
-    font-size: 25px;
-    text-align: center;
-}
 
 .btn-toggle-filter:not([notifyCount="0"]):not(.active):before{
     content: attr(notifyCount);
@@ -391,7 +157,7 @@ $size: 160px;
     width: 40px;
     height: 50px;
     text-align: center;
-    left: 60px !important;
+    left: 15px !important;
     cursor: pointer;
     transition: top ease-out 0.2s;
     i{
@@ -423,20 +189,18 @@ $size: 160px;
             left: 0px;
         }
         .filterbar-header{
-            width: 150px;
+            width: 120px;
             padding-left: 10px;
             padding-right: 10px;
             top: 0px;
             height: $headercontentsize;
             .title{
-
                 font-family: 'MontserratThin', sans-serif;
                 width: 100%;
                 text-align: center;
                 font-size: 24px;
                 line-height: 75px;
                 height: 75px;
-                text-align: right;
                 text-transform: uppercase;
             }
             label{
@@ -488,11 +252,14 @@ $size: 160px;
         }
         .filterbar-tab-headers{
             padding-top: 9px;
-            margin-left: 171px;
+            margin-left: 140px;
             height: 150px;
             width: 40px;
             background: #DDD;
             border-right: 1px solid #888;
+            .filterbar-tab-header:not(.selected){
+                color: #666;
+            }
             .filterbar-tab-header.selected{
                 background: white;
                 width: 40px;
@@ -525,7 +292,7 @@ $size: 160px;
         }
         .filterbar-content{
             width: calc(100% - 180px);
-            left: 170px;
+            left: 140px;
             top: 0px;
             height: 150px;
             padding: 5px;
@@ -788,7 +555,7 @@ input[type='checkbox']:checked:after{
         position: absolute;
         background-color: #fff;
         font-family: Roboto;
-        margin-left: 50px;
+        margin-left: 5px;
         font-size: 16px;
         font-weight: 300;
         padding: 0 11px 0 13px;
@@ -808,7 +575,7 @@ input[type='checkbox']:checked:after{
         z-index: 13;
         height: 20px;
         line-height: 20px;
-        margin-left: 50px;
+        margin-left: 5px;
         padding-left: 10px;
         padding-right: 10px;
     }
@@ -862,6 +629,7 @@ input[type='checkbox']:checked:after{
 }
 
 #selected-mode{
+    overflow: hidden;
     top: 70px !important;
     left: 15px !important;
     position: absolute;

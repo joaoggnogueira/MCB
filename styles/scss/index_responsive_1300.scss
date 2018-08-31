@@ -1,0 +1,14 @@
+/* 
+    Created on : 18/08/2018, 13:13:41
+    Author     : Acer
+*/
+
+.about{
+    width: calc(100% - 20px);
+    margin-left: 10px;
+    margin-right: 10px;
+    .content:not(:nth-child(2)){
+        max-width: calc(20% - 5px);
+        padding: 5px 5px;
+    }
+}

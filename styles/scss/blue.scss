@@ -15,6 +15,4 @@ $hex8: #062B68;
 $hex9: #041A3F;
 $hex30: rgba(13, 94, 228,0.5);
 
-body.blue-theme{
-    @import "color.scss";
-}
+@import "color.scss";

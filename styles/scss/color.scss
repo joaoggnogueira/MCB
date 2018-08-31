@@ -11,34 +11,6 @@
 *   BUTTON
 **/
 
-.btn-toggle-sidebar:hover{
-    background: $hex5;
-}
-
-.btn-toggle-sidebar:active{
-    background: $hex2;
-}
-
-.sidebar-button-icon{
-    background: $hex5;
-}
-
-.sidebar-button-text,.sidebar-button.selected::after{
-    background: $hex1;
-}
-
-.sidebar-button:hover{
-    .sidebar-button-icon{
-        background: $hex2;
-    }
-}
-
-.sidebar-button:active{
-    .sidebar-button-icon{
-        background: $hex7;
-    }
-}
-
 .simple-btn{
     color: $hex5;
 }
@@ -117,21 +89,6 @@ input[type="checkbox"]:hover + label,input[type="checkbox"]:focus + label{
     }
 }
 
-.theater-about-content{
-    button:not(:disabled):hover{
-        background: $hex4 !important;
-    }
-    button:not(:disabled):active{
-        background: $hex2 !important;
-    }
-    .badge.badge-edit:hover{
-        background: $hex4 !important;
-    }
-    .badge.badge-edit:active{
-        background: $hex5 !important;
-    }
-
-}
 
 .dataTables_wrapper {
     .fg-button:not(.ui-state-disabled):hover {

@@ -74,18 +74,6 @@
         }
     }
 
-    .sidebar{
-        background: $background;
-        .sidebar-title{
-            color: $gray2;
-        }
-        .sidebar-button{
-            box-shadow: -2px 0px 2px $foreground;
-        }
-        .sidebar-button.selected::after{
-            box-shadow: 0px 0px 2px $foreground;
-        }
-    }
 }
 .dataTable{ 
     th{
@@ -98,25 +86,6 @@
             }
         }
     }
-}
-.btn-toggle-sidebar{
-    background: $background_50;
-    box-shadow: 0px 0px 5px $foreground_50;
-    color: $foreground;
-}
-
-.btn-toggle-sidebar:hover{
-    color: $background;
-}
-
-.sidebar-button-icon{
-    background: $gray2;
-    color: $gray7;
-}
-
-.sidebar-button-text{
-    background: $gray6;
-    color: $gray1;
 }
 
 .simple-btn{

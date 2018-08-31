@@ -12,6 +12,11 @@ function cMapControl() {
     this.treeSelectMode = cUI.catchElement("selected-mode");
     this.configVisualBtn = cUI.catchElement("config-visualizacao");
 
+    this.inputsearchmun.hide();
+    this.inputsearchinst.hide();
+    this.treeSelectMode.hide();
+    this.selectsearch.hide();
+
     this.orange_marker = {
         url: ROOT_APP + "images/marker/spotlight-poi-dotless-orange.png",
         size: new google.maps.Size(27, 43),
@@ -40,8 +45,8 @@ function cMapControl() {
     this.visualType = 0;
     this.markerType = 0;
     this.instModeId = false;
-    this.KMLAtual = false;
     this.markerSelected = false;
+    this.atualStateMun = false;
 
     this.inputsearchinst.hide();
 
@@ -62,6 +67,18 @@ function cMapControl() {
     this.googlemap = new google.maps.Map(this.mapdiv, initialpos);
 
     var ctrl = this;
+    var initialized = false;
+    this.init = function () {
+        if (!ctrl.initialized) {
+            setTimeout(function () {
+                ctrl.inputsearchmun.toggleSlideHorizontal(400);
+                ctrl.treeSelectMode.toggleSlideHorizontal(400);
+                ctrl.selectsearch.toggleSlideHorizontal(400);
+                ctrl.initialized = true;
+                $("#splash").remove();
+            }, 1000);
+        }
+    };
 
     this.appendLeft = function (domelem) {
         if (domelem) {
@@ -97,59 +114,81 @@ function cMapControl() {
         ctrl.hideKML();
     };
     this.hideKML = function () {
-        if (ctrl.KMLAtual && ctrl.KMLAtual.setMap) {
-            ctrl.KMLAtual.setMap(null);
-            ctrl.KMLAtual = false;
-        }
+        ctrl.googlemap.data.setStyle(function (feature) {
+            return {visible: false};
+        });
     };
     this.showKML = function (id) {
-        var kmlArray = false;
-        var prefix = false;
+
         ctrl.hideKML();
+
         if (ctrl.markerType === 0) {
-            return;
+            var uf_id = ("" + id).substr(0, 2);
+            if (uf_id != ctrl.atualStateMun) {
+                if (ctrl.atualStateMun != false) {
+                    ctrl.googlemap.data.forEach(function (feature) {
+                        ctrl.googlemap.data.remove(feature);
+                    });
+                }
+                ctrl.atualStateMun = uf_id;
+                $.getJSON('./shapes/geojs-' + uf_id + '-mun.json', function (data) {
+                    ctrl.googlemap.data.addGeoJson(data);
+                    ctrl.googlemap.data.setStyle(function (feature) {
+                        var geocodigo = feature.getProperty('id');
+                        return {
+                            fillColor: "#0000FF",
+                            strokeWeight: 1.0,
+                            fillOpacity: 0.5,
+                            strokeColor: "#0000FF",
+                            strokeOpacity: 1,
+                            visible: (id == geocodigo)
+                        };
+                    });
+                });
+            } else {
+                ctrl.googlemap.data.setStyle(function (feature) {
+                    var geocodigo = feature.getProperty('id');
+                    return {
+                        fillColor: "#0000FF",
+                        strokeWeight: 1.0,
+                        fillOpacity: 0.3,
+                        strokeColor: "#0000FF",
+                        strokeOpacity: 1,
+                        visible: (id == geocodigo)
+                    };
+                });
+            }
         } else if (ctrl.markerType === 1) {
-            kmlArray = {
-                "11": "RO",
-                "12": "AC",
-                "13": "AM",
-                "14": "RR",
-                "15": "PA",
-                "16": "AP",
-                "17": "TO",
-                "21": "MA",
-                "22": "PI",
-                "23": "CE",
-                "24": "RN",
-                "25": "PB",
-                "26": "PE",
-                "27": "AL",
-                "28": "SE",
-                "29": "BA",
-                "31": "MG",
-                "32": "ES",
-                "33": "RJ",
-                "35": "SP",
-                "41": "PR",
-                "42": "SC",
-                "43": "RS",
-                "50": "MS",
-                "51": "MT",
-                "52": "GO",
-                "53": "DF"
-            };
-            prefix = "estado/";
+            this.googlemap.data.setStyle(function (feature) {
+                var geocodigo = feature.getProperty('geocodigo');
+                return {
+                    fillColor: "#0000FF",
+                    strokeWeight: 1.5,
+                    fillOpacity: 0.4,
+                    strokeColor: "#0000FF",
+                    strokeOpacity: 1,
+                    visible: (id == geocodigo)
+                };
+            });
         } else if (ctrl.markerType === 2) {
-            prefix = "regiao/v2/";
-            kmlArray = {"1": "NORTE", "2": "NORDESTE", "3": "SUDESTE", "4": "SUL", "5": "CENTRO-OESTE2"};
+            ctrl.googlemap.data.forEach(function (feature) {
+                ctrl.googlemap.data.remove(feature);
+            });
+            $.getJSON('./shapes/regiao/' + id + '.json', function (data) {
+                ctrl.googlemap.data.addGeoJson(data);
+                ctrl.googlemap.data.setStyle(function (feature) {
+                    return {
+                        fillColor: "#0000FF",
+                        strokeWeight: 2.0,
+                        fillOpacity: 0.5,
+                        strokeColor: "#0000FF",
+                        strokeOpacity: 1,
+                        visible: true
+                    };
+                });
+            });
         }
 
-        var src = "http://www2.sbc.org.br/mapas/shapes/" + prefix + kmlArray[id] + ".kml";
-        ctrl.KMLAtual = new google.maps.KmlLayer(src, {
-            suppressInfoWindows: true,
-            preserveViewport: true,
-            map: ctrl.googlemap
-        });
     };
 
     this.changeMarkerType = function (ind) {
@@ -157,13 +196,26 @@ function cMapControl() {
         ctrl.markerType = ind;
         if (ctrl.visualType === 0 && (ctrl.markerType === 1 || ctrl.markerType === 2)) {
             ctrl.visualType = 1;
-            cUI.sidebarCtrl.setSelectedVisual(1);
             window.cUserConfig.close_dialog();
         } else if ((ctrl.visualType === 1 && (ctrl.markerType === 0))) {
             ctrl.visualType = 0;
-            cUI.sidebarCtrl.setSelectedVisual(0);
             window.cUserConfig.close_dialog();
         }
+
+        ctrl.googlemap.data.forEach(function (feature) {
+            ctrl.googlemap.data.remove(feature);
+        });
+
+        if (ctrl.markerType === 1) {
+            $.getJSON('./shapes/estado/all.geojson', function (data) {
+                ctrl.googlemap.data.addGeoJson(data);
+                ctrl.googlemap.data.setStyle(function (feature) {
+                    return {visible: false};
+                });
+            });
+        }
+        ctrl.atualStateMun = false;
+
         ctrl.requestUpdate(cUI.filterCtrl.getFilters());
         ctrl.hideKML();
     };
@@ -416,7 +468,8 @@ function cMapControl() {
             ctrl.markerCluster = new MarkerClusterer(ctrl.googlemap, markers, {imagePath: 'https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/m'});
         }
         cUI.filterCtrl.enableFilters();
-        $("#splash").remove();
+
+        ctrl.init();
     };
 
     this.HabiliarModoInstituicao = function (id_inst, sigla_inst, nome_inst) {
@@ -491,14 +544,12 @@ function cMapControl() {
                 }).then((result) => {
                     if (result.value) {
                         ctrl.changeVisualType(index);
-                        cUI.sidebarCtrl.setSelectedVisual(index);
                     } else {
                         $("#visual-selected-text").val(ctrl.visualType).selectmenu("refresh");
                     }
                 });
             } else {
                 ctrl.changeVisualType(index);
-                cUI.sidebarCtrl.setSelectedVisual(index);
             }
         }
     });
@@ -506,7 +557,6 @@ function cMapControl() {
         change: function (event, ui) {
             var index = parseInt(ui.item.value);
             ctrl.changeMarkerType(index);
-            cUI.sidebarCtrl.setSelectedMarker(index);
         }
     });
     cData.listInstituicoes(function (list) {

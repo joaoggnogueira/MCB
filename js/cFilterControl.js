@@ -3,9 +3,6 @@ function cFilterControl() {
 
     this.filterbar = cUI.catchElement("filterbar");
     this.togglefilterbar = cUI.catchElement("btn-toggle-filter");
-    this.resetBtn = cUI.catchElement("reset-filter");
-    this.autoupdateCheckbox = cUI.catchElement("keep-update-filter");
-    this.autoupdateCheckbox.checked = true;
     this.visiblefilters = false;
     this.filterCheckboxes = [];
     this.counterFilters = cUI.catchElement("counter-filters");
@@ -47,8 +44,6 @@ function cFilterControl() {
                 input.disabled = value;
             }
         }
-        ctrl.autoupdateCheckbox.disabled = value;
-        ctrl.resetBtn.disabled = value;
     };
 
     this.disableFilters = function () {
@@ -60,10 +55,8 @@ function cFilterControl() {
     };
 
     this.updateRequest = function () {
-        if (ctrl.autoupdateCheckbox.checked) {
-            var filters = ctrl.getFilters();
-            cUI.mapCtrl.requestUpdate(filters);
-        }
+        var filters = ctrl.getFilters();
+        cUI.mapCtrl.requestUpdate(filters);
     };
 
     this.show = function () {
@@ -82,7 +75,7 @@ function cFilterControl() {
             ctrl.togglefilterbar.html('<i class="fa fa-filter"></i>');
             ctrl.togglefilterbar.toggleClass("active");
         }
-    }
+    };
 
     this.fadeOut = function (time) {
         ctrl.filterbar.slideUp(time);
@@ -183,8 +176,6 @@ function cFilterControl() {
     };
 
     this.togglefilterbar.click(this.toggle);
-    this.resetBtn.click(this.resetFilters);
-    this.autoupdateCheckbox.change(this.updateRequest);
     this.hide();
 
     this.filterBtnEvent = function (event, data) {

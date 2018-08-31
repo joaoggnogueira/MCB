@@ -1,0 +1,7 @@
+{
+"version": 3,
+"mappings": "AAKA,MAAM,CACF,KAAK,CAAE,iBAAiB,CACxB,WAAW,CAAE,IAAI,CACjB,YAAY,CAAE,IAAI,CAClB,kCAA2B,CACvB,SAAS,CAAE,eAAe,CAC1B,OAAO,CAAE,OAAO",
+"sources": ["scss/index_responsive_1300.scss"],
+"names": [],
+"file": "index_responsive_1300.css"
+}

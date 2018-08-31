@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+    <head>
+        <title>MCB</title>
+        <meta name="viewport" content="width=device-width">
+        <meta charset="UTF-8" />
+        <meta name="theme-color" content="#4267b2"/>
+        <meta name="Description" content="Mapa dos Cursos de Computação e Similares no Território Nacional">
+        <meta name="author" content="João G. G. Nogueira">
+        <meta name="keywords" content="Mapa, Ciência da Computação, Tecnologia da Informação, Visualização de Dados">
+
+        <link rel="manifest" href="manifest.json"/>
+        <meta name="robots" content="all">
+        <meta name="googlebot-news" content="noindex" />
+        <link rel="shortcut icon" href="images/icon/mcb-32.png"/>
+        
+        <link async href="https://fonts.googleapis.com/css?family=Roboto+Condensed:400,700" rel="stylesheet"/>
+        <link async href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet"/>
+
+        <link async rel="stylesheet" href="./styles/reset.css"/>
+        <link async rel="stylesheet" href="./styles/font.css"/>
+        <link defer rel="stylesheet" href="./styles/index_style.css"/>
+        <link async href="./styles/index_responsive_1300.css" rel="stylesheet" media="(max-width: 1300px)"/>
+        <link async href="./styles/index_responsive_800.css" rel="stylesheet" media="(max-width: 800px)"/>
+        <link async href="./styles/index_responsive_510.css" rel="stylesheet" media="(max-width: 510px)"/>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.0/jquery.min.js"></script>
+        <script async src='https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/7.24.1/sweetalert2.min.js'></script>
+        <link async rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/7.24.1/sweetalert2.min.css"/>
+    </head>
+    <body>
+        <div class="topbar">
+            <a class="title linkpage" href="#top">MCB</a>
+            <div class="linkspage"> 
+                <a class="linkpage" href="#about">Sobre</a>
+                <a class="linkpage" href="#mapas">Mapas</a>
+                <a class="linkpage" href="#artigos">Publicações</a>
+                <a class="linkpage" href="#manuais">Manuais</a>
+                <a class="linkpage" href="#apoiadores">Apoioadores</a>
+                <a class="linkpage" href="#contatos">Contatos</a>
+            </div>
+        </div>
+        <div class="cover" id="top">
+            <img class="logo-principal" alt="Logo do Projeto MCB" src="./images/mcb-mini.svg" width="200" height="100"/>
+            <div class="list-logos">
+                <a href="http://www.sbc.org.br/" target="_blank" rel="noopener"><img async class="logo" title="Logotipo da Sociedade Brasileira de Computação" src="./images/logotipos/sbc.svg"/></a>
+                <a href="http://www.fct.unesp.br/" target="_blank" rel="noopener"><img async class="logo" title="Logotipo da UNESP" src="./images/logotipos/unesp.svg"/></a>
+                <a href="#" target="_blank" rel="noopener"><img async class="logo" title="Logotipo do LAPESCA" src="./images/logotipos/lapesca.svg"/></a>
+            </div>
+        </div>
+        <div class="alert">
+            <div class="icon">
+                <i class="fa fa-exclamation-triangle"></i>
+            </div>
+            <div class="text">
+                Este projeto está em desenvolvimento e receberá atualizações constantemente.
+            </div>
+        </div>
+        <div class="about" id="about">
+            <div class="content">
+                <img async alt="imagem com demonstração da ferramenta" src="./images/index_page/about01.webp"/>
+            </div>
+            <div class="content">
+                <div class="title">
+                    Sobre o Projeto
+                </div>
+                <div class="text">
+                    Através de Técnica de Visualização de Dados em Georeferência, e do cruzamento de dados a partir do Censo (dos últimos anos) do INEP, ENADE, IBGE e outras entidades, 
+                    esta ferramenta visa apresentar a concentração das caracteristicas dos cursos de computação, e similares, no Território Nacional, sejam presenciais ou a distância, de instituições públicas ou privadas. 
+                    <br/><br/>
+                    Este trabalho surgiu a partir da iniciativa do Prof. Ronaldo Celso Messias Correia da UNESP Campus de Presidente Prudente, 
+                    membro da Comissão de Educação da SBC. 
+                    Atualmente está sob a responsabilidade da Diretoria de Educação. 
+                    <br/><br/>
+                    Para os cursos do mapa é apresentado dados como:
+                    <br/><br/>
+                    <ul>
+                        <li>Instituição de Ensino;</li>
+                        <li>Local de Oferta;</li>
+                        <li>Área de Conhecimento;</li>
+                        <li>Modalidade do Curso;</li>
+                        <li>Carga Horária;</li>
+                        <li>Ano de início;</li>
+                        <li>Grau Acadêmico;</li>
+                        <li>Mantenedora;</li>
+                        <li>Tipo de Rede (Pública ou Privada);</li>
+                        <li>Entre outros ...</li>
+                    </ul>
+                    <br/><br/>
+                </div>
+            </div>
+            <div class="content">
+                <img async alt="imagem com demonstração da ferramenta" src="./images/index_page/about03.webp"/>
+            </div>
+            <div class="content">
+                <img async alt="imagem com demonstração da ferramenta" src="./images/index_page/about04.webp"/>
+            </div>
+        </div>
+        <div class="control carrosel-system" id="mapas">
+            <div class="control-header">
+                <div class="icon">
+                    <i class="fa fa-map"></i>
+                </div>
+                <div class="control-header-content">
+                    <div class="title">
+                        Mapas
+                    </div>
+                    <div class="subtitle">
+                        Explore os aspectos dos cursos de computação no território nacional
+                    </div>
+                </div>
+            </div>
+            <div class="control-content">
+                <div class="carrosel-content">
+                    <div class="card">
+                        <img class="image" alt="Imagem do Mapa dos Cursos Superiores de Computação de 2016" async src="./images/mapas/superior.svg"/>
+                        <div class="content">
+                            <a href="./app.php" class="title">
+                                Mapa dos Cursos Superiores de Computação de 2016
+                            </a>
+                            <a href="#relatorioMapa" class="details">
+                                Detalhes
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="control carrosel-system" id="artigos">
+            <div class="control-header">
+                <div class="icon">
+                    <i class="fa fa-file"></i>
+                </div>
+                <div class="control-header-content">
+                    <div class="title">
+                        Trabalhos Relacionados
+                    </div>
+                    <div class="subtitle">
+                        Artigos e Publicações de Trabalhos recomendados e relacionados com o tema
+                    </div>
+                </div>
+            </div>
+            <div class="control-content">
+                <div class="carrosel-content">
+                    <div class="card">
+                        <img async alt="Imagem do Relatório INEP 2016" class="image" src="./images/artigos/01.png"/>
+                        <div class="content">
+                            <a href="./RelatorioComputacaoINEP2016.pdf" class="title">
+                                Relatório INEP 2016
+                            </a>
+                            <a href="#detalhesRelatorioINEP" class="details">
+                                Detalhes
+                            </a>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <img async class="image" alt="Imagem do Livro 'A Trajetória dos Cursos de Graduação da Área de Computação e Informática'" src="./images/artigos/02.png"/>
+                        <div class="content"/>
+                            <a href="./KM_C554e-20180806145356.pdf" class="title">
+                                A Trajetória dos Cursos de Graduação da Área de Computação e Informática
+                            </a>
+                            <a href="#detalhesArtigo2" class="details">
+                                Detalhes
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="control file-system" id="manuais">
+            <div class="control-header">
+                <div class="icon">
+                    <i class="fa fa-info-circle"></i>
+                </div>
+                <div class="control-header-content">
+                    <div class="title">
+                        Outros
+                    </div>
+                    <div class="subtitle">
+                        Outros documentos públicos sobre o Projeto
+                    </div>
+                </div>
+            </div>
+            <div class="control-content">
+                <details open>
+                    <summary><i class="fa fa-folder"></i> Manuais</summary>
+                    <a class="file" href="#"><i class="fa fa-file"></i> Manual de Uso dos Mapas (Em construção)</a>
+                </details>
+            </div>
+        </div>
+        <div class="control" id="apoiadores">
+            <div class="control-header">
+                <div class="icon">
+                    <i class="fa fa-slideshare"></i>
+                </div>
+                <div class="control-header-content simple">
+                    <div class="title">
+                        Apoiadores
+                    </div>
+                </div>
+            </div>
+            <div class="control list-system">
+                <div class="list-content">
+                    <ul>
+                        <li>
+                            <a href="http://www.fct.unesp.br/" target="_blank" rel="noopener"><img async width="100" height="36" class="logo" title="Logotipo da UNESP" src="./images/logotipos/unesp.svg"/></a>
+                            <div class="content">
+                                <div class="title">Unesp - Universidade Estadual de São Paulo</div>
+                                <div class="text">A Universidade do Estado de São Paulo, Júlio de Mesquita Filho, campus localizado no município de Presidente Prudente atua com regularidade nas três grandes áreas do conhecimento, oferecendo doze cursos de graduação, sete programas em nível de pós-graduação e diversos cursos de especialização (lato sensu) em diferentes áreas e participa de mais quatro programas de pós-graduação interunidades. Além do ensino, seus docentes desenvolvem pesquisas e projetos com intensa troca com a sociedade, por meio da extensão universitária. A existência de vários convênios, o trabalho dos laboratórios e a dedicação dos seus funcionários fazem desta unidade não apenas um local de agradável convívio e muito trabalho, mas também um centro de irradiação de desenvolvimento regional.</div>
+                            </div>
+                        </li>
+                        <li>
+                            <a href="http://www.sbc.org.br/" target="_blank" rel="noopener"><img async width="100" class="logo" title="Logotipo da Sociedade Brasileira de Computação" src="./images/logotipos/sbc.svg"/></a>
+                            <div class="content">
+                                <div class="title">SBC - Sociedade Brasileira de Computação</div>
+                                <div class="text">A Sociedade Brasileira de Computação – SBC é uma Sociedade Científica sem fins lucrativos, fundada em 24 de Julho de 1978, que reúne estudantes, professores, profissionais, pesquisadores e entusiastas da área de Computação e Informática de todo o Brasil. A SBC tem como função fomentar o acesso à informação e cultura por meio da informática, promover a inclusão digital, incentivar a pesquisa e o ensino em computação no Brasil, e contribuir para a formação do profissional da computação com responsabilidade social.</div>
+                            </div>
+                        </li>
+                        <li>
+                            <a href="#" target="_blank" rel="noopener"><img async class="logo" title="Logotipo do LAPESCA" width="100" src="./images/logotipos/lapesca2.svg"/></a>
+                            <div class="content">
+                                <div class="title">LAPESCA - Laboratório de Pesquisa de Computação Aplicada</div>
+                                <div class="text">Localizado no Campus da Unesp de Presidente Prudente, o Laboratório de Pesquisa de Computação Aplicada é um espaço físico gerenciado pelo professor Ronaldo Celso Messias Correia e por alunos do Curso de Bacharelado de Ciência da Computação, realizando projetos de desenvolvimento e pesquisa para a faculdade e colaboradores.</div>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="footer" id="contatos">
+            <div class="developers">
+                <div class="year">
+                    <div class="header">2018</div>
+                    <div class="card">
+                        <div class="cargo">Coordenador</div>
+                        <div class="nome">Ronaldo Celso Messias Correia</div>
+                        <div class="contato">ronaldo.correia@unesp.br</div>
+                    </div>
+                    <div class="card">
+                        <div class="cargo">Desenvolvedor</div>
+                        <div class="nome">João Gabriel Gomes Nogueira</div>
+                        <div class="contato">joaogabriel17.0@hotmail.com</div>
+                    </div>
+                </div>
+            </div>
+            <div class="credits">
+                Licensa de Terceiros
+                <br/><br/>
+                Icons made by <a target="_blank" rel="noopener" href="https://www.flaticon.com/authors/google" title="Google">Google</a> from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a> is licensed by <a target="_blank" rel="noopener" href="http://creativecommons.org/licenses/by/3.0/" title="Creative Commons BY 3.0" target="_blank">CC 3.0 BY</a>
+            </div>
+        </div>
+        <div id="detalhesArtigo2" style="display: none">
+            <img src='images/artigos/livro.webp' height="300" async alt='Capa de Livro' /><br/>
+            Livro publicado pela SBC, contento informações sobre a evolução dos cursos de computação desde 1969 até 2006.
+        </div>
+        <div id="detalhesRelatorioINEP" style="display: none">
+            <img src='images/artigos/artigo.webp' height="300" async alt='Exemplo do Conteudo do Artigo'/><br/>
+            Relatório com dados dos cursos de computação de 2001 até 2016, segundo INEP.
+        </div>
+        <div id="relatorioMapa" style="display: none">
+            Mapa com a localização de cursos superiores de Computação segundo o Censo <b>INEP 2016</b>, além dos resultados do Conceito <b>Enade</b> de 2014.
+        </div>
+        <script async src="./js/index/main.min.js"></script>
+<!--        <script async src="https://www.googletagmanager.com/gtag/js?id=UA-122930708-1"></script>
+        <script>
+          window.dataLayer = window.dataLayer || [];
+          function gtag(){dataLayer.push(arguments);}
+          gtag('js', new Date());
+          gtag('config', 'UA-122930708-1');
+        </script>-->
+
+    </body>
+</html>
