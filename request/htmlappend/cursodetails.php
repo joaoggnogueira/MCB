@@ -3,6 +3,11 @@ if (!isset($data)) {
     echo "Não é permitido acesso direto! 0x0001";
     exit();
 }
+$enade_enable = constant('ENABLE_ENADE');
+
+if($data['mapa']=="2"){
+    $enade_enable = false;
+}
 
 include_once './htmlappend/generator.php';
 $periodo_definido = $data['eh_matutino'] === '1' || $data['eh_vespertino'] === '1' || $data['eh_noturno'] === '1' || $data['eh_integral'] === '1';
@@ -57,7 +62,7 @@ $conceito_enade_campus = $data['conceito_enade_campus'];
         <div class="tab-header">
             Instituição
         </div>
-        <div class="tab-header">
+        <div class="tab-header" <?= ($enade_enable?'':'style="display: none"') ?>>
             Conceito Enade
         </div>
         <div class="tab-header" style="display: none">
@@ -75,12 +80,18 @@ $conceito_enade_campus = $data['conceito_enade_campus'];
             <div class="value"><?= utf8_encode($data['modalidade']) ?></div>
             <div class="label">Nível</div>
             <div class="value"><?= utf8_encode($data['nivel']) ?></div>
-            <div class="label">Grau Acadêmico</div>
-            <div class="value"><?= utf8_encode($data['grau_academico']) ?></div>
-            <div class="label">Total de Alunos Vinculados</div>
-            <div class="value"><?= utf8_encode($data['total_de_alunos']) ?></div>
-            <div class="label">Carga Horária</div>
-            <div class="value"><?= utf8_encode($data['carga_horaria']) ?> horas</div>
+            <?PHP if($data['grau_academico'] != "N/D"): ?>
+                <div class="label">Grau Acadêmico</div>
+                <div class="value"><?= utf8_encode($data['grau_academico']) ?></div>
+            <?PHP endif; ?>
+            <?PHP if($data['total_de_alunos'] != "N/D"): ?>
+                <div class="label">Total de Alunos Vinculados</div>
+                <div class="value"><?= utf8_encode($data['total_de_alunos']) ?></div>
+            <?PHP endif; ?>
+            <?PHP if($data['carga_horaria'] != "N/D"): ?>
+                <div class="label">Carga Horária</div>
+                <div class="value"><?= $data['carga_horaria'] ?></div>
+            <?PHP endif; ?>
 <!--        <div class="label">Periodo</div>
                 <ul>
                 <li>            
@@ -104,30 +115,48 @@ $conceito_enade_campus = $data['conceito_enade_campus'];
                     <label>Não se aplica</label>
                 </li>
             </ul>-->
-            <div class="label">Programa</div>
-            <div class="value"><?= utf8_encode($data['codigo_do_programa']) ?> - <?= utf8_encode($data['nome_do_programa']) ?></div>
-            <div class="label">Área Detalhada</div>
-            <div class="value"><?= utf8_encode($data['area_detalhada']) ?></div>
-            <div class="label">Área Específica</div>
-            <div class="value"><?= utf8_encode($data['area_especifica']) ?></div>
-            <div class="label">Área Geral</div>
-            <div class="value"><?= utf8_encode($data['area_geral']) ?></div>
+            <?PHP if($data['codigo_do_programa'] != "N/D"): ?>
+                <div class="label">Programa</div>
+                <div class="value"><?= utf8_encode($data['codigo_do_programa']) ?> - <?= utf8_encode($data['nome_do_programa']) ?></div>
+            <?PHP endif; ?>
+            <?PHP if($data['area_detalhada'] != "N/D"): ?>
+                <div class="label">Área Detalhada</div>
+                <div class="value"><?= utf8_encode($data['area_detalhada']) ?></div>
+            <?PHP endif; ?>
+            <?PHP if($data['area_especifica'] != "N/D"): ?>
+                <div class="label">Área Específica</div>
+                <div class="value"><?= utf8_encode($data['area_especifica']) ?></div>
+            <?PHP endif; ?>
+            <?PHP if($data['area_geral'] != "N/D"): ?>
+                <div class="label">Área Geral</div>
+                <div class="value"><?= utf8_encode($data['area_geral']) ?></div>
+            <?PHP endif; ?>
         </div>
         <div class="tab">
             <div class="label">Instituição</div>
             <div class="value"><?= $data['id_instituicao'] ?> - <?= utf8_encode($data['nome_da_instituicao']) ?> (<?= utf8_encode($data['sigla_da_instituicao']) ?>)</div>
-            <div class="label">Tipo da Organização</div>
-            <div class="value"><?= utf8_encode($data['tipo_da_organizacao']) ?></div>
-            <div class="label">Campus / Local de Oferta do Curso</div>
-            <div class="value"><?= utf8_encode($data['local_de_oferta']) ?></div>
-            <div class="label">Mantenedora - CNPJ</div>
-            <div class="value"><?= utf8_encode($data['mantenedora'])?> - <?= utf8_encode($data['cnpj']) ?></div>
-            <div class="label">Rede</div>
-            <div class="value"><?= utf8_encode($data['rede']) ?></div>
-            <div class="label">Natureza Pública</div>
+            <?PHP if($data['tipo_da_organizacao'] != "N/D"): ?>
+                <div class="label">Tipo da Organização</div>
+                <div class="value"><?= utf8_encode($data['tipo_da_organizacao']) ?></div>
+            <?PHP endif; ?>
+            <?PHP if(utf8_encode($data['local_de_oferta']) != "NÃO SE APLICA/INDEFINIDO"): ?>
+                <div class="label">Campus / Local de Oferta do Curso</div>
+                <div class="value"><?= utf8_encode($data['local_de_oferta']) ?></div>
+            <?PHP endif; ?>
+            <?PHP if($data['mantenedora'] != "N/D"): ?>
+                <div class="label">Mantenedora - CNPJ</div>
+                <div class="value"><?= utf8_encode($data['mantenedora']) ?></div>
+            <?PHP endif; ?>
+            <?PHP if($data['rede'] != "N/D"): ?>
+                <div class="label">Rede</div>
+                <div class="value"><?= utf8_encode($data['rede']) ?></div>
+            <?PHP endif; ?>
+            <div class="label">Natureza</div>
             <div class="value"><?= utf8_encode($data['natureza_publica']) ?></div>
-            <div class="label">Natureza Privada</div>
-            <div class="value"><?= utf8_encode($data['natureza_privada']) ?></div>
+            <?PHP if($data['natureza_privada'] != "N/D"): ?>
+                <div class="label">Natureza Jurídica</div>
+                <div class="value"><?= utf8_encode($data['natureza_privada']) ?></div>
+            <?PHP endif; ?>
             <div class="label">Múnicipio</div>
             <div class="value"><?= utf8_encode($data['codigo_municipio']) ?> - <?= utf8_encode($data['nome_do_municipio']) ?> (<?= $data['sigla_do_estado'] ?>)</div>
         </div>

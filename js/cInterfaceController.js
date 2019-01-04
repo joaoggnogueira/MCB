@@ -113,6 +113,9 @@
                     $(d).click();
                 }
             };
+            d.parentClass = function(classname){
+                return cUI.catchElement($(d).parents("."+classname)[0]);
+            };
             d.fadeIn = function(time,callback){
                 $(d).fadeIn(time, "easeInOutQuint",callback);
             };
@@ -166,6 +169,12 @@
             d.toggleClass = function (className) {
                 d.classList.toggle(className);
                 return d;
+            };
+            d.mouseOut = function(callback) {
+                d.addEventListener("mouseout",callback);
+            };
+            d.mouseIn = function(callback) {
+                d.addEventListener("mouseover",callback);
             };
             d.cInterfaceInitialized = true;
 

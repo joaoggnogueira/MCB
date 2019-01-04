@@ -14,6 +14,7 @@ if ($request->verifyPOST(["id"])) {
     $enadeModel = new EnadeModel();
     $data = $model->getCursoDetails($id);
     $data['conceito_enade_campus'] = $enadeModel->getAvaliacoesCampus($data['id_instituicao']);
+    
     if ($data) {
         ob_start();
         include './htmlappend/cursodetails.php';

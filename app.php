@@ -5,26 +5,61 @@ include_once "./controllers/DatabaseController.php";
 include './models/RelatorioModel.php';
 
 $model = new RelatorioModel();
+$mapaId = false;
+if (isset($_GET['mapa'])) {
+    $mapaId = (int) $_GET['mapa'];
+} else {
+    $mapaId = 1;
+}
 
-$listGrau = $model->listGrau();
-$listRede = $model->listRede();
-$listModalidade = $model->listModalidade();
-$listNatureza = $model->listNatureza();
+$mapaInfo = $model->getMapaInfo($mapaId);
+
+$listGrau = $model->listGrau($mapaId);
+$listRede = $model->listRede($mapaId);
+$listModalidade = $model->listModalidade($mapaId);
+$listNatureza = $model->listNatureza($mapaId);
+$listNivel = $model->listNivel($mapaId);
+$listPrograma = $model->listPrograma($mapaId);
+$listTipoOrganizacao = $model->listTipoOrganizacao($mapaId);
+
 $listNaturezaDepartamento = $model->listNaturezaDepartamento();
-$listNivel = $model->listNivel();
-$listPrograma = $model->listPrograma();
+
 $listEstado = $model->listEstado();
 $listRegiao = $model->listRegiao();
-$listTipoOrganizacao = $model->listTipoOrganizacao();
 
-$conceito_enade = array(
-    array("id" => 0, "nome" => "INDEFINIDO"),
-    array("id" => 1, "nome" => utf8_decode("1 (0.0 até 1.0)")),
-    array("id" => 2, "nome" => utf8_decode("2 (1.0 até 2.0)")),
-    array("id" => 3, "nome" => utf8_decode("3 (2.0 até 3.0)")),
-    array("id" => 4, "nome" => utf8_decode("4 (3.0 até 4.0)")),
-    array("id" => 5, "nome" => utf8_decode("5 (4.0 até 5.0)"))
-);
+if ($mapaId == 1) {
+    $avaliacao = array(
+        array("id" => 0, "nome" => "INDEFINIDO"),
+        array("id" => 1, "nome" => utf8_decode("1 (0.0 até 1.0)")),
+        array("id" => 2, "nome" => utf8_decode("2 (1.0 até 2.0)")),
+        array("id" => 3, "nome" => utf8_decode("3 (2.0 até 3.0)")),
+        array("id" => 4, "nome" => utf8_decode("4 (3.0 até 4.0)")),
+        array("id" => 5, "nome" => utf8_decode("5 (4.0 até 5.0)"))
+    );
+} else {
+    $avaliacao = array(
+        array("id" => 1, "nome" => "1"),
+        array("id" => 2, "nome" => "2"),
+        array("id" => 3, "nome" => "3"),
+        array("id" => 4, "nome" => "4"),
+        array("id" => 5, "nome" => "5"),
+        array("id" => 6, "nome" => "6"),
+        array("id" => 7, "nome" => "7"),
+        array("id" => 7, "nome" => "8"),
+        array("id" => 7, "nome" => "9"),
+        array("id" => 'A', "nome" => "A")
+    );
+}
+
+$enade_enable = constant('ENABLE_ENADE');
+
+function encode_all_strings($arr) {
+    return utf8_encode($arr);
+}
+
+if (is_array($mapaInfo)) {
+    $mapaInfo = array_map("encode_all_strings", $mapaInfo);
+}
 ?>
 <html lang="pt-BR">
     <head>
@@ -35,18 +70,21 @@ $conceito_enade = array(
         <meta name="Description" content="Mapa dos Cursos de Computação e Similares no Território Nacional">
         <meta name="author" content="João G. G. Nogueira">
         <meta name="keywords" content="Mapa, Ciência da Computação, Tecnologia da Informação, Visualização de Dados">
-        
+
         <link rel="manifest" href="manifest.json"/>
         <meta name="robots" content="all">
         <meta name="googlebot-news" content="noindex" />
         <link rel="shortcut icon" href="images/icon/mcb-32.png"/>
-        
+
         <script>
             ROOT_APP = "<?= constant('ROOT_APP'); ?>";
             window.onload_all = function () {
+                cUI.mapCtrl.setMapInfo(<?= json_encode($mapaInfo) ?>);
                 cUI.mapCtrl.requestUpdate(cUI.filterCtrl.getFilters());
-                //$("#graph-item-enade").hide();
-                //$(".filter-type[name='enade']").hide();
+<?PHP if (!$enade_enable): ?>
+                    $("#filterbar-tab-task").hide();
+                    $("#graph-item-enade").hide();
+<?PHP endif; ?>
             }
         </script>
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.0/jquery.min.js"></script>
@@ -87,6 +125,10 @@ $conceito_enade = array(
         <script async src='<?= resource_script("cGraphs.js"); ?>'></script>
     </head>
     <body id='body' class='day-theme'>
+        <div class="header-group" id="header-group">
+            <a class="button-home" href="#"><i class="fa fa-home"></i></a>
+            <div class="text"><?= $mapaInfo['title'] ?><br/><span style="font-size: 12px">Fonte: <?= $mapaInfo['fonte'] ?> <?= $mapaInfo['ano'] ?></span></div>
+        </div>
         <div id="input-group-search" class="input-group">
             <label for="pac-input" style="position: absolute"></label>
             <select autocomplete="off" name="select-search" id="select-search">
@@ -112,6 +154,7 @@ $conceito_enade = array(
                             <option value="0" selected>Com agrupamento</option>
                             <option value="1">Sem agrupamento</option>
                             <option value="2">Circulo Ponderado</option>
+                            <!--<option value="3">Escala de Cores</option>-->
                         </select>
                         <div class="next"></div>
                     </li>
@@ -144,94 +187,35 @@ $conceito_enade = array(
                     <div class="filterbar-tab-header selected" title="Sobre o curso"><i class="fa fa-book"></i></div>
                     <div class="filterbar-tab-header" title="Sobre a instituição"><i class="fa fa-university"></i></div>
                     <div class="filterbar-tab-header" title="Sobre o localização"><i class="fa fa-map"></i></div>
-                    <div class="filterbar-tab-header" title="Sobre as avaliações"><i class="fa fa-tasks"></i></div>
+                    <div class="filterbar-tab-header" id="filterbar-tab-task" title="Sobre as avaliações"><i class="fa fa-tasks"></i></div>
                 </div>
                 <div class="filterbar-div filterbar-content" id="filter-list">
                     <ul class='filter-list'>
-                        <li name="grau" class="filter-type">
-                            <?PHP
-                            resource_component(
-                                    "Filter.php", array("id" => "grau", "title" => "Grau Académico", "lista" => $listGrau)
-                            );
-                            ?>
-                        </li>
-                        <li name="modalidades" class="filter-type">
-                            <?PHP
-                            resource_component(
-                                    "Filter.php", array("id" => "modalidade", "title" => "Modalidade", "lista" => $listModalidade)
-                            );
-                            ?>
-                        </li>
-                        <li name="nivel" class="filter-type">
-                            <?PHP
-                            resource_component(
-                                    "Filter.php", array("id" => "nivel", "title" => "Nível", "lista" => $listNivel)
-                            );
-                            ?>
-                        </li>
-                        <li name="programa" class="filter-type">
-                            <?PHP
-                            resource_component(
-                                    "Filter.php", array("id" => "programa", "title" => "Programa", "lista" => $listPrograma)
-                            );
-                            ?>
-                        </li>
+                        <?PHP
+                        resource_component("Filter.php", array("li-name" => "grau", "id" => "grau", "title" => "Grau Académico", "lista" => $listGrau));
+                        resource_component("Filter.php", array("li-name" => "modalidades", "id" => "modalidade", "title" => "Modalidade", "lista" => $listModalidade));
+                        resource_component("Filter.php", array("li-name" => "nivel", "id" => "nivel", "title" => "Nível", "lista" => $listNivel));
+                        resource_component("Filter.php", array("li-name" => "programa", "id" => "programa", "title" => "Programa", "lista" => $listPrograma));
+                        ?>
                     </ul>
                     <ul class='filter-list' style="display: none">
-                        <li name="rede" class="filter-type">
-                            <?PHP
-                            resource_component(
-                                    "Filter.php", array("id" => "rede", "title" => "Rede", "lista" => $listRede)
-                            );
-                            ?>
-                        </li>
-
-                        <li name="natureza" class="filter-type">
-                            <?PHP
-                            resource_component(
-                                    "Filter.php", array("id" => "natureza", "title" => "Natureza Privada", "lista" => $listNatureza)
-                            );
-                            ?>
-                        </li>
-                        <li name="naturezadep" class="filter-type">
-                            <?PHP
-                            resource_component(
-                                    "Filter.php", array("id" => "natureza_departamento", "title" => "Natureza Pública", "lista" => $listNaturezaDepartamento)
-                            );
-                            ?>
-                        </li>
-                        <li name="tipoorganizacao" class="filter-type">
-                            <?PHP
-                            resource_component(
-                                    "Filter.php", array("id" => "tipoorganizacao", "title" => "Tipo de Organização", "lista" => $listTipoOrganizacao)
-                            );
-                            ?>
-                        </li>
+                        <?PHP
+                        resource_component("Filter.php", array("li-name" => "rede", "id" => "rede", "title" => "Rede", "lista" => $listRede));
+                        resource_component("Filter.php", array("li-name" => "natureza", "id" => "natureza", "title" => "Natureza Jurídica", "lista" => $listNatureza));
+                        resource_component("Filter.php", array("li-name" => "naturezadep", "id" => "natureza_departamento", "title" => "Natureza", "lista" => $listNaturezaDepartamento));
+                        resource_component("Filter.php", array("li-name" => "tipoorganizacao", "id" => "tipoorganizacao", "title" => "Tipo de Organização", "lista" => $listTipoOrganizacao));
+                        ?>
                     </ul>
                     <ul class='filter-list' style="display: none">
-                        <li name="estado" class="filter-type">
-                            <?PHP
-                            resource_component(
-                                    "Filter.php", array("id" => "estado", "title" => "Estado", "lista" => $listEstado)
-                            );
-                            ?>
-                        </li>
-                        <li name="regiao" class="filter-type">
-                            <?PHP
-                            resource_component(
-                                    "Filter.php", array("id" => "regiao", "title" => "Região", "lista" => $listRegiao)
-                            );
-                            ?>
-                        </li>
+                        <?PHP
+                        resource_component("Filter.php", array("li-name" => "estado", "id" => "estado", "title" => "Estado", "lista" => $listEstado));
+                        resource_component("Filter.php", array("li-name" => "regiao", "id" => "regiao", "title" => "Região", "lista" => $listRegiao));
+                        ?>
                     </ul>
                     <ul class='filter-list' style="display: none">
-                        <li name="enade" class="filter-type">
-                            <?PHP
-                            resource_component(
-                                    "Filter.php", array("id" => "enade", "title" => "Conceito Enade", "lista" => $conceito_enade)
-                            );
-                            ?>
-                        </li>
+                        <?PHP
+                        resource_component("Filter.php", array("li-name" => "enade", "id" => "enade", "title" => "Nota ".$mapaInfo['avaliacao'], "lista" => $avaliacao));
+                        ?>
                     </ul>
                 </div>
                 <div class="filterbar-div filterbar-footer">
@@ -239,13 +223,6 @@ $conceito_enade = array(
             </div>
         </div>
         <div id="map">
-            <p id="loading" style="color:white;padding-top: 90px;text-align: center">
-                <i class="fa fa-map-marker"></i> 
-                Carregando<br/><br/>
-                <i style="text-decoration: none;font-size: 30px">Google Maps</i><br/><br/>
-                Aguarde ...
-                <b class="problem"></b>
-            </p>
         </div> 
         <div id="marker-dialog" class="marker-dialog">
             <div class="header">
@@ -277,12 +254,14 @@ $conceito_enade = array(
                             <thead>
                                 <tr>
                                     <th>#</th>
-                                    <th>Nome (Inep)</th>
+                                    <th>Nome (<?= $mapaInfo['fonte'] ?>)</th>
                                     <th>Instituição</th>
                                 </tr>
                             </thead>
                         </table>
+                        <?PHP if($mapaId == 1): ?>
                         <div class="clabel tabulation f12"> (*) Cursos ofertados na modalidade a distância (EAD)</div>
+                        <?PHP endif; ?>
                     </div>
                     <div class="tab" id="graphs-tab">
                         <ul>
@@ -290,7 +269,7 @@ $conceito_enade = array(
                             resource_component("Graph.php", array("id" => "grau", "title" => "Grau Académico", "type" => "sector"));
                             resource_component("Graph.php", array("id" => "rede", "title" => "Rede", "type" => "sector"));
                             resource_component("Graph.php", array("id" => "modalidade", "title" => "Modalidade", "type" => "sector"));
-                            resource_component("Graph.php", array("id" => "enade", "title" => "Conceito Enade", "type" => "bars"));
+                            resource_component("Graph.php", array("id" => "enade", "title" => "Nota ".$mapaInfo['avaliacao'], "type" => "bars"));
                             resource_component("Graph.php", array("id" => "natureza", "title" => "Natureza Privada", "type" => "sector"));
                             resource_component("Graph.php", array("id" => "naturezadep", "title" => "Natureza Pública", "type" => "sector"));
                             resource_component("Graph.php", array("id" => "nivel", "title" => "Nível", "type" => "sector"));
@@ -309,7 +288,10 @@ $conceito_enade = array(
         </div>
         <a class="logotipo" id="logotipo_unesp"><img title="Logotipo da UNESP" width="100" height="36" src="images/logotipos/unesp-placeholder-mini.png" /></a>
         <a class="logotipo" id="logotipo_sbc"><img title="Logotipo do Sociedade Brasileira de Computação" width="30" height="36" src="images/logotipos/sbc_placeholder_mini_2.png"/></a>
-        <div id="splash"></div>
+        <div id="splash">
+            <div class="title">Carregando</div>
+            <div class="lds-ellipsis"><div></div><div></div><div></div><div></div></div>
+        </div>
         <!--        <script async src="https://www.googletagmanager.com/gtag/js?id=UA-122930708-1"></script>
         <script>
           window.dataLayer = window.dataLayer || [];

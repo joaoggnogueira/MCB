@@ -6,6 +6,7 @@ define('DATABASE_NAME',"ccomputacao");
 define('DATABASE_USER',"root");
 define('DATABASE_PASSWORD',"");
 define('VIEW_CTRL', true);
+define('ENABLE_ENADE', true);
 
 function resource($path) {
     return constant('ROOT_APP') . $path;

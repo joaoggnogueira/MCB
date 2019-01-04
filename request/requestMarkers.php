@@ -7,6 +7,7 @@ $request = new RequestController();
 
 if ($request->verifyPOST(["filters"])) {
     $filters = $request->takePOST("filters", RequestController::$PROCESS_JSON);
+    $mapa = $request->takePOST("mapa", RequestController::$PROCESS_JSON);
     
     include "../controllers/DatabaseController.php";
     include "../models/RelatorioModel.php";
@@ -15,13 +16,13 @@ if ($request->verifyPOST(["filters"])) {
     $result = false;
     switch($filters->markerType){
         case 0:
-            $result = $model->listMarkersMunicipios($filters);
+            $result = $model->listMarkersMunicipios($filters, $mapa);
             break;
         case 1:
-            $result = $model->listMarkersEstado($filters);
+            $result = $model->listMarkersEstado($filters, $mapa);
             break;
         case 2:
-            $result = $model->listMarkersRegiao($filters);
+            $result = $model->listMarkersRegiao($filters, $mapa);
             break;
     }
     if(is_array($result)){

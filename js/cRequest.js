@@ -4,7 +4,7 @@
     window.cRequest = new function () {
         
         this.postJson = function(url,json,callback){
-            $.ajax({
+            return $.ajax({
                 url: "./request/"+url,
                 type: 'POST',
                 dataType: 'json',

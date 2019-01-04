@@ -4,8 +4,6 @@ function initMap() {
     cUI.createFilters();
     cUI.createMarkerDialogCtrl();
     
-    $("#loading").remove();
-    
     cUI.mapCtrl.appendLeft(cUI.filterCtrl.togglefilterbar);
     cUI.mapCtrl.appendLeft(cUI.filterCtrl.filterbar);
     cUI.mapCtrl.appendRight(cUI.markerDialogCtrl.dialog);

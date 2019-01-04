@@ -10,12 +10,13 @@ if ($request->verifyPOST(["filters"])) {
     $cod = $request->takePOST("cod", RequestController::$PROCESS_INT);
     $markerType = $request->takePOST("markerType", RequestController::$PROCESS_INT);
     $table = $request->takePOST("table", RequestController::$PROCESS_STRING);
+    $mapa = $request->takePOST("mapa", RequestController::$PROCESS_INT);
     
     include "../controllers/DatabaseController.php";
     include "../models/RelatorioModel.php";
     
     $model = new RelatorioModel();
-    $totais = $model->totais($table, $cod, $filters, $markerType);
+    $totais = $model->totais($table, $cod, $filters, $markerType, $mapa);
     if(is_array($totais)){
         ob_start("ob_gzhandler");
         $request->responseSuccess("Sucesso ao recuperar dados", $totais);

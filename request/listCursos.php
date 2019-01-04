@@ -4,23 +4,24 @@ include "../config/config.php";
 include "../controllers/RequestController.php";
 
 $request = new RequestController();
-if ($request->verifyPOST(["id","filters"])) {
+if ($request->verifyPOST(["id", "filters"])) {
     $id = $request->takePOST("id", RequestController::$PROCESS_INT);
     $filters = $request->takePOST("filters", RequestController::$PROCESS_JSON);
-    
+    $mapa = $request->takePOST("mapa", RequestController::$PROCESS_JSON);
+
     include "../controllers/DatabaseController.php";
     include "../models/RelatorioModel.php";
     $model = new RelatorioModel();
     $result = false;
-    switch($filters->markerType){
+    switch ($filters->markerType) {
         case 0:
-            $result = $model->listCursosByMunicipio($id,$filters);
+            $result = $model->listCursosByMunicipio($id, $filters, $mapa);
             break;
         case 1:
-            $result = $model->listCursosByEstado($id,$filters);
+            $result = $model->listCursosByEstado($id, $filters, $mapa);
             break;
         case 2:
-            $result = $model->listCursosByRegiao($id,$filters);
+            $result = $model->listCursosByRegiao($id, $filters, $mapa);
             break;
     }
     if ($result) {

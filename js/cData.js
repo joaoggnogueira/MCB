@@ -3,14 +3,20 @@
 
     window.cData = new function () {
 
+
         this.saveConfiguracoes = function (rotulo, json) {
             cRequest.postJson("saveConfiguracoes.php", {rotulo: rotulo, json: JSON.stringify(json)}, function (data) {
                 swal({type: "success", title: "Relatório Salvo", html: "Use o seguinte link para compartilhar:<br/><input type='text' style='width:350px;text-align:center;' value='" + ROOT_APP + "index.php?savedconfig=" + data.data + "'/>"});
             });
         };
 
-        this.requestMarkers = function (filters, callback) {
-            cRequest.postJson("requestMarkers.php", {filters: JSON.stringify(filters)}, function (data) {
+        var request_markers = false;
+        this.requestMarkers = function (filters, mapa, callback) {
+            if (request_markers) {
+                request_markers.abort();
+            }
+            request_markers = cRequest.postJson("requestMarkers.php", {filters: JSON.stringify(filters), mapa: mapa}, function (data) {
+                request_markers = false;
                 callback(data.data);
             });
         };
@@ -27,8 +33,14 @@
             });
         };
 
-        this.listCursos = function (id, filters, callback) {
-            cRequest.postJson("listCursos.php", {id: id, filters: JSON.stringify(filters)}, function (data) {
+        var request_cursos = false;
+        this.listCursos = function (id, mapa, filters, callback) {
+            if (request_cursos) {
+                request_cursos.abort();
+            }
+            console.log(mapa);
+            request_cursos = cRequest.postJson("listCursos.php", {id: id, mapa: mapa, filters: JSON.stringify(filters)}, function (data) {
+                request_markers = false;
                 callback(data.data);
             });
         };
@@ -69,8 +81,8 @@
             });
         };
 
-        this.getTotais = function (cod, filters, markerType, table, callback) {
-            cRequest.postJson("getTotais.php", {cod: cod, filters: JSON.stringify(filters), markerType: markerType, table: table}, function (data) {
+        this.getTotais = function (cod, mapa, filters, markerType, table, callback) {
+            cRequest.postJson("getTotais.php", {cod: cod, filters: JSON.stringify(filters), markerType: markerType, table: table, mapa: mapa}, function (data) {
                 callback(data.data);
             });
         };

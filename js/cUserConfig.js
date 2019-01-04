@@ -48,10 +48,6 @@
         };
     }
 
-    function format2AD(value) {
-        return parseFloat(Math.round(value * 10) / 10).toFixed(1);
-    }
-
     window.cUserConfig = {
         save: function () {
 
@@ -109,7 +105,7 @@
             $("<br/>").appendTo(tab);
         },
         category_insert_dialog: function (id, categoria, tabheaders, tabs, onchange) {
-            $("<div/>").addClass("tab-header").html(categoria.titulo).appendTo(tabheaders);
+            $("<div/>").addClass("tab-header").attr("id", "tab-" + id).html(categoria.titulo).appendTo(tabheaders);
             var tab = $("<div/>").addClass("tab").appendTo(tabs);
             var inputs = categoria.vs;
             for (var key in inputs) {
@@ -125,7 +121,7 @@
                     });
             tab.controlgroup({"direction": "vertical"});
         },
-        content_insert_dialog: function (data, onchange) {
+        content_insert_dialog: function (data, onchange, initial_tab) {
             var notebook = $("<div/>").attr("id", "modal-dialog-config").addClass("notebook");
             $("<div/>").addClass("subtitle").html(data.subtitulo).appendTo(notebook);
             var tabheaders = $("<div/>").addClass("tabs-header").html(data.childdesc).appendTo(notebook);
@@ -141,7 +137,7 @@
                 minWidth: 400,
                 position: {my: "right-10 top+10", at: "right-10 top+10", of: window}
             });
-            cNotebookControl(cUI.catchElement(notebook[0]));
+            cNotebookControl(cUI.catchElement(notebook[0]), initial_tab);
         },
         empty_content_insert_dialog: function (data) {
             var notebook = $("<div/>").attr("id", "modal-dialog-config").addClass("notebook");
@@ -153,37 +149,57 @@
                 position: {my: "right-10 top+10", at: "right-10 top+10", of: window}
             });
         },
-        config_dialog: function (config_id, onchange) {
+        config_dialog: function (map_id, config_id, onchange, initial_tab) {
             cUserConfig.close_dialog();
-            var data = cUserConfig.data[config_id];
+            var data = cUserConfig.data[map_id][config_id];
             if (data.cs) {
-                cUserConfig.content_insert_dialog(data, onchange);
+                cUserConfig.content_insert_dialog(data, onchange, initial_tab);
             } else {
                 cUserConfig.empty_content_insert_dialog(data);
             }
             $(".ui-button.ui-corner-all.ui-widget.ui-button-icon-only.ui-dialog-titlebar-close").html("<i class='fa fa-times'></i>").css("text-indent", "0");
         },
-        data: {
-            0: r("Configuração de visualização", "Marcadores com Agrupamento"),
-            1: r("Configuração de visualização", "Marcadores sem Agrupamento"),
-            2: r("Configuração de visualização", "Circulo Ponderado", "Para o modo de: ", [
-                c("Município", {
-                    min: v("Raio mínimo", 5000, ENUM_TIPOS.numero, 100, 50000, 100, "km", 1000),
-                    fator: v("Acréscimo do raio por unidade", 500, ENUM_TIPOS.numero, 0, 1000, 10, "km", 1000),
-                    opacity: v("Opacidade", 40, ENUM_TIPOS.numero, 0, 100, 1, "%")
-                }),
-                c("Estado", {
-                    min: v("Raio mínimo", 10000, ENUM_TIPOS.numero, 100, 50000, 100, "km", 1000),
-                    fator: v("Acréscimo do raio por unidade", 100, ENUM_TIPOS.numero, 0, 1000, 10, "km", 1000),
-                    opacity: v("Opacidade", 35, ENUM_TIPOS.numero, 0, 100, 1, "%")
-                }),
-                c("Região", {
-                    min: v("Raio mínimo", 10000, ENUM_TIPOS.numero, 100, 50000, 100, "km", 1000),
-                    fator: v("Acréscimo do raio por unidade", 100, ENUM_TIPOS.numero, 0, 1000, 10, "km", 1000),
-                    opacity: v("Opacidade", 30, ENUM_TIPOS.numero, 0, 100, 1, "%")
-                })
-            ])
-
+        data: {1: {
+                0: r("Configuração de visualização", "Marcadores com Agrupamento"),
+                1: r("Configuração de visualização", "Marcadores sem Agrupamento"),
+                2: r("Configuração de visualização", "Circulo Ponderado", "Para o modo de: ", [
+                    c("Município", {
+                        min: v("Raio mínimo", 5000, ENUM_TIPOS.numero, 100, 50000, 100, "km", 1000),
+                        fator: v("Acréscimo do raio por unidade", 500, ENUM_TIPOS.numero, 0, 1000, 10, "km", 1000),
+                        opacity: v("Opacidade", 40, ENUM_TIPOS.numero, 0, 100, 1, "%")
+                    }),
+                    c("Estado", {
+                        min: v("Raio mínimo", 10000, ENUM_TIPOS.numero, 100, 50000, 100, "km", 1000),
+                        fator: v("Acréscimo do raio por unidade", 100, ENUM_TIPOS.numero, 0, 1000, 10, "km", 1000),
+                        opacity: v("Opacidade", 35, ENUM_TIPOS.numero, 0, 100, 1, "%")
+                    }),
+                    c("Região", {
+                        min: v("Raio mínimo", 10000, ENUM_TIPOS.numero, 100, 50000, 100, "km", 1000),
+                        fator: v("Acréscimo do raio por unidade", 100, ENUM_TIPOS.numero, 0, 1000, 10, "km", 1000),
+                        opacity: v("Opacidade", 30, ENUM_TIPOS.numero, 0, 100, 1, "%")
+                    })
+                ])
+            }, 2: {
+                0: r("Configuração de visualização", "Marcadores com Agrupamento"),
+                1: r("Configuração de visualização", "Marcadores sem Agrupamento"),
+                2: r("Configuração de visualização", "Circulo Ponderado", "Para o modo de: ", [
+                    c("Município", {
+                        min: v("Raio mínimo", 5000, ENUM_TIPOS.numero, 100, 50000, 100, "km", 1000),
+                        fator: v("Acréscimo do raio por unidade", 10000, ENUM_TIPOS.numero, 0, 50000, 10, "km", 1000),
+                        opacity: v("Opacidade", 40, ENUM_TIPOS.numero, 0, 100, 1, "%")
+                    }),
+                    c("Estado", {
+                        min: v("Raio mínimo", 10000, ENUM_TIPOS.numero, 100, 50000, 100, "km", 1000),
+                        fator: v("Acréscimo do raio por unidade", 10000, ENUM_TIPOS.numero, 0, 50000, 10, "km", 1000),
+                        opacity: v("Opacidade", 35, ENUM_TIPOS.numero, 0, 100, 1, "%")
+                    }),
+                    c("Região", {
+                        min: v("Raio mínimo", 10000, ENUM_TIPOS.numero, 100, 50000, 100, "km", 1000),
+                        fator: v("Acréscimo do raio por unidade", 10000, ENUM_TIPOS.numero, 0, 50000, 10, "km", 1000),
+                        opacity: v("Opacidade", 30, ENUM_TIPOS.numero, 0, 100, 1, "%")
+                    })
+                ])
+            }
         }
     };
 

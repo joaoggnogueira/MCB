@@ -11,6 +11,7 @@ function cMapControl() {
     this.closeFilterInstBtn = cUI.catchElement("close-filter-inst-btn");
     this.treeSelectMode = cUI.catchElement("selected-mode");
     this.configVisualBtn = cUI.catchElement("config-visualizacao");
+    this.headerGroup = cUI.catchElement("header-group");
 
     this.inputsearchmun.hide();
     this.inputsearchinst.hide();
@@ -37,7 +38,9 @@ function cMapControl() {
     };
     this.blue_circle = {
         strokeColor: "#1111FF",
-        fillColor: "#1111FF"
+        fillColor: "#1111FF",
+        fillOpacity: 0,
+        srokeOpacity: 0
     };
 
     this.hashMarkers = false;
@@ -47,6 +50,7 @@ function cMapControl() {
     this.instModeId = false;
     this.markerSelected = false;
     this.atualStateMun = false;
+    this.mapaInfo = false;
 
     this.inputsearchinst.hide();
 
@@ -61,22 +65,26 @@ function cMapControl() {
         disableDefaultUI: true,
         zoomControl: true,
         scaleControl: true,
-        fullscreenControl: true
+        fullscreenControl: false
     };
 
     this.googlemap = new google.maps.Map(this.mapdiv, initialpos);
 
     var ctrl = this;
     var initialized = false;
-    this.init = function () {
+
+    this.setMapInfo = function (info) {
+        console.log(info);
+        ctrl.mapInfo = info;
+    };
+
+    this.init = function () { //inicializa interface caso não inicializada
         if (!ctrl.initialized) {
-            setTimeout(function () {
-                ctrl.inputsearchmun.toggleSlideHorizontal(400);
-                ctrl.treeSelectMode.toggleSlideHorizontal(400);
-                ctrl.selectsearch.toggleSlideHorizontal(400);
-                ctrl.initialized = true;
-                $("#splash").remove();
-            }, 1000);
+            ctrl.inputsearchmun.toggleSlideHorizontal(400);
+            ctrl.treeSelectMode.toggleSlideHorizontal(400);
+            ctrl.selectsearch.toggleSlideHorizontal(400);
+            ctrl.initialized = true;
+            $("#splash").remove();
         }
     };
 
@@ -107,7 +115,10 @@ function cMapControl() {
             if (ctrl.markerSelected.setIcon) {
                 ctrl.markerSelected.setIcon(ctrl.orange_marker);
             } else {
-                ctrl.markerSelected.setOptions(ctrl.orange_circle);
+                var option = JSON.parse(JSON.stringify(ctrl.orange_circle));
+                option.fillOpacity = cUserConfig.data[ctrl.mapInfo.id][2].cs[ctrl.markerType].vs.opacity.valor / 100.0;
+                option.strokeOpacity = 0.8;
+                ctrl.markerSelected.setOptions(option);
             }
             ctrl.markerSelected = false;
         }
@@ -232,9 +243,9 @@ function cMapControl() {
         } else if (ctrl.visualType === 1) {
 
         } else if (ctrl.visualType === 2) {
-            var fator = cUserConfig.data[2].cs[ctrl.markerType].vs.fator.valor;
-            var min = cUserConfig.data[2].cs[ctrl.markerType].vs.min.valor;
-            var opacity = cUserConfig.data[2].cs[ctrl.markerType].vs.opacity.valor;
+            var fator = cUserConfig.data[ctrl.mapInfo.id][2].cs[ctrl.markerType].vs.fator.valor;
+            var min = cUserConfig.data[ctrl.mapInfo.id][2].cs[ctrl.markerType].vs.min.valor;
+            var opacity = cUserConfig.data[ctrl.mapInfo.id][2].cs[ctrl.markerType].vs.opacity.valor;
 
             for (var key in ctrl.hashMarkers) {
                 var marker = ctrl.hashMarkers[key];
@@ -260,8 +271,19 @@ function cMapControl() {
         $("#marker-selected-text").val(ctrl.markerType);
         $("#visual-selected-text").selectmenu("refresh");
         $("#marker-selected-text").selectmenu("refresh");
+        var timer;
 
-        cData.requestMarkers(filters, ctrl.setData);
+        function timer_function() {
+            if (typeof MarkerClusterer !== "undefined") {
+                clearInterval(timer);
+                var mapa = ctrl.mapInfo.id;
+                cData.requestMarkers(filters, mapa, ctrl.setData);
+            } else {
+                console.log("Aguardando MarkerClusterer ser carregado");
+            }
+        }
+
+        timer = setInterval(timer_function, 1000);
     };
 
     this.loadData = function (id) {
@@ -345,8 +367,7 @@ function cMapControl() {
         }
     };
 
-    this.setData = function (data) {
-
+    this.removeAllMarkers = function () {
         if (ctrl.markerCluster) {
             ctrl.markerCluster.clearMarkers();
             ctrl.markerCluster = null;
@@ -363,34 +384,157 @@ function cMapControl() {
         } else {
             ctrl.hashMarkers = [];
         }
+    };
 
-        const fator = cUserConfig.data[2].cs[ctrl.markerType].vs.fator.valor;
-        const min = cUserConfig.data[2].cs[ctrl.markerType].vs.min.valor;
-        const opacity = cUserConfig.data[2].cs[ctrl.markerType].vs.opacity.valor / 100.0;
+    var percentColors = [
+        {pct: 0.0, color: {r: 0xff, g: 0xff, b: 0xff}},
+        {pct: 1.0, color: {r: 0x00, g: 0x00, b: 0xff}}
+    ];
+
+    function map_recenter(latlng, offsetx, offsety) {
+        var scale = Math.pow(2, ctrl.googlemap.getZoom());
+
+        var worldCoordinateCenter = ctrl.googlemap.getProjection().fromLatLngToPoint(latlng);
+        var pixelOffset = new google.maps.Point((offsetx / scale) || 0, (offsety / scale) || 0);
+
+        var worldCoordinateNewCenter = new google.maps.Point(
+                worldCoordinateCenter.x - pixelOffset.x,
+                worldCoordinateCenter.y + pixelOffset.y
+                );
+
+        var newCenter = ctrl.googlemap.getProjection().fromPointToLatLng(worldCoordinateNewCenter);
+
+        ctrl.googlemap.panTo(newCenter);
+    }
+
+    var getColorForPercentage = function (pct) {
+        pct = Math.pow(pct, 1 / 5);
+        for (var i = 1; i < percentColors.length - 1; i++) {
+            if (pct < percentColors[i].pct) {
+                break;
+            }
+        }
+        var lower = percentColors[i - 1];
+        var upper = percentColors[i];
+        var range = upper.pct - lower.pct;
+        var rangePct = (pct - lower.pct) / range;
+        var pctLower = 1 - rangePct;
+        var pctUpper = rangePct;
+        var color = {
+            r: Math.floor(lower.color.r * pctLower + upper.color.r * pctUpper),
+            g: Math.floor(lower.color.g * pctLower + upper.color.g * pctUpper),
+            b: Math.floor(lower.color.b * pctLower + upper.color.b * pctUpper)
+        };
+        return 'rgb(' + [color.r, color.g, color.b].join(',') + ')';
+        // or output as hex if preferred
+    };
+
+    this.eventOpenMapMarkerControl = function (marker, cod_mun, name_mun, uf_mun) {
+        var position;
+        if (marker.getPosition) {
+            position = marker.getPosition();
+        } else {
+            position = marker.getCenter();
+        }
+        map_recenter(position, -(($(window).width() - 100) / 4), 0);
+        ctrl.unselectMarker();
+        ctrl.showKML(cod_mun);
+        if (marker.setIcon) {
+            marker.setIcon(ctrl.blue_marker);
+        } else {
+            marker.setOptions(ctrl.blue_circle);
+        }
+
+        ctrl.markerSelected = marker;
+        var filters = cUI.filterCtrl.getFilters();
+        if (ctrl.instModeId === false) {
+            filters.instituicao = {all: true};
+        } else {
+            filters.instituicao = [ctrl.instModeId];
+        }
+        filters.markerType = ctrl.markerType;
+        cData.listCursos(cod_mun, ctrl.mapInfo.id, filters, function (data) {
+            cUI.filterCtrl.close();
+            cUI.markerDialogCtrl.open({uf: uf_mun, cod_mun: cod_mun, name_mun: name_mun, data: data, mapInfo: ctrl.mapInfo});
+        });
+    };
+
+    this.setData = function (data) {
+        
+        if(ctrl.instModeId != false && data.length == 0){
+            swal({html:"Nenhum resultado foi encontrado"});
+            ctrl.DesabilitarModoInstituicao();
+            return;
+        }
+        
+        ctrl.removeAllMarkers();
+
+        const fator = cUserConfig.data[ctrl.mapInfo.id][2].cs[ctrl.markerType].vs.fator.valor;
+        const min = cUserConfig.data[ctrl.mapInfo.id][2].cs[ctrl.markerType].vs.min.valor;
+        const opacity = cUserConfig.data[ctrl.mapInfo.id][2].cs[ctrl.markerType].vs.opacity.valor / 100.0;
         var bounds = new google.maps.LatLngBounds();
 
         var count = -1;
-        var min_rect = {lng: 99999, lat: 99999};
-        var max_rect = {lng: -999999, lat: -999999};
-        var markers = data.map(function (mun) {
-            count++;
-            if (typeof (google) !== "undefined") {
+        if (ctrl.visualType === 3) {
+            var hashState = [];
+            var hash = [];
+            var hashMun = [];
+            var max = 0;
+            var bounds = new google.maps.LatLngBounds();
+            var total = 0;
+            data.map(function (mun) {
+                var uf_id = ("" + mun[3]).substr(0, 2);
+                if (!hashState[uf_id]) {
+                    hashState[uf_id] = uf_id;
+                    total++;
+                }
+                if (max < parseInt(mun[0])) {
+                    max = parseInt(mun[0]);
+                }
+
+                var lat = parseFloat(mun[2]);
+                var lng = parseFloat(mun[1]);
+
+                bounds.extend({lng: lng, lat: lat});
+                hash.push(mun[3] + "");
+                hashMun[mun[3]] = mun;
+                count++;
+
+            });
+
+            var ready = 0;
+            console.log(count);
+            hashState.map(function (uf_id) {
+                $.getJSON('./shapes/geojs-' + uf_id + '-mun.json', function (data) {
+                    ctrl.googlemap.data.addGeoJson(data);
+                    ready++;
+                    if (ready === total) {
+                        ctrl.googlemap.data.setStyle(function (feature) {
+                            var geocodigo = "" + feature.getProperty('id');
+                            var value = hashMun[geocodigo];
+                            if (hash.includes(geocodigo)) {
+                                return {
+                                    fillColor: getColorForPercentage(value[0] / max),
+                                    strokeWeight: 1.5,
+                                    fillOpacity: 0.75,
+                                    strokeColor: getColorForPercentage(value[0] / max),
+                                    strokeOpacity: 1,
+                                    visible: true
+                                };
+                            } else {
+                                return {visible: false};
+                            }
+                        });
+                    }
+                });
+            });
+        } else {
+            var markers = data.map(function (mun) {
+                count++;
                 var marker;
                 var lat = parseFloat(mun[2]);
                 var lng = parseFloat(mun[1]);
 
-                if (min_rect.lng > lng) {
-                    min_rect.lng = lng;
-                }
-                if (min_rect.lat > lat) {
-                    min_rect.lat = lat;
-                }
-                if (max_rect.lng < lng) {
-                    max_rect.lng = lng;
-                }
-                if (max_rect.lat < lat) {
-                    max_rect.lat = lat;
-                }
                 bounds.extend({lng: lng, lat: lat});
                 if (ctrl.visualType === 2) {
                     marker = new google.maps.Circle({
@@ -415,7 +559,7 @@ function cMapControl() {
                             fontSize: '12px',
                             x: '30',
                             y: '10'
-                        },
+                        }
                     };
                     if (ctrl.visualType === 1) {
                         marker_data.map = ctrl.googlemap;
@@ -428,41 +572,17 @@ function cMapControl() {
                 const name_mun = mun[4];
                 const uf_mun = mun[5];
                 marker.addListener('click', function (data) {
-                    ctrl.unselectMarker();
-                    ctrl.showKML(cod_mun);
-                    if (marker.setIcon) {
-                        marker.setIcon(ctrl.blue_marker);
-                    } else {
-                        marker.setOptions(ctrl.blue_circle);
-                    }
-
-                    ctrl.markerSelected = marker;
-                    var filters = cUI.filterCtrl.getFilters();
-                    if (ctrl.instModeId === false) {
-                        filters.instituicao = {all: true};
-                    } else {
-                        filters.instituicao = [ctrl.instModeId];
-                    }
-                    filters.markerType = ctrl.markerType;
-                    cData.listCursos(cod_mun, filters, function (data) {
-                        cUI.filterCtrl.close();
-                        cUI.markerDialogCtrl.open({uf: uf_mun, cod_mun: cod_mun, name_mun: name_mun, data: data});
-                    });
+                    ctrl.eventOpenMapMarkerControl(marker, cod_mun, name_mun, uf_mun);
                 });
-            }
-            return marker;
-        });
-
-        var media = {};
-        media.lng = (min_rect.lng + max_rect.lng) / 2.0;
-        media.lat = (min_rect.lat + max_rect.lat) / 2.0;
-
-        if (ctrl.googlemap.getZoom() >= 10) {
-            ctrl.googlemap.setZoom(10);
+                return marker;
+            });
         }
 
         ctrl.googlemap.fitBounds(bounds);
-        ctrl.googlemap.setCenter(media);
+        
+        if (ctrl.googlemap.getZoom() >= 10) {
+            ctrl.googlemap.setZoom(10);
+        }
 
         if (typeof (google) !== "undefined" && ctrl.visualType === 0) {
             ctrl.markerCluster = new MarkerClusterer(ctrl.googlemap, markers, {imagePath: 'https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/m'});
@@ -503,17 +623,35 @@ function cMapControl() {
     };
 
     this.ShowAtualVisualConfigDialog = function (event, data) {
-        window.cUserConfig.config_dialog(ctrl.visualType, ctrl.updateVisualType);
+        window.cUserConfig.config_dialog(ctrl.mapInfo.id, ctrl.visualType, ctrl.updateVisualType, ctrl.markerType);
     };
 
     this.ShowVisualConfigDialog = function (event, data) {
-        window.cUserConfig.config_dialog(data.ind, ctrl.updateVisualType);
+        window.cUserConfig.config_dialog(ctrl.mapInfo.id, data.ind, ctrl.updateVisualType, ctrl.markerType);
+    };
+
+    this.backToHome = function () {
+        swal({
+            text: "Deseja sair?",
+            showCancelButton: true,
+            confirmButtonColor: '#d03536',
+            cancelButtonColor: '#777777',
+            confirmButtonText: 'SAIR',
+            cancelButtonText: 'Cancelar'
+        }).then((result) => {
+            if (result.value) {
+                window.location = "./index.html";
+            }
+        });
     };
 
     this.closeFilterInstBtn.hide();
     this.selectsearch.change(this.onchangeSelectSearch);
     this.appendLeft(this.searchdiv);
     this.appendLeft(this.treeSelectMode);
+    this.appendLeft(this.headerGroup);
+    this.headerGroup.child(".button-home").click(this.backToHome);
+
     this.appendLogo(cUI.catchElement("logotipo_unesp"));
     this.appendLogo(cUI.catchElement("logotipo_sbc"));
     var options = {

@@ -35,32 +35,36 @@ class RelatorioModel {
         return $this->lastquery;
     }
 
-    public function listGrau() {
-        return $this->controller->listTable("curso_grau_academico", "nome");
+    public function getMapaInfo($id) {
+        return $this->controller->getRecord("mapa", array("id" => $id));
     }
 
-    public function listRede() {
-        return $this->controller->listTable("curso_rede", "nome");
+    public function listGrau($mapa) {
+        return $this->controller->listTable("curso_grau_academico", "nome", array("mapa" => $mapa));
     }
 
-    public function listModalidade() {
-        return $this->controller->listTable("curso_modalidade", "nome");
+    public function listRede($mapa) {
+        return $this->controller->listTable("curso_rede", "nome", array("mapa" => $mapa));
     }
 
-    public function listNatureza() {
-        return $this->controller->listTable("curso_natureza", "nome");
+    public function listModalidade($mapa) {
+        return $this->controller->listTable("curso_modalidade", "nome", array("mapa" => $mapa));
+    }
+
+    public function listNatureza($mapa) {
+        return $this->controller->listTable("curso_natureza", "nome", array("mapa" => $mapa));
     }
 
     public function listNaturezaDepartamento() {
         return $this->controller->listTable("curso_natureza_departamento", "nome");
     }
 
-    public function listNivel() {
-        return $this->controller->listTable("curso_nivel", "nome");
+    public function listNivel($mapa) {
+        return $this->controller->listTable("curso_nivel", "nome", array("mapa" => $mapa));
     }
 
-    public function listPrograma() {
-        return $this->controller->listTable("curso_programa", "nome");
+    public function listPrograma($mapa) {
+        return $this->controller->listTable("curso_programa", "nome", array("mapa" => $mapa));
     }
 
     public function listEstado() {
@@ -71,14 +75,14 @@ class RelatorioModel {
         return $this->controller->listTable("regiao", "nome");
     }
 
-    public function listTipoOrganizacao() {
-        return $this->controller->listTable("tipo_organizacao", "nome");
+    public function listTipoOrganizacao($mapa) {
+        return $this->controller->listTable("tipo_organizacao", "nome", array("mapa" => $mapa));
     }
 
     public function listInstituicoes() {
         return $this->controller->listTable("instituicao", "sigla");
     }
-
+    
     public function listConfiguracoes() {
         $query = "SELECT id,nome,json,data_hora FROM relatorio";
         $stmt = $this->controller->query($query);
@@ -140,11 +144,10 @@ class RelatorioModel {
 
     public function getCursoDetails($id) {
         $query = "SELECT 
-                man.`nome` as 'mantenedora',
-                man.`cnpj` as 'cnpj',
+                IF(man.`nome` IS NOT NULL, CONCAT(man.`nome`,' - ',man.`cnpj`), 'N/D') as 'mantenedora',
                 clo.`nome` as 'local_de_oferta',
-                c.`total_de_alunos` as 'total_de_alunos',
-                c.`carga_horaria` as 'carga_horaria',
+                IF(c.`total_de_alunos`<>0,c.`total_de_alunos`,'N/D') as 'total_de_alunos',
+                IF(c.`carga_horaria`<>0,CONCAT(c.`carga_horaria`,' horas'),'N/D') as 'carga_horaria',
                 c.`matutino` as 'eh_matutino',
                 c.`vespertino` as 'eh_vespertino',
                 c.`noturno` as 'eh_noturno',
@@ -161,18 +164,19 @@ class RelatorioModel {
                 i.`id` as 'id_instituicao',
                 i.`nome` as 'nome_da_instituicao',
                 i.`sigla` as 'sigla_da_instituicao',
-                cg.`nome` as 'grau_academico',
+                IFNULL(cg.`nome`,'N/D') as 'grau_academico',
                 cm.`nome` as 'modalidade',
                 cn.`nome` as 'nivel',
-                o.`nome` as 'tipo_da_organizacao',
-                cp.`nome` as 'nome_do_programa',
-                cp.`cod` as 'codigo_do_programa',
-                ad.`nome` as 'area_detalhada',
-                ae.`nome` as 'area_especifica',
-                ag.`nome` as 'area_geral',
-                cr.`nome` as 'rede',
-                cnpr.`nome` as 'natureza_privada',
-                cnpu.`nome` as 'natureza_publica'
+                IFNULL(o.`nome`,'N/D') as 'tipo_da_organizacao',
+                IFNULL(cp.`nome`,'N/D') as 'nome_do_programa',
+                IFNULL(cp.`cod`,'N/D') as 'codigo_do_programa',
+                IFNULL(ad.`nome`,'N/D') as 'area_detalhada',
+                IFNULL(ae.`nome`,'N/D') as 'area_especifica',
+                IFNULL(ag.`nome`,'N/D') as 'area_geral',
+                IFNULL(cr.`nome`,'N/D') as 'rede',
+                IFNULL(cnpr.`nome`,'N/D') as 'natureza_privada',
+                cnpu.`nome` as 'natureza_publica',
+                c.`mapa` as 'mapa'
                 FROM `curso` c
                 LEFT JOIN `mantenedora` man ON man.id = c.id_mantenedora 
                 LEFT JOIN `curso_local_oferta` clo ON clo.id = c.id_local_de_oferta 
@@ -209,7 +213,7 @@ class RelatorioModel {
         return $stmt->fetchAssoc();
     }
 
-    public function listCursosByMunicipio($cod_mun, $filters) {
+    public function listCursosByMunicipio($cod_mun, $filters, $mapa) {
         $query = "SELECT "
                 . "c.id as id "
                 . ",ri.nome as nome "
@@ -222,12 +226,13 @@ class RelatorioModel {
                 . "INNER JOIN registro_inep ri ON ri.id = c.id_registro_inep "
                 . "INNER JOIN instituicao i ON i.id = c.id_instituicao ";
 
-        $stmt = $this->append_filter_to_query($filters, $query, false, " c.cod_municipio = :cod_mun ", false);
+        $stmt = $this->append_filter_to_query($filters, $query, false, " c.cod_municipio = :cod_mun AND c.mapa = :mapa ", false);
         $stmt->bindString("cod_mun", $cod_mun);
+        $stmt->bindInt("mapa", $mapa);
         return $stmt->fetchAll();
     }
 
-    public function listCursosByEstado($id_estado, $filters) {
+    public function listCursosByEstado($id_estado, $filters, $mapa) {
         $query = "SELECT "
                 . "c.id as id "
                 . ",ri.nome as nome "
@@ -240,12 +245,13 @@ class RelatorioModel {
                 . "INNER JOIN registro_inep ri ON ri.id = c.id_registro_inep "
                 . "INNER JOIN instituicao i ON i.id = c.id_instituicao ";
 
-        $stmt = $this->append_filter_to_query($filters, $query, false, " m.id_estado = :id_estado ", false);
+        $stmt = $this->append_filter_to_query($filters, $query, false, " m.id_estado = :id_estado AND c.mapa = :mapa ", false);
         $stmt->bindString("id_estado", $id_estado);
+        $stmt->bindInt("mapa", $mapa);
         return $stmt->fetchAll();
     }
 
-    public function listCursosByRegiao($id_regiao, $filters) {
+    public function listCursosByRegiao($id_regiao, $filters, $mapa) {
         $query = "SELECT "
                 . "c.id as id "
                 . ",ri.nome as nome "
@@ -258,12 +264,13 @@ class RelatorioModel {
                 . "INNER JOIN registro_inep ri ON ri.id = c.id_registro_inep "
                 . "INNER JOIN instituicao i ON i.id = c.id_instituicao ";
 
-        $stmt = $this->append_filter_to_query($filters, $query, false, " e.id_regiao = :id_regiao ", false);
+        $stmt = $this->append_filter_to_query($filters, $query, false, " e.id_regiao = :id_regiao AND c.mapa = :mapa ", false);
         $stmt->bindString("id_regiao", $id_regiao);
+        $stmt->bindInt("mapa", $mapa);
         return $stmt->fetchAll();
     }
 
-    public function listMarkersMunicipios($filters) {
+    public function listMarkersMunicipios($filters, $mapa) {
 
         $query = "SELECT "
                 . "COUNT(c.cod_municipio) as total "
@@ -276,11 +283,12 @@ class RelatorioModel {
                 . "INNER JOIN cidade m ON c.cod_municipio = m.cod "
                 . "INNER JOIN estado e ON e.id = m.id_estado ";
 
-        $stmt = $this->append_filter_to_query($filters, $query, "c.cod_municipio", false, " total DESC ");
+        $stmt = $this->append_filter_to_query($filters, $query, "c.cod_municipio", " c.mapa = :mapa ", " total DESC ");
+        $stmt->bindInt("mapa", $mapa);
         return $stmt->fetchAll();
     }
 
-    public function listMarkersEstado($filters) {
+    public function listMarkersEstado($filters, $mapa) {
 
         $query = "SELECT "
                 . "COUNT(c.cod_municipio) as total "
@@ -293,11 +301,12 @@ class RelatorioModel {
                 . "INNER JOIN cidade m ON c.cod_municipio = m.cod "
                 . "INNER JOIN estado e ON e.id = m.id_estado ";
 
-        $stmt = $this->append_filter_to_query($filters, $query, "e.id", false, " total DESC ");
+        $stmt = $this->append_filter_to_query($filters, $query, "e.id", " c.mapa = :mapa ", " total DESC ");
+        $stmt->bindInt("mapa", $mapa);
         return $stmt->fetchAll();
     }
 
-    public function listMarkersRegiao($filters) {
+    public function listMarkersRegiao($filters, $mapa) {
 
         $query = "SELECT "
                 . "COUNT(c.cod_municipio) as total "
@@ -311,14 +320,20 @@ class RelatorioModel {
                 . "INNER JOIN estado e ON e.id = m.id_estado "
                 . "INNER JOIN regiao r ON r.id = e.id_regiao ";
 
-        $stmt = $this->append_filter_to_query($filters, $query, "e.id_regiao", false, " total DESC ");
+        $stmt = $this->append_filter_to_query($filters, $query, "e.id_regiao", " c.mapa = :mapa ", " total DESC ");
+        $stmt->bindInt("mapa", $mapa);
         return $stmt->fetchAll();
     }
 
-    function totais($table, $cod, $filters, $markerType) {
+    function totais($table, $cod, $filters, $markerType, $mapa) {
         $query = "";
         $group_by = "";
         $order_by = "total DESC";
+        
+        if($table == "enade" && $mapa != 1){
+            return array();
+        }
+        
         if ($table == "grau") {
             $query .= "SELECT cg.nome as nome, "
                     . "COUNT(c.id) as total "
@@ -401,16 +416,16 @@ class RelatorioModel {
         }
 
         if ($markerType == 0) {
-            $stmt = $this->append_filter_to_query($filters, $query, $group_by, "c.cod_municipio = :cod_mun ", $order_by);
+            $stmt = $this->append_filter_to_query($filters, $query, $group_by, "c.cod_municipio = :cod_mun AND c.mapa = :mapa ", $order_by);
             $stmt->bindInt("cod_mun", $cod);
         } else if ($markerType == 1) {
-            $stmt = $this->append_filter_to_query($filters, $query, $group_by, "m.id_estado = :id_estado ", $order_by);
+            $stmt = $this->append_filter_to_query($filters, $query, $group_by, "m.id_estado = :id_estado AND c.mapa = :mapa ", $order_by);
             $stmt->bindInt("id_estado", $cod);
         } else if ($markerType == 2) {
-            $stmt = $this->append_filter_to_query($filters, $query, $group_by, "e.id_regiao = :id_regiao ", $order_by);
+            $stmt = $this->append_filter_to_query($filters, $query, $group_by, "e.id_regiao = :id_regiao AND c.mapa = :mapa ", $order_by);
             $stmt->bindInt("id_regiao", $cod);
         }
-
+        $stmt->bindInt("mapa", $mapa);
         return $stmt->fetchAllAssoc();
     }
 
@@ -421,18 +436,39 @@ class RelatorioModel {
         if (isset($filters->instituicao)) {
             $query .= $this->append_filter($filters->instituicao, "c.id_instituicao", "instituicao", $first);
         }
-        $query .= $this->append_filter($filters->grau, "c.id_grau", "grau", $first);
-        $query .= $this->append_filter($filters->rede, "c.id_rede", "rede", $first);
-        $query .= $this->append_filter($filters->modalidades, "c.id_modalidade", "modalidade", $first);
-        $query .= $this->append_filter($filters->natureza, "c.id_natureza", "natureza", $first);
-        $query .= $this->append_filter($filters->naturezadep, "c.id_natureza_departamento", "naturezadep", $first);
-        $query .= $this->append_filter($filters->nivel, "c.id_nivel", "nivel", $first);
-        $query .= $this->append_filter($filters->programa, "c.id_programa", "programa", $first);
-        $query .= $this->append_filter($filters->tipoorganizacao, "c.id_tipo_organizacao", "tipoorganizacao", $first);
-        $query .= $this->append_filter($filters->regiao, "e.id_regiao", "regiao", $first);
-        $query .= $this->append_filter($filters->estado, "m.id_estado", "estado", $first);
-        $query .= $this->append_filter($filters->enade, "c.temp_faixa_enade", "enade", $first);
-
+        if (isset($filters->grau)) {
+            $query .= $this->append_filter($filters->grau, "c.id_grau", "grau", $first);
+        }
+        if (isset($filters->rede)) {
+            $query .= $this->append_filter($filters->rede, "c.id_rede", "rede", $first);
+        }
+        if (isset($filters->modalidades)) {
+            $query .= $this->append_filter($filters->modalidades, "c.id_modalidade", "modalidade", $first);
+        }
+        if (isset($filters->natureza)) {
+            $query .= $this->append_filter($filters->natureza, "c.id_natureza", "natureza", $first);
+        }
+        if (isset($filters->naturezadep)) {
+            $query .= $this->append_filter($filters->naturezadep, "c.id_natureza_departamento", "naturezadep", $first);
+        }
+        if (isset($filters->nivel)) {
+            $query .= $this->append_filter($filters->nivel, "c.id_nivel", "nivel", $first);
+        }
+        if (isset($filters->programa)) {
+            $query .= $this->append_filter($filters->programa, "c.id_programa", "programa", $first);
+        }
+        if (isset($filters->tipoorganizacao)) {
+            $query .= $this->append_filter($filters->tipoorganizacao, "c.id_tipo_organizacao", "tipoorganizacao", $first);
+        }
+        if (isset($filters->regiao)) {
+            $query .= $this->append_filter($filters->regiao, "e.id_regiao", "regiao", $first);
+        }
+        if (isset($filters->estado)) {
+            $query .= $this->append_filter($filters->estado, "m.id_estado", "estado", $first);
+        }
+        if (isset($filters->enade)) {
+            $query .= $this->append_filter($filters->enade, "c.temp_faixa_enade", "enade", $first);
+        }
         if ($adictional) {
             if ($first) {
                 $query .= " WHERE ";
@@ -449,21 +485,43 @@ class RelatorioModel {
         }
         $this->log = array($query);
         $stmt = $this->controller->query($query);
+
         if (isset($filters->instituicao)) {
             $this->bind_array_to_param($stmt, $filters->instituicao, "instituicao");
         }
-        $this->bind_array_to_param($stmt, $filters->grau, "grau");
-        $this->bind_array_to_param($stmt, $filters->rede, "rede");
-        $this->bind_array_to_param($stmt, $filters->modalidades, "modalidade");
-        $this->bind_array_to_param($stmt, $filters->natureza, "natureza");
-        $this->bind_array_to_param($stmt, $filters->naturezadep, "naturezadep");
-        $this->bind_array_to_param($stmt, $filters->nivel, "nivel");
-        $this->bind_array_to_param($stmt, $filters->programa, "programa");
-        $this->bind_array_to_param($stmt, $filters->tipoorganizacao, "tipoorganizacao");
-        $this->bind_array_to_param($stmt, $filters->regiao, "regiao");
-        $this->bind_array_to_param($stmt, $filters->estado, "estado");
-        $this->bind_array_to_param($stmt, $filters->enade, "enade");
-
+        if (isset($filters->grau)) {
+            $this->bind_array_to_param($stmt, $filters->grau, "grau");
+        }
+        if (isset($filters->rede)) {
+            $this->bind_array_to_param($stmt, $filters->rede, "rede");
+        }
+        if (isset($filters->modalidades)) {
+            $this->bind_array_to_param($stmt, $filters->modalidades, "modalidade");
+        }
+        if (isset($filters->natureza)) {
+            $this->bind_array_to_param($stmt, $filters->natureza, "natureza");
+        }
+        if (isset($filters->naturezadep)) {
+            $this->bind_array_to_param($stmt, $filters->naturezadep, "naturezadep");
+        }
+        if (isset($filters->nivel)) {
+            $this->bind_array_to_param($stmt, $filters->nivel, "nivel");
+        }
+        if (isset($filters->programa)) {
+            $this->bind_array_to_param($stmt, $filters->programa, "programa");
+        }
+        if (isset($filters->tipoorganizacao)) {
+            $this->bind_array_to_param($stmt, $filters->tipoorganizacao, "tipoorganizacao");
+        }
+        if (isset($filters->regiao)) {
+            $this->bind_array_to_param($stmt, $filters->regiao, "regiao");
+        }
+        if (isset($filters->estado)) {
+            $this->bind_array_to_param($stmt, $filters->estado, "estado");
+        }
+        if (isset($filters->enade)) {
+            $this->bind_array_to_param($stmt, $filters->enade, "enade");
+        }
 
         return $stmt;
     }

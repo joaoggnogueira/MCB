@@ -17,49 +17,9 @@
     }
 }
 
-
 .cover{
     > .logo-principal{
         width: 250px;
         margin-left: 10px;
-    }
-    > .list-logos{
-        > a > .logo{
-            height: 55px;
-        }
-    }
-    > .social{
-        right: 10px;
-    }
-}
-
-.about{
-    > .content:first-child:hover{
-        > img{
-            float: right;
-            margin-left: 10px;
-        }
-    }
-    > .content:not(:nth-child(2)):hover{
-        margin-top: 50px;
-    }
-    > .content:not(:nth-child(2)){
-        max-width: calc(15% - 5px);
-        padding: 5px;
-    }
-    > .content:nth-child(2){
-        max-width: 55%;
-    }
-    > .content:nth-child(4){
-        order: 4;
-    }
-    > .content:nth-child(3){
-        order: 3;
-    }
-    > .content:nth-child(1){
-        order: 2;
-    }
-    > .content:nth-child(2){
-        order: 1;
     }
 }

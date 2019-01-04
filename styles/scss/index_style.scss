@@ -106,7 +106,7 @@ body{
     position: relative;
 
     width: 100%;
-    height: 250px;
+    height: 170px;
 
     background-color: $gray_0;
     background-image: url(../images/cover.webp);
@@ -131,16 +131,6 @@ body{
         background-color: rgba(255,255,255,0.5);
         border-radius: 10px;
         box-shadow: 0px 0px 5px rgb(0,0,0);
-    }
-    > .list-logos{
-        position: absolute;
-        bottom: 20px;
-        left: 50px;
-
-        height: 60px;
-        > a > .logo{
-            height: 60px;
-        }
     }
 }
 
@@ -193,61 +183,29 @@ body{
 .about{
     text-align: justify;
     margin: 50px;
-    width: calc(100% - 100px);
+    width: calc(100% - 200px);
     position: relative;
-    @include display-flex();
-    align-items: center;
-    > .content:first-child{
-        padding-left: 0px !important;
+    margin-left: 100px;
+    margin-right: 100px;
+    > .title{
+        font-size: 20px;
+        color: $color_theme_7;
+        font-weight: bold;
+        margin-bottom: 10px;
+        text-align: left;
     }
-    > .content:last-child{
-        padding-right: 0px !important;
-    }
-    > .content{
-        z-index: 1;
-        overflow: hidden;
-        @include flex(2);
-        max-width: calc(20% - 20px);
-        padding: 5px 20px;
-        transition: 0.2s linear margin-top;
-        > .title{
-            font-size: 20px;
-            color: $color_theme_7;
-            font-weight: bold;
-            margin-bottom: 10px;
-            text-align: center;
-        }
-        > .text{
-            ul{
-                margin-left: 50px;
-                li{
-                    list-style: circle;
-                }
+    > .text{
+        ul{
+            margin-left: 50px;
+            li{
+                list-style: circle;
             }
         }
-        > img{
-            transition: 0.2s linear box-shadow;
-            width: 400px;
-            float: right;
-        }
     }
-    > .content:hover{
-        overflow: visible;
-        z-index: 2;
-        > img{
-            box-shadow: 0px 0px 10px rgba(0,0,0,0.5);
-            float: right;
-        }
-    }
-    > .content:first-child:hover{
-        > img{
-            float: left;
-        }
-    }
-    > .content:nth-child(2){
-        max-width: 40%;
-        padding-left: 0px;
-        background: white;
+    > img{
+        transition: 0.2s linear box-shadow;
+        width: 400px;
+        float: right;
     }
 }
 

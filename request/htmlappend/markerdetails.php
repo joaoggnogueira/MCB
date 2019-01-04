@@ -12,7 +12,7 @@ if ($markerType == 0) {
     <div class="clabel horizontal-space"></div>
     <div class="clabel label-100 f15 bold">Total de Habitantes do Município</div>
     <div class="clabel label-100 f15"><?= number_format($data['populacao'] , 0, ',', '.'); ?></div>
-    <div class="clabel label-100 f12"><i>Dados estimados IBGE/2017</i></div>
+    <div class="clabel label-100 f12"><i>Dados estimados IBGE/2018</i></div>
     <div class="clabel horizontal-space"></div>
     <div class="clabel label-100 f15 bold">Geolocalização</div>
     <div class="clabel label-100 f15">Latitude <?= $data['latitude'] ?> e Longitude <?= $data['longitude'] ?></div>

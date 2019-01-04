@@ -7,8 +7,4 @@
     width: calc(100% - 20px);
     margin-left: 10px;
     margin-right: 10px;
-    .content:not(:nth-child(2)){
-        max-width: calc(20% - 5px);
-        padding: 5px 5px;
-    }
 }

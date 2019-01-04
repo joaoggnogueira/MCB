@@ -1,6 +1,6 @@
 
 
-function cNotebookControl(notebook_elem) { //classname = notebook
+function cNotebookControl(notebook_elem, select_index = 0) { //classname = notebook
 
     notebook_elem = cUI.catchElement(notebook_elem);
 
@@ -19,9 +19,8 @@ function cNotebookControl(notebook_elem) { //classname = notebook
     for (var i = 0; i < this.tabheaderlist.length; i++) {
         this.tabheaderlist[i].click(this.tabheaderclickevent, i);
     }
-
-    this.tabheaderlist[0].classList.add("selected");
-    this.tabslist[0].classList.add("selected");
+    this.tabheaderlist[select_index].classList.add("selected");
+    this.tabslist[select_index].classList.add("selected");
 
     var ctrl = this;
 }

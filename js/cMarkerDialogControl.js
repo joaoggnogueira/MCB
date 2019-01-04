@@ -191,18 +191,21 @@ function cMarkerDialogControl() {
                 }
             });
         });
+        var mapInfo = ctrl.atual_data.mapInfo;
+
         $(".graph-content svg").remove();
+        $(".graph-content .text-one").remove();
         $(".graph-content .legenda").remove();
-        cGraph("graph-content-grau", data.cod_mun);
-        cGraph("graph-content-rede", data.cod_mun);
-        cGraph("graph-content-modalidade", data.cod_mun);
-        cGraph("graph-content-natureza", data.cod_mun);
-        cGraph("graph-content-naturezadep", data.cod_mun);
-        cGraph("graph-content-nivel", data.cod_mun);
-        cGraph("graph-content-programa", data.cod_mun);
-        cGraph("graph-content-tipoorganizacao", data.cod_mun);
-        cGraph("graph-content-enade", data.cod_mun);
-        cGraph("graph-content-estado", data.cod_mun);
+        cGraph(mapInfo, "graph-content-grau", data.cod_mun);
+        cGraph(mapInfo, "graph-content-rede", data.cod_mun);
+        cGraph(mapInfo, "graph-content-modalidade", data.cod_mun);
+        cGraph(mapInfo, "graph-content-natureza", data.cod_mun);
+        cGraph(mapInfo, "graph-content-naturezadep", data.cod_mun);
+        cGraph(mapInfo, "graph-content-nivel", data.cod_mun);
+        cGraph(mapInfo, "graph-content-programa", data.cod_mun);
+        cGraph(mapInfo, "graph-content-tipoorganizacao", data.cod_mun);
+        cGraph(mapInfo, "graph-content-enade", data.cod_mun);
+        cGraph(mapInfo, "graph-content-estado", data.cod_mun);
         ctrl.localtab.html("Carregando ...");
         cData.getMunicipioDetailsHTML(data.cod_mun,cUI.mapCtrl.markerType,function(data){
             ctrl.localtab.html(data.view);

@@ -61,6 +61,7 @@ function cFilterControl() {
 
     this.show = function () {
         if (ctrl.visiblefilters === false) {
+            $(ctrl.filterbar).css("opacity", 1);
             ctrl.visiblefilters = true;
             ctrl.filterbar.slideDown(200);
             ctrl.togglefilterbar.html('<i class="fa fa-angle-double-up"></i>');
