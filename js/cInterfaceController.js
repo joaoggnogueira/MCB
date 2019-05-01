@@ -1,4 +1,4 @@
-
+'use strict';
 //define uma interface customizada entre jquery e a aplicação    
 
 (function () {
@@ -11,11 +11,11 @@
         this.markerDialogCtrl = null;
         this.body = null;
 
-        this.createMarkerDialogCtrl = function(){
+        this.createMarkerDialogCtrl = function () {
             this.markerDialogCtrl = new cMarkerDialogControl();
         };
 
-        this.createMapCtrl = function(){
+        this.createMapCtrl = function () {
             this.mapCtrl = new cMapControl();
         };
 
@@ -32,7 +32,7 @@
             this.sidebarCtrl = new cSidebarControl();
         };
         this.catchElement = function (elem) {
-            var d;
+            let d;
 
             if (elem instanceof HTMLElement) {
                 d = elem;
@@ -47,15 +47,15 @@
             if (d.cInterfaceInitialized) {
                 return d;
             }
-            d.append = function(child){
+            d.append = function (child) {
                 $(d).append(child);
             };
-            d.removeAllClickEvents = function(){
+            d.removeAllClickEvents = function () {
                 $(d).off("click");
                 return d;
             };
             d.setStates = function (arr) {
-                var item;
+                let item;
                 if (d.id.length !== 0) {
                     item = localStorage.getItem("mcomputa_" + d.id);
                     if (item) {
@@ -74,14 +74,14 @@
                 d.atualstate = (d.atualstate + 1) % d.states.length;
                 d.classList.add(d.states[d.atualstate]);
                 if (d.id.length !== 0) {
-                    var item_key = "mcomputa_" + d.id;
+                    const item_key = "mcomputa_" + d.id;
                     localStorage.setItem(item_key, d.atualstate);
                 }
             };
             d.childlist = function (query) {
-                var querylist = $(d).find(query);
-                var list = [];
-                for(var i=0;i<querylist.length;i++){
+                const querylist = $(d).find(query);
+                const list = [];
+                for (let i = 0; i < querylist.length; i++) {
                     list.push(cUI.catchElement(querylist[i]));
                 }
                 return list;
@@ -89,57 +89,57 @@
             d.child = function (query) {
                 return cUI.catchElement($(d).find(query)[0]);
             };
-            d.change = function (callback,data) {
-                d.addEventListener("change", function(event){
-                    callback(event,data);
+            d.change = function (callback, data) {
+                d.addEventListener("change", function (event) {
+                    callback(event, data);
                 });
                 return d;
             };
-            d.disable = function(){
-                d.setAttribute("disabled","disabled");
+            d.disable = function () {
+                d.setAttribute("disabled", "disabled");
                 return d;
             };
-            d.enable = function(){
+            d.enable = function () {
                 d.removeAttribute("disabled");
                 return d;
             }
-            d.click = function (callback,data) {
-                if(callback){
-                    d.addEventListener("click", function(event){
-                        callback(event,data);
+            d.click = function (callback, data) {
+                if (callback) {
+                    d.addEventListener("click", function (event) {
+                        callback(event, data);
                     });
                     return d;
                 } else {
                     $(d).click();
                 }
             };
-            d.parentClass = function(classname){
-                return cUI.catchElement($(d).parents("."+classname)[0]);
+            d.parentClass = function (classname) {
+                return cUI.catchElement($(d).parents("." + classname)[0]);
             };
-            d.fadeIn = function(time,callback){
-                $(d).fadeIn(time, "easeInOutQuint",callback);
+            d.fadeIn = function (time, callback) {
+                $(d).fadeIn(time, "easeInOutQuint", callback);
             };
-            d.fadeOut = function(time,callback) {
-                $(d).fadeOut(time, "easeInOutQuint",callback);
+            d.fadeOut = function (time, callback) {
+                $(d).fadeOut(time, "easeInOutQuint", callback);
             };
             d.hide = function () {
-                $(d).hide();
+                d.style.display = "none";
                 return d;
             };
-            d.show = function(){
-                $(d).show();
+            d.show = function () {
+                d.style.display = "block";
                 return d;
             };
             d.html = function (html) {
-                if(html === undefined){
+                if (html === undefined) {
                     return $(d).html();
                 } else {
                     $(d).html(html);
                     return d;
                 }
             };
-            d.cText = function(text){
-                if(text === undefined){
+            d.cText = function (text) {
+                if (text === undefined) {
                     return $(d).text();
                 } else {
                     $(d).text(text);
@@ -170,11 +170,11 @@
                 d.classList.toggle(className);
                 return d;
             };
-            d.mouseOut = function(callback) {
-                d.addEventListener("mouseout",callback);
+            d.mouseOut = function (callback) {
+                d.addEventListener("mouseout", callback);
             };
-            d.mouseIn = function(callback) {
-                d.addEventListener("mouseover",callback);
+            d.mouseIn = function (callback) {
+                d.addEventListener("mouseover", callback);
             };
             d.cInterfaceInitialized = true;
 

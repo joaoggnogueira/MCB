@@ -1,0 +1,275 @@
+/* 
+    Created on : 22/02/2019, 11:50:40
+    Author     : João Nogueira
+*/
+
+#body-content{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+}
+h1.center{
+    text-align: center;
+}
+.custom-input-container{
+    margin: 24px 16px;
+    height: 32px;
+}
+.custom-select-container{
+    margin: 24px 16px;
+}
+.custom-select-container md-select-value{
+    text-transform: uppercase;
+}
+.custom-section-container{
+    margin: 24px 16px;
+}
+.custom-autocomplete-container{
+    margin: 24px 16px;
+}
+.custom-spinner-container{
+    height: 32px;
+    margin: 24px 16px;
+}
+.custom-block-container{
+    display:flex;
+    flex-direction:row;
+    align-items: center;
+    justify-content: space-between;
+}
+.custom-block-container md-input-container{
+    flex-grow: 2;
+}
+.custom-block-container md-checkbox{
+    flex-grow: 1;
+    min-width: 150px;
+}
+.custom-autocomplete-container md-autocomplete{
+    margin-top: 8px;
+}
+.custom-autocomplete-container md-autocomplete > md-autocomplete-wrap > input{
+    margin-right: 8px;
+    margin-left: 8px;
+    margin-top: 4px;
+}
+#content{
+    width: 640px;
+    height: calc(100% - 132px);
+    margin-top: 32px;
+}
+#form{
+    overflow-x: hidden;
+    height: calc(100% - 128px);
+}
+#form > section{
+    padding-bottom: 25px;
+}
+#form > section > .md-subheader{
+    margin-bottom: 50px;
+}
+#content.mobile{
+    width: 100% !important;
+    margin-top: 0px !important;
+    height: calc(100% - 32px) !important;
+}
+#content.mobile #form{
+    height: calc(100% - 80px) !important;
+}
+.footer-content{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    height: 64px;
+    border-top: 1px solid rgba(0,0,0,0.2);
+}
+.md-select-menu-container {
+}
+.md-select-menu-container .md-text{
+    padding-right: 8px;
+}
+disabled{
+    color: #BBB;
+}
+.linkdialog{
+    font-weight: bold;
+    color: #fe5790;
+}
+
+body.dark #body-content{
+    background: black;
+}
+
+body.dark md-autocomplete{
+    background: #333;
+}
+
+body.dark md-autocomplete[disabled]:not(md-floating-label){
+    background: blue;
+}
+
+body.dark md-autocomplete input{
+    color: green;
+}
+body.dark  .md-autocomplete-suggestions-container{
+    background: #222;
+}
+body.dark  .md-autocomplete-suggestions-container li{
+    color: white;
+}
+body.dark  .md-autocomplete-suggestions-container li:hover{
+    background: #111;
+}
+
+body.dark md-select-menu md-content{
+    background: #222;
+}
+
+body.dark md-select-menu md-content md-option:hover{
+    background: #111 !important;
+}
+
+body.dark md-select-menu md-content md-option[selected]{
+    background: #222629 !important;
+}
+
+body.dark md-select-menu md-content md-option{
+    color: white;
+}
+
+.card-profile{
+    display: flex;
+    flex-direction: row;
+    align-content: center;
+    line-height: 48px;
+    height: 48px;
+}
+
+.card-profile span{
+    padding: 0px 10px;
+}
+
+.card-profile-image{
+    width: 40px;
+    height: 40px;
+    background-position: center center;
+    background-size: 40px;
+    border-radius: 50%;
+    background-color: white;
+}
+
+.g-signin2 .abcRioButton {
+    width: 200px !important;
+}
+.g-signin2 span[id^=connected]:before {
+    content: 'Conectar com o Google';
+    padding-right:40px;
+}
+.g-signin2 span[id^=not_signed_]:before {
+    content: 'Conectar com o Google';
+    padding-right:40px;
+}
+
+body:not(.dark) md-input-container.md-principal-theme .md-placeholder, md-input-container.md-principal-theme label {
+    color: rgba(0,0,0,0.74) !important;
+}
+
+md-list-item .md-button{
+    width: 100%;
+    text-align: left;
+    display: flex;
+}
+
+.md-avatar{
+    background: rgba(0,0,0,0.15);
+    padding: 5px;
+}
+
+.span-text{
+    margin-top: 32px;
+    display: inline-block;
+}
+
+.span-label{
+    font-size: 13px;
+}
+.span-fieldset{
+    display: inline-block;
+    flex-grow: 1;
+    text-align: center;
+}
+.span-fieldset md-input-container{
+    height: 20px;
+    width: 20px;
+    margin: 0px;
+}
+.fieldset-container{
+    margin-top: 30px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+}
+overline{
+    text-decoration: line-through;
+}
+overline.red{
+    color: rgb(255,120,120);
+}
+
+md-checkbox[ng-readonly="true"]{
+    pointer-events: none
+}
+md-tabs > md-tabs-wrapper > md-tabs-canvas > md-pagination-wrapper > md-tab-item:not([disabled]).md-active{
+    font-size: 20px;
+    transition: 0.2s ease-out font-size;
+}
+md-tabs > md-tabs-wrapper > md-tabs-canvas > md-pagination-wrapper > md-tab-item:focus,
+md-tabs > md-tabs-wrapper > md-tabs-canvas > md-pagination-wrapper > md-tab-item:hover{
+    background: rgba(255,255,255,0.2);
+}
+md-checkbox md-label{
+    -webkit-user-select: none; /* Safari 3.1+ */
+    -moz-user-select: none; /* Firefox 2+ */
+    -ms-user-select: none; /* IE 10+ */
+    user-select: none;                
+}
+
+span.tag{
+    border-radius: 5px;
+    height: 15px;
+    line-height: 20px;
+    margin-left: 10px;
+    padding: 5px;
+    font-weight: 400;
+    font-size: 13px;
+}
+span.tag.novo{
+    background: #2290bb;
+    color: white;
+}
+span.tag.mapa{
+    background: #673ab7;
+    color: white;
+}
+span.tag.inalterado{
+    background: #CECECE;
+    color: black;
+}
+.span-list-item{
+    padding: 0px !important;
+    min-height: 70px !important;
+    height: 70px !important;
+}
+.md-card-image{
+    margin: auto;
+    margin-bottom:32px;
+    width:64px;
+    height:64px;
+}
+.rich_editor{
+    height: 200px !important;
+    margin-bottom: 16px !important;
+    border: 1px solid #DDD;
+}

@@ -1,4 +1,4 @@
-
+'use strict';
 function cMarkerDialogControl() {
 
     this.dialog = cUI.catchElement("marker-dialog");
@@ -12,7 +12,7 @@ function cMarkerDialogControl() {
     this.tabheadermun = this.dialog.child("#tabheadermun");
     this.localtab = this.dialog.child("#local-tab");
     this.atual_data = false;
-    var ctrl = this;
+    const ctrl = this;
 
     this.showTheater = function (html) {
         ctrl.theater.show();
@@ -47,7 +47,7 @@ function cMarkerDialogControl() {
             this.alert.hide();
         }
 
-        var local = data.name_mun;
+        let local = data.name_mun;
 
         if (data.uf.length === 2) {
             local += " (" + data.uf + ")";
@@ -60,23 +60,21 @@ function cMarkerDialogControl() {
             ctrl.copytable = cUI.catchElement("cursos-tab").innerHTML;
         }
 
-        var list = [];
-        for (var key in data.data) {
-            var row = data.data[key];
-            list[key] = [];
-
+        const list = data.data.map((row) => {
+            const row_saida = [];
             if (row[4] === "2") {
                 row[1] += " *";
             }
-
-            list[key][0] = row[0];
-            list[key][1] = row[1];
+            row_saida[0] = row[0];
+            row_saida[1] = row[1];
             if (row[2].length > 2) {
-                list[key][2] = row[2];
+                row_saida[2] = row[2];
             } else {
-                list[key][2] = row[3];
+                row_saida[2] = row[3];
             }
-        }
+            row_saida[3] = row[5];
+            return row_saida;
+        });
 
         ctrl.datatable = $("#table-cursos").DataTable({
             data: list,
@@ -108,36 +106,47 @@ function cMarkerDialogControl() {
             }
         });
         $('#table-cursos tbody').on('click', 'tr', function () {
-            var row = ctrl.datatable.row(this).data();
-            var id_curso = row[0];
-            cData.getCursoDetailsHTML(id_curso, function (data_enade) {
-                ctrl.showTheater(data_enade.view);
+            const row = ctrl.datatable.row(this).data();
+            const id_curso = row[0];
+            cData.getCursoDetailsHTML(id_curso, function (data) {
+                ctrl.showTheater(data.view);
+
+                const quill_adicionais = new Quill('#rich_editor', {
+                    readOnly: true,
+                    placeholder: 'Escreva aqui informações adicionais sobre o curso',
+                });
+                const a = document.createElement("div");
+                a.innerHTML = data.adicional;
+                if (data.adicional) {
+                    quill_adicionais.setContents(JSON.parse(a.textContent.replace(/\n/g, "\\n")));
+                } else {
+                    quill_adicionais.setContents({"ops": [{"attributes": {"underline": true, "color": "#bbbbbb", "italic": true}, "insert": "Sem informações"}, {"attributes": {"header": 3}, "insert": "\n"}]});
+                }
                 new cNotebookControl("details-dialog");
                 ctrl.theater.child(".btn-close").click(ctrl.closeTheater);
-
-                var inst_nome = data_enade.nome_instituicao;
-                if (data_enade.sigla_instituicao.length > 0 && data_enade.sigla_instituicao.length < 10) {
-                    inst_nome += " (" + data_enade.sigla_instituicao + ")";
+                let inst_nome = false;
+                if (data.sigla_instituicao.length > 0 && data.sigla_instituicao.length < 10) {
+                    inst_nome = (data.nome_instituicao + " (" + data.sigla_instituicao + ")").toUpperCase();
                 }
-                local = unescape(encodeURIComponent(local));
-                var notfound = $("#campus_enade > option[value='" + data_enade.cod_mun + "']").length === 0;
+                local = unescape(encodeURIComponent(local)).toUpperCase();
+                const notfound = $("#campus_enade > option[value='" + data.cod_mun + "']").length === 0;
                 if (notfound) {
-                    $("#campus_enade > .first-option").text("Não foi possível encontrar nenhuma avaliação do ENADE (para o cursos de computação) do campus " + local.toUpperCase() + " da " + inst_nome.toUpperCase() + ", porém é possível ver o resultado de outros campus cliquando aqui!");
+                    $("#campus_enade > .first-option").text("Não foi possível encontrar nenhuma avaliação do ENADE (para o cursos de computação) do campus " + local + " da " + inst_nome + ", porém é possível ver o resultado de outros campus cliquando aqui!");
                 }
+                const theater = $("#theater-details");
+                theater.find(".controlgroup_vertical").controlgroup({"direction": "vertical"});
+                theater.find(".ui-widget").css("width", "460px");
 
-                $("#theater-details .controlgroup_vertical").controlgroup({"direction": "vertical"});
-                $("#theater-details .ui-widget").css("width", "460px");
+                const area_enade_selected = function () {
 
-                var area_enade_selected = function () {
-
-                    var area = $("#area_enade").val();
-                    var campus = $("#campus_enade").val();
-                    var ano = $("#ano_enade").val();
+                    const area = $("#area_enade").val();
+                    const campus = $("#campus_enade").val();
+                    const ano = $("#ano_enade").val();
                     if (area !== null && campus !== null && ano !== null) {
-                        cData.getAvaliacaoEnade(area, campus, ano, data_enade.id_inst, function (data) {
-                            var details = $("#enade-details");
-                            for (var key in data) {
-                                var value = data[key];
+                        cData.getAvaliacaoEnade(area, campus, ano, data.id_inst, function (data) {
+                            const details = $("#enade-details");
+                            for (let key in data) {
+                                const value = data[key];
                                 details.find("span[name='" + key + "']").text(value);
                             }
                             details.show();
@@ -145,12 +154,12 @@ function cMarkerDialogControl() {
                     }
                 };
 
-                var ano_enade_selected = function () {
-                    cData.listAreaEnade(data_enade.id_inst, $("#campus_enade").val(), $("#ano_enade").val(), id_curso, function (data) {
+                const ano_enade_selected = function () {
+                    cData.listAreaEnade(data.id_inst, $("#campus_enade").val(), $("#ano_enade").val(), id_curso, function (data) {
                         $("#area_enade > option:not(.first-option)").remove();
                         $("#area_enade").removeAttr("disabled");
                         $("label[for='area_enade-button']").removeAttr("disabled");
-                        for (var i = 0; i < data.list.length; i++) {
+                        for (let i = 0; i < data.list.length; i++) {
                             $("<option/>").attr("value", data.list[i].id).text(data.list[i].nome).appendTo($("#area_enade"));
                         }
                         $("#area_enade").val(data.inducao).selectmenu("refresh");
@@ -160,8 +169,8 @@ function cMarkerDialogControl() {
                     });
                 };
 
-                var campus_enade_selected = function () {
-                    cData.listAnoEnade(data_enade.id_inst, $("#campus_enade").val(), function (data) {
+                const campus_enade_selected = function () {
+                    cData.listAnoEnade(data.id_inst, $("#campus_enade").val(), function (data) {
                         $("#ano_enade > option:not(.first-option)").remove();
                         $("#ano_enade").removeAttr("disabled");
                         $("label[for='ano_enade-button']").removeAttr("disabled");
@@ -169,7 +178,7 @@ function cMarkerDialogControl() {
                         $("#area_enade > option:not(.first-option)").remove();
                         $("label[for='area_enade-button']").attr("disabled");
                         $("#area_enade").attr("disabled", true).selectmenu("refresh");
-                        for (var i = 0; i < data.length; i++) {
+                        for (let i = 0; i < data.length; i++) {
                             $("<option/>").attr("value", data[i].ano).text(data[i].ano).appendTo($("#ano_enade"));
                         }
                         $("#ano_enade").val(data[data.length - 1].ano).selectmenu("refresh");
@@ -186,12 +195,12 @@ function cMarkerDialogControl() {
                     $("#campus_enade-menu .ui-state-disabled").hide();
                     $("#campus_enade-button").click();
                 } else {
-                    $("#campus_enade").val(data_enade.cod_mun).selectmenu("refresh");
+                    $("#campus_enade").val(data.cod_mun).selectmenu("refresh");
                     campus_enade_selected();
                 }
             });
         });
-        var mapInfo = ctrl.atual_data.mapInfo;
+        const mapInfo = ctrl.atual_data.mapInfo;
 
         $(".graph-content svg").remove();
         $(".graph-content .text-one").remove();
@@ -207,11 +216,9 @@ function cMarkerDialogControl() {
         cGraph(mapInfo, "graph-content-enade", data.cod_mun);
         cGraph(mapInfo, "graph-content-estado", data.cod_mun);
         ctrl.localtab.html("Carregando ...");
-        cData.getMunicipioDetailsHTML(data.cod_mun,cUI.mapCtrl.markerType,function(data){
+        cData.getMunicipioDetailsHTML(data.cod_mun, cUI.mapCtrl.markerType, function (data) {
             ctrl.localtab.html(data.view);
         });
-
-
     };
 
     this.close = function () {

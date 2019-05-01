@@ -4,33 +4,33 @@ if (!defined('VIEW_CTRL')) {
     exit('No direct script access allowed');
 }
 
-function encode_all_strings($arr) {
-    if(!is_array($arr)){
-       return utf8_decode($arr);
-    } else {
-        foreach($arr as $key => $value) {
-            if(!is_array($value)){
-                $arr[$key] = utf8_encode($value);
-            } else {
-                $arr[$key] = encode_all_strings($value);
-            }
-        }
-    }
-    return $arr;
-}
-
 class RequestController {
 
     public static $PROCESS_NOTHING = -1;
     public static $PROCESS_STRING = 0;
     public static $PROCESS_JSON = 1;
     public static $PROCESS_INT = 2;
-    private $errors = false;
+    private $error = false;
+    private $dataPost = false;
+    private $dataGet = false;
+    private $payload = false;
+
+    public function __construct() {
+        $this->dataGet = $_GET;
+        $this->dataPost = $_POST;
+    }
+
+    public function requestPayload() {
+        $this->payload = true;
+        $request_body = file_get_contents('php://input');
+        $this->dataGet = array();
+        $this->dataPost = (array) json_decode($request_body);
+    }
 
     public function verifyPOST($parameters) {
         $this->error = array();
         foreach ($parameters as $parameter) {
-            if (!isset($_POST[$parameter])) {
+            if (!isset($this->dataPost[$parameter])) {
                 $this->error[] = "Missing Argument POST::$parameter";
             }
         }
@@ -45,7 +45,7 @@ class RequestController {
     public function verifyGET($parameters) {
         $this->error = array();
         foreach ($parameters as $parameter) {
-            if (!isset($_GET[$parameter])) {
+            if (!isset($this->dataGet[$parameter])) {
                 $this->error[] = "Missing Argument GET::$parameter";
             }
         }
@@ -58,15 +58,16 @@ class RequestController {
     }
 
     public function takePOST($name, $process = -1) {
+
         $value = false;
         if ($process == RequestController::$PROCESS_STRING) {
-            $value = filter_input(INPUT_POST, $name, FILTER_SANITIZE_STRING);
+            $value = filter_var($this->dataPost[$name], FILTER_SANITIZE_STRING);
         } else if ($process == RequestController::$PROCESS_JSON) {
-            $value = json_decode($_POST[$name]);
+            $value = json_decode($this->dataPost[$name]);
         } else if ($process == RequestController::$PROCESS_INT) {
-            $value = (int)filter_input(INPUT_POST, $name, FILTER_SANITIZE_NUMBER_INT);
+            $value = (int) filter_var($this->dataPost[$name], FILTER_SANITIZE_NUMBER_INT);
         } else {
-            $value = $_POST[$name];
+            $value = $this->dataPost[$name];
         }
         return $value;
     }
@@ -74,11 +75,13 @@ class RequestController {
     public function takeGET($name, $process = -1) {
         $value = false;
         if ($process == RequestController::$PROCESS_STRING) {
-            $value = filter_input(INPUT_GET, $name, FILTER_SANITIZE_STRING);
+            $value = filter_var($this->dataGet[$name], $name, FILTER_SANITIZE_STRING);
         } else if ($process == RequestController::$PROCESS_JSON) {
-            $value = json_decode($_POST[$name]);
+            $value = json_decode($this->dataGet[$name]);
+        } else if ($process == RequestController::$PROCESS_INT) {
+            $value = (int) filter_var($this->dataGet[$name], FILTER_SANITIZE_NUMBER_INT);
         } else {
-            $value = $_POST[$name];
+            $value = $this->dataGet[$name];
         }
         return $value;
     }
@@ -88,13 +91,10 @@ class RequestController {
     }
 
     public function responseSuccess($message, $data = "") {
-        
         if (is_array($message)) {
             $message = json_encode($message);
         }
-        if(is_array($data)){
-            $data = array_map("encode_all_strings",$data);
-        }
+
         $packet = array("success" => true, "message" => $message, "data" => $data);
         echo json_encode($packet);
     }

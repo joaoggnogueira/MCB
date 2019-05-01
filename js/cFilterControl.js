@@ -1,4 +1,4 @@
-
+'use strict';
 function cFilterControl() {
 
     this.filterbar = cUI.catchElement("filterbar");
@@ -9,21 +9,20 @@ function cFilterControl() {
 
     this.counterFilters.hide();
 
-    var ctrl = this;
+    const ctrl = this;
 
     this.updateFiltersActived = function () {
-        var listfilters = ctrl.filterbar.childlist(".filter-type.enabled");
-        var total = listfilters.length;
-        var countertotal = ctrl.counterFilters;
-        var totaldiv = countertotal.child(".total");
-        var textdiv = countertotal.child(".text");
+        const listfilters = ctrl.filterbar.childlist(".filter-type.enabled");
+        const total = listfilters.length;
+        const countertotal = ctrl.counterFilters;
+        const totaldiv = countertotal.child(".total");
+        const textdiv = countertotal.child(".text");
 
         if (total === 0) {
             countertotal.hide();
             totaldiv.html("");
             textdiv.html("");
         } else {
-
             countertotal.show();
             totaldiv.html(total);
             if (total === 1) {
@@ -36,11 +35,11 @@ function cFilterControl() {
     };
 
     this.setFiltersDisabled = function (value) {
-        var listfilters = ctrl.filterCheckboxes;
-        for (var key in listfilters) {
-            var listinput = listfilters[key];
-            for (var keyinput in listinput) {
-                var input = listinput[keyinput];
+        const listfilters = ctrl.filterCheckboxes;
+        for (let key in listfilters) {
+            const listinput = listfilters[key];
+            for (let keyinput in listinput) {
+                const input = listinput[keyinput];
                 input.disabled = value;
             }
         }
@@ -55,7 +54,7 @@ function cFilterControl() {
     };
 
     this.updateRequest = function () {
-        var filters = ctrl.getFilters();
+        const filters = ctrl.getFilters();
         cUI.mapCtrl.requestUpdate(filters);
     };
 
@@ -104,18 +103,18 @@ function cFilterControl() {
         if (update === undefined) {
             update = true;
         }
-        var listfilters = ctrl.filterCheckboxes;
-        for (var key in listfilters) {
-            var listinput = listfilters[key];
-            for (var keyinput in listinput) {
-                var input = listinput[keyinput];
+        let listfilters = ctrl.filterCheckboxes;
+        for (let key in listfilters) {
+            const listinput = listfilters[key];
+            for (let keyinput in listinput) {
+                const input = listinput[keyinput];
                 input.checked = true;
             }
 
         }
-        var listfilters = cUI.catchElement("filter-list").childlist(".filter-type");
-        for (var key in listfilters) {
-            var selectOne = listfilters[key].child(".select-one");
+        listfilters = cUI.catchElement("filter-list").childlist(".filter-type");
+        for (let key in listfilters) {
+            const selectOne = listfilters[key].child(".select-one");
             listfilters[key].classList.remove("enabled");
             if (selectOne.checked) {
                 selectOne.checked = false;
@@ -129,14 +128,14 @@ function cFilterControl() {
     };
 
     this.getFilters = function () {
-        var data = {};
-        var listfilters = ctrl.filterCheckboxes;
-        for (var key in listfilters) {
+        const data = {};
+        const listfilters = ctrl.filterCheckboxes;
+        for (let key in listfilters) {
             data[key] = [];
-            var listinput = listfilters[key];
-            var all = true;
-            for (var keyinput in listinput) {
-                var input = listinput[keyinput];
+            const listinput = listfilters[key];
+            let all = true;
+            for (let keyinput in listinput) {
+                const input = listinput[keyinput];
                 if (input.checked) {
                     data[key].push(input.value);
                 } else {
@@ -155,11 +154,11 @@ function cFilterControl() {
     this.setFilters = function (filters) {
         ctrl.resetFilters(false);
 
-        for (var key in filters) {
+        for (let key in filters) {
             if (!filters[key].all) {
-                var list = filters[key];
-                var listcheckboxes = ctrl.filterCheckboxes[key];
-                for (var keycheckbox in listcheckboxes) {
+                const list = filters[key];
+                const listcheckboxes = ctrl.filterCheckboxes[key];
+                for (let keycheckbox in listcheckboxes) {
                     if (!list.includes(listcheckboxes[keycheckbox].value)) {
                         listcheckboxes[keycheckbox].checked = false;
                     }
@@ -180,19 +179,19 @@ function cFilterControl() {
     this.hide();
 
     this.filterBtnEvent = function (event, data) {
-        var lista = data.list;
+        const lista = data.list;
         cUI.markerDialogCtrl.close();
         if (data.selectOne.checked) {
-            for (var i = 0; i < lista.length; i++) {
+            for (let i = 0; i < lista.length; i++) {
                 lista[i].checked = false;
             }
             data.source.checked = true;
             ctrl.updateRequest();
         } else {
-            var found = false;
-            var all = true;
-            for (var i = 0; i < lista.length; i++) {
-                var input = lista[i];
+            let found = false;
+            let all = true;
+            for (let i = 0; i < lista.length; i++) {
+                const input = lista[i];
                 if (input.checked) {
                     found = true;
                 } else {
@@ -216,9 +215,9 @@ function cFilterControl() {
     };
 
     this.selectAllBtnEvent = function (event, data) {
-        var list = data.list;
+        const list = data.list;
         cUI.markerDialogCtrl.close();
-        for (var keyinput in list) {
+        for (let keyinput in list) {
             list[keyinput].checked = true;
         }
         if (data.selectOne.checked) {
@@ -231,14 +230,14 @@ function cFilterControl() {
     };
 
     this.selectOneBtnEvent = function (event, data) {
-        var btn = data.btn;
-        var list = data.list;
+        const btn = data.btn;
+        const list = data.list;
         cUI.markerDialogCtrl.close();
         if (!data.selectOne.checked) {
 
-            var total = 0;
+            let total = 0;
 
-            for (var keyinput in list) {
+            for (let keyinput in list) {
                 if (list[keyinput].checked) {
                     total++;
                 }
@@ -255,10 +254,10 @@ function cFilterControl() {
     };
 
     this.toWindowBtnEvent = function (event, data) {
-        var filtertype = data.filtertype;
-        var body = filtertype.child(".body");
-        var placeholder = $("<a/>").addClass("placeholder").html("Restaurar");
-        var onclose = function (event, ui) {
+        const filtertype = data.filtertype;
+        const body = filtertype.child(".body");
+        const placeholder = $("<a/>").addClass("placeholder").html("Restaurar");
+        const onclose = function (event, ui) {
             placeholder.remove();
             $(body).dialog("destroy");
             filtertype.append(body);
@@ -280,42 +279,40 @@ function cFilterControl() {
         placeholder.click(onclose).appendTo(filtertype);
     };
 
-    var listfilters = cUI.catchElement("filter-list").childlist(".filter-type");
+    const listfilters = cUI.catchElement("filter-list").childlist(".filter-type");
 
-    for (var key in listfilters) {
-        var value = listfilters[key].getAttribute("name");
-        var selectAll = listfilters[key].child(".select-all");
-        var selectOne = listfilters[key].child(".select-one");
-        var towindowbtn = listfilters[key].child(".to-window-btn.fa-window-maximize");
+    listfilters.forEach((list) => {
+        const value = list.getAttribute("name");
+        const selectAll = list.child(".select-all");
+        const selectOne = list.child(".select-one");
+        const towindowbtn = list.child(".to-window-btn.fa-window-maximize");
 
-        towindowbtn.click(this.toWindowBtnEvent, {filtertype: listfilters[key]});
+        towindowbtn.click(this.toWindowBtnEvent, {filtertype: list});
 
         selectOne.checked = false;
-        var listinput = listfilters[key].childlist("input");
+        const listinput = list.childlist("input");
         this.filterCheckboxes[value] = listinput;
-        selectAll.click(this.selectAllBtnEvent, {list: listinput, selectOne: selectOne, filtertype: listfilters[key]});
-        selectOne.click(this.selectOneBtnEvent, {list: listinput, btn: selectOne, selectOne: selectOne, filtertype: listfilters[key]});
-        for (var keyinput in listinput) {
-            var input = listinput[keyinput];
-            input.click(this.filterBtnEvent, {source: input, selectOne: selectOne, filtertype: listfilters[key], list: listinput});
-        }
-    }
+        selectAll.click(this.selectAllBtnEvent, {list: listinput, selectOne: selectOne, filtertype: list});
+        selectOne.click(this.selectOneBtnEvent, {list: listinput, btn: selectOne, selectOne: selectOne, filtertype: list});
+        listinput.forEach((input) => {
+            input.click(this.filterBtnEvent, {source: input, selectOne: selectOne, filtertype: list, list: listinput});
+        });
+    });
 
-    var listtabs = this.filterbar.childlist(".filterbar-tab-header");
-    var listfilterlists = this.filterbar.childlist(".filter-list");
+    const listtabs = this.filterbar.childlist(".filterbar-tab-header");
+    const listfilterlists = this.filterbar.childlist(".filter-list");
 
     function selectTab(event, data) {
-        for (var i = 0; i < listtabs.length; i++) {
+        for (let i = 0; i < listtabs.length; i++) {
             listtabs[i].classList.remove("selected");
             listfilterlists[i].hide();
         }
         listtabs[data.index].classList.add("selected");
         listfilterlists[data.index].show();
     }
-
-    for (var i = 0; i < listtabs.length; i++) {
-        listtabs[i].click(selectTab, {index: i});
-    }
+    listtabs.forEach((tab, i) => {
+        tab.click(selectTab, {index: i});
+    });
 
     $(".filter-list").sortable({
         items: "> li",

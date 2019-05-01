@@ -1,4 +1,4 @@
-
+'use strict';
 /* global google */
 
 function cMapControl() {
@@ -58,7 +58,7 @@ function cMapControl() {
         return this.visualType;
     };
 
-    var initialpos = {
+    const initialpos = {
         zoom: 4,
         center: {lat: -13.9731974397433545, lng: -51.92527999999999},
         mapTypeId: google.maps.MapTypeId.ROADMAP,
@@ -70,8 +70,8 @@ function cMapControl() {
 
     this.googlemap = new google.maps.Map(this.mapdiv, initialpos);
 
-    var ctrl = this;
-    var initialized = false;
+    const ctrl = this;
+    const initialized = false;
 
     this.setMapInfo = function (info) {
         console.log(info);
@@ -115,7 +115,7 @@ function cMapControl() {
             if (ctrl.markerSelected.setIcon) {
                 ctrl.markerSelected.setIcon(ctrl.orange_marker);
             } else {
-                var option = JSON.parse(JSON.stringify(ctrl.orange_circle));
+                const option = JSON.parse(JSON.stringify(ctrl.orange_circle));
                 option.fillOpacity = cUserConfig.data[ctrl.mapInfo.id][2].cs[ctrl.markerType].vs.opacity.valor / 100.0;
                 option.strokeOpacity = 0.8;
                 ctrl.markerSelected.setOptions(option);
@@ -134,7 +134,7 @@ function cMapControl() {
         ctrl.hideKML();
 
         if (ctrl.markerType === 0) {
-            var uf_id = ("" + id).substr(0, 2);
+            const uf_id = ("" + id).substr(0, 2);
             if (uf_id != ctrl.atualStateMun) {
                 if (ctrl.atualStateMun != false) {
                     ctrl.googlemap.data.forEach(function (feature) {
@@ -145,7 +145,7 @@ function cMapControl() {
                 $.getJSON('./shapes/geojs-' + uf_id + '-mun.json', function (data) {
                     ctrl.googlemap.data.addGeoJson(data);
                     ctrl.googlemap.data.setStyle(function (feature) {
-                        var geocodigo = feature.getProperty('id');
+                        const geocodigo = feature.getProperty('id');
                         return {
                             fillColor: "#0000FF",
                             strokeWeight: 1.0,
@@ -158,7 +158,7 @@ function cMapControl() {
                 });
             } else {
                 ctrl.googlemap.data.setStyle(function (feature) {
-                    var geocodigo = feature.getProperty('id');
+                    const geocodigo = feature.getProperty('id');
                     return {
                         fillColor: "#0000FF",
                         strokeWeight: 1.0,
@@ -171,7 +171,7 @@ function cMapControl() {
             }
         } else if (ctrl.markerType === 1) {
             this.googlemap.data.setStyle(function (feature) {
-                var geocodigo = feature.getProperty('geocodigo');
+                const geocodigo = feature.getProperty('geocodigo');
                 return {
                     fillColor: "#0000FF",
                     strokeWeight: 1.5,
@@ -243,13 +243,13 @@ function cMapControl() {
         } else if (ctrl.visualType === 1) {
 
         } else if (ctrl.visualType === 2) {
-            var fator = cUserConfig.data[ctrl.mapInfo.id][2].cs[ctrl.markerType].vs.fator.valor;
-            var min = cUserConfig.data[ctrl.mapInfo.id][2].cs[ctrl.markerType].vs.min.valor;
-            var opacity = cUserConfig.data[ctrl.mapInfo.id][2].cs[ctrl.markerType].vs.opacity.valor;
+            const fator = cUserConfig.data[ctrl.mapInfo.id][2].cs[ctrl.markerType].vs.fator.valor;
+            const min = cUserConfig.data[ctrl.mapInfo.id][2].cs[ctrl.markerType].vs.min.valor;
+            const opacity = cUserConfig.data[ctrl.mapInfo.id][2].cs[ctrl.markerType].vs.opacity.valor;
 
-            for (var key in ctrl.hashMarkers) {
-                var marker = ctrl.hashMarkers[key];
-                var radius = parseInt(marker.label.text) * fator + min;
+            for (let key in ctrl.hashMarkers) {
+                const marker = ctrl.hashMarkers[key];
+                const radius = parseInt(marker.label.text) * fator + min;
                 marker.setRadius(radius);
                 marker.setOptions({fillOpacity: opacity / 100.0});
             }
@@ -271,12 +271,12 @@ function cMapControl() {
         $("#marker-selected-text").val(ctrl.markerType);
         $("#visual-selected-text").selectmenu("refresh");
         $("#marker-selected-text").selectmenu("refresh");
-        var timer;
+        let timer;
 
         function timer_function() {
             if (typeof MarkerClusterer !== "undefined") {
                 clearInterval(timer);
-                var mapa = ctrl.mapInfo.id;
+                const mapa = ctrl.mapInfo.id;
                 cData.requestMarkers(filters, mapa, ctrl.setData);
             } else {
                 console.log("Aguardando MarkerClusterer ser carregado");
@@ -288,7 +288,7 @@ function cMapControl() {
 
     this.loadData = function (id) {
         cData.getConfiguracoes(id, function (datare) {
-            var data = JSON.parse(datare.json);
+            const data = JSON.parse(datare.json);
             cUI.filterCtrl.setFilters(data.filter);
             cUI.mapCtrl.changeVisualType(data.markertype);
         });
@@ -320,7 +320,7 @@ function cMapControl() {
     };
 
     this.buscar = function () {
-        var place = ctrl.autocomplete.getPlace();
+        let place = ctrl.autocomplete.getPlace();
         if (!place.geometry) {
             $.ajax({
                 url: "http://maps.google.com/maps/api/geocode/json?address=" + ctrl.inputsearchmun.value + "&types=(cities)&components=country:BR",
@@ -375,7 +375,7 @@ function cMapControl() {
         }
 
         if (ctrl.hashMarkers) {
-            for (var key in ctrl.hashMarkers) {
+            for (let key in ctrl.hashMarkers) {
                 if (ctrl.hashMarkers[key].setMap) {
                     ctrl.hashMarkers[key].setMap(null);
                 }
@@ -386,51 +386,51 @@ function cMapControl() {
         }
     };
 
-    var percentColors = [
+    const percentColors = [
         {pct: 0.0, color: {r: 0xff, g: 0xff, b: 0xff}},
         {pct: 1.0, color: {r: 0x00, g: 0x00, b: 0xff}}
     ];
 
     function map_recenter(latlng, offsetx, offsety) {
-        var scale = Math.pow(2, ctrl.googlemap.getZoom());
+        const scale = Math.pow(2, ctrl.googlemap.getZoom());
 
-        var worldCoordinateCenter = ctrl.googlemap.getProjection().fromLatLngToPoint(latlng);
-        var pixelOffset = new google.maps.Point((offsetx / scale) || 0, (offsety / scale) || 0);
+        const worldCoordinateCenter = ctrl.googlemap.getProjection().fromLatLngToPoint(latlng);
+        const pixelOffset = new google.maps.Point((offsetx / scale) || 0, (offsety / scale) || 0);
 
-        var worldCoordinateNewCenter = new google.maps.Point(
+        const worldCoordinateNewCenter = new google.maps.Point(
                 worldCoordinateCenter.x - pixelOffset.x,
                 worldCoordinateCenter.y + pixelOffset.y
                 );
 
-        var newCenter = ctrl.googlemap.getProjection().fromPointToLatLng(worldCoordinateNewCenter);
+        const newCenter = ctrl.googlemap.getProjection().fromPointToLatLng(worldCoordinateNewCenter);
 
         ctrl.googlemap.panTo(newCenter);
     }
 
-    var getColorForPercentage = function (pct) {
+    const getColorForPercentage = function (pct) {
         pct = Math.pow(pct, 1 / 5);
-        for (var i = 1; i < percentColors.length - 1; i++) {
+        for (let i = 1; i < percentColors.length - 1; i++) {
             if (pct < percentColors[i].pct) {
                 break;
             }
         }
-        var lower = percentColors[i - 1];
-        var upper = percentColors[i];
-        var range = upper.pct - lower.pct;
-        var rangePct = (pct - lower.pct) / range;
-        var pctLower = 1 - rangePct;
-        var pctUpper = rangePct;
-        var color = {
+        const lower = percentColors[i - 1];
+        const upper = percentColors[i];
+        const range = upper.pct - lower.pct;
+        const rangePct = (pct - lower.pct) / range;
+        const pctLower = 1 - rangePct;
+        const pctUpper = rangePct;
+        const color = {
             r: Math.floor(lower.color.r * pctLower + upper.color.r * pctUpper),
             g: Math.floor(lower.color.g * pctLower + upper.color.g * pctUpper),
             b: Math.floor(lower.color.b * pctLower + upper.color.b * pctUpper)
         };
-        return 'rgb(' + [color.r, color.g, color.b].join(',') + ')';
+        return 'rgb(' + [color.r, color.g, color.b] + ')';
         // or output as hex if preferred
     };
 
     this.eventOpenMapMarkerControl = function (marker, cod_mun, name_mun, uf_mun) {
-        var position;
+        let position;
         if (marker.getPosition) {
             position = marker.getPosition();
         } else {
@@ -446,7 +446,7 @@ function cMapControl() {
         }
 
         ctrl.markerSelected = marker;
-        var filters = cUI.filterCtrl.getFilters();
+        const filters = cUI.filterCtrl.getFilters();
         if (ctrl.instModeId === false) {
             filters.instituicao = {all: true};
         } else {
@@ -460,58 +460,58 @@ function cMapControl() {
     };
 
     this.setData = function (data) {
-        
-        if(ctrl.instModeId != false && data.length == 0){
-            swal({html:"Nenhum resultado foi encontrado"});
+
+        if (ctrl.instModeId != false && data.length == 0) {
+            swal({html: "Nenhum resultado foi encontrado"});
             ctrl.DesabilitarModoInstituicao();
             return;
         }
-        
+
         ctrl.removeAllMarkers();
 
         const fator = cUserConfig.data[ctrl.mapInfo.id][2].cs[ctrl.markerType].vs.fator.valor;
         const min = cUserConfig.data[ctrl.mapInfo.id][2].cs[ctrl.markerType].vs.min.valor;
         const opacity = cUserConfig.data[ctrl.mapInfo.id][2].cs[ctrl.markerType].vs.opacity.valor / 100.0;
-        var bounds = new google.maps.LatLngBounds();
-
-        var count = -1;
+        const bounds = new google.maps.LatLngBounds();
+        let count = -1;
         if (ctrl.visualType === 3) {
-            var hashState = [];
-            var hash = [];
-            var hashMun = [];
-            var max = 0;
-            var bounds = new google.maps.LatLngBounds();
-            var total = 0;
-            data.map(function (mun) {
-                var uf_id = ("" + mun[3]).substr(0, 2);
+            const hashState = [];
+            const hash = [];
+            const hashMun = [];
+            let max = 0;
+            const bounds = new google.maps.LatLngBounds();
+            let total = 0;
+            for (let i = 0; i < data.length; i++) {
+                const d = data[i];
+                const uf_id = ("" + d[3]).substr(0, 2);
                 if (!hashState[uf_id]) {
                     hashState[uf_id] = uf_id;
                     total++;
                 }
-                if (max < parseInt(mun[0])) {
-                    max = parseInt(mun[0]);
+                if (max < parseInt(d[0])) {
+                    max = parseInt(d[0]);
                 }
 
-                var lat = parseFloat(mun[2]);
-                var lng = parseFloat(mun[1]);
+                const lat = parseFloat(d[2]);
+                const lng = parseFloat(d[1]);
 
                 bounds.extend({lng: lng, lat: lat});
-                hash.push(mun[3] + "");
-                hashMun[mun[3]] = mun;
+                hash.push(d[3] + "");
+                hashMun[d[3]] = d;
                 count++;
+            }
 
-            });
-
-            var ready = 0;
+            let ready = 0;
             console.log(count);
-            hashState.map(function (uf_id) {
+            for (let i = 0; hashState.length; i++) {
+                const uf_id = hashState[i];
                 $.getJSON('./shapes/geojs-' + uf_id + '-mun.json', function (data) {
                     ctrl.googlemap.data.addGeoJson(data);
                     ready++;
                     if (ready === total) {
                         ctrl.googlemap.data.setStyle(function (feature) {
-                            var geocodigo = "" + feature.getProperty('id');
-                            var value = hashMun[geocodigo];
+                            const geocodigo = "" + feature.getProperty('id');
+                            const value = hashMun[geocodigo];
                             if (hash.includes(geocodigo)) {
                                 return {
                                     fillColor: getColorForPercentage(value[0] / max),
@@ -527,13 +527,13 @@ function cMapControl() {
                         });
                     }
                 });
-            });
+            }
         } else {
-            var markers = data.map(function (mun) {
+            const markers = data.map(function (mun) {
                 count++;
-                var marker;
-                var lat = parseFloat(mun[2]);
-                var lng = parseFloat(mun[1]);
+                let marker;
+                const lat = parseFloat(mun[2]);
+                const lng = parseFloat(mun[1]);
 
                 bounds.extend({lng: lng, lat: lat});
                 if (ctrl.visualType === 2) {
@@ -550,7 +550,7 @@ function cMapControl() {
                         zIndex: count
                     });
                 } else {
-                    var marker_data = {
+                    let marker_data = {
                         position: {lng: lng, lat: lat},
                         icon: ctrl.orange_marker,
                         label: {
@@ -576,17 +576,15 @@ function cMapControl() {
                 });
                 return marker;
             });
+            ctrl.markerCluster = new MarkerClusterer(ctrl.googlemap, markers, {imagePath: 'https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/m'});
+            ctrl.googlemap.fitBounds(bounds);
+
         }
 
-        ctrl.googlemap.fitBounds(bounds);
-        
         if (ctrl.googlemap.getZoom() >= 10) {
             ctrl.googlemap.setZoom(10);
         }
 
-        if (typeof (google) !== "undefined" && ctrl.visualType === 0) {
-            ctrl.markerCluster = new MarkerClusterer(ctrl.googlemap, markers, {imagePath: 'https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/m'});
-        }
         cUI.filterCtrl.enableFilters();
 
         ctrl.init();
@@ -654,10 +652,10 @@ function cMapControl() {
 
     this.appendLogo(cUI.catchElement("logotipo_unesp"));
     this.appendLogo(cUI.catchElement("logotipo_sbc"));
-    var options = {
+    const options = {
         componentRestrictions: {country: 'br'}
     };
-    var autocomplete = new google.maps.places.Autocomplete(this.inputsearchmun, options);
+    const autocomplete = new google.maps.places.Autocomplete(this.inputsearchmun, options);
     autocomplete.bindTo('bounds', this.googlemap);
 
     ctrl.autocomplete = autocomplete;
@@ -669,7 +667,7 @@ function cMapControl() {
 
     $("#visual-selected-text").selectmenu({
         change: function (event, ui) {
-            var index = parseInt(ui.item.value);
+            const index = parseInt(ui.item.value);
             if (index === 1 && ctrl.markerType === 0) {
                 swal({
                     title: 'Alerta',
@@ -693,13 +691,13 @@ function cMapControl() {
     });
     $("#marker-selected-text").selectmenu({
         change: function (event, ui) {
-            var index = parseInt(ui.item.value);
+            const index = parseInt(ui.item.value);
             ctrl.changeMarkerType(index);
         }
     });
     cData.listInstituicoes(function (list) {
 
-        for (var i = 0; i < list.length; i++) {
+        for (let i = 0; i < list.length; i++) {
             if (list[i].sigla.length > 2) {
                 list[i].value = list[i].sigla;
             } else {

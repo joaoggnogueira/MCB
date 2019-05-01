@@ -3,46 +3,46 @@
  **/
 
 !function () {
-    var Donut3D = {};
+    const Donut3D = {};
 
     function pieTop(d, rx, ry, ir) {
         if (d.endAngle - d.startAngle == 0)
             return "M 0 0";
-        var sx = rx * Math.cos(d.startAngle),
+        const sx = rx * Math.cos(d.startAngle),
                 sy = ry * Math.sin(d.startAngle),
                 ex = rx * Math.cos(d.endAngle),
                 ey = ry * Math.sin(d.endAngle);
 
-        var ret = [];
+        const ret = [];
         ret.push("M", sx, sy, "A", rx, ry, "0", (d.endAngle - d.startAngle > Math.PI ? 1 : 0), "1", ex, ey, "L", ir * ex, ir * ey);
         ret.push("A", ir * rx, ir * ry, "0", (d.endAngle - d.startAngle > Math.PI ? 1 : 0), "0", ir * sx, ir * sy, "z");
         return ret.join(" ");
     }
 
     function pieOuter(d, rx, ry, h) {
-        var startAngle = (d.startAngle > Math.PI ? Math.PI : d.startAngle);
-        var endAngle = (d.endAngle > Math.PI ? Math.PI : d.endAngle);
+        const startAngle = (d.startAngle > Math.PI ? Math.PI : d.startAngle);
+        const endAngle = (d.endAngle > Math.PI ? Math.PI : d.endAngle);
 
-        var sx = rx * Math.cos(startAngle),
+        const sx = rx * Math.cos(startAngle),
                 sy = ry * Math.sin(startAngle),
                 ex = rx * Math.cos(endAngle),
                 ey = ry * Math.sin(endAngle);
 
-        var ret = [];
+        const ret = [];
         ret.push("M", sx, h + sy, "A", rx, ry, "0 0 1", ex, h + ey, "L", ex, ey, "A", rx, ry, "0 0 0", sx, sy, "z");
         return ret.join(" ");
     }
 
     function pieInner(d, rx, ry, h, ir) {
-        var startAngle = (d.startAngle < Math.PI ? Math.PI : d.startAngle);
-        var endAngle = (d.endAngle < Math.PI ? Math.PI : d.endAngle);
+        const startAngle = (d.startAngle < Math.PI ? Math.PI : d.startAngle);
+        const endAngle = (d.endAngle < Math.PI ? Math.PI : d.endAngle);
 
-        var sx = ir * rx * Math.cos(startAngle),
+        const sx = ir * rx * Math.cos(startAngle),
                 sy = ir * ry * Math.sin(startAngle),
                 ex = ir * rx * Math.cos(endAngle),
                 ey = ir * ry * Math.sin(endAngle);
 
-        var ret = [];
+        const ret = [];
         ret.push("M", sx, sy, "A", ir * rx, ir * ry, "0 0 1", ex, ey, "L", ex, h + ey, "A", ir * rx, ir * ry, "0 0 0", sx, h + sy, "z");
         return ret.join(" ");
     }
@@ -54,42 +54,42 @@
 
     Donut3D.transition = function (id, data, rx, ry, h, ir) {
         function arcTweenInner(a) {
-            var i = d3.interpolate(this._current, a);
+            const i = d3.interpolate(this._current, a);
             this._current = i(0);
             return function (t) {
                 return pieInner(i(t), rx + 0.5, ry + 0.5, h, ir);
             };
         }
         function arcTweenTop(a) {
-            var i = d3.interpolate(this._current, a);
+            const i = d3.interpolate(this._current, a);
             this._current = i(0);
             return function (t) {
                 return pieTop(i(t), rx, ry, ir);
             };
         }
         function arcTweenOuter(a) {
-            var i = d3.interpolate(this._current, a);
+            const i = d3.interpolate(this._current, a);
             this._current = i(0);
             return function (t) {
                 return pieOuter(i(t), rx - .5, ry - .5, h);
             };
         }
         function textTweenX(a) {
-            var i = d3.interpolate(this._current, a);
+            const i = d3.interpolate(this._current, a);
             this._current = i(0);
             return function (t) {
                 return 0.6 * rx * Math.cos(0.5 * (i(t).startAngle + i(t).endAngle));
             };
         }
         function textTweenY(a) {
-            var i = d3.interpolate(this._current, a);
+            const i = d3.interpolate(this._current, a);
             this._current = i(0);
             return function (t) {
                 return 0.6 * rx * Math.sin(0.5 * (i(t).startAngle + i(t).endAngle));
             };
         }
 
-        var _data = d3.layout.pie().sort(null).value(function (d) {
+        const _data = d3.layout.pie().sort(null).value(function (d) {
             return d.value;
         })(data);
 
@@ -109,14 +109,14 @@
     Donut3D.draw = function (id, data, x /*center x*/, y/*center y*/,
             rx/*radius x*/, ry/*radius y*/, h/*height*/, ir/*inner radius*/) {
 
-        var _data = d3.layout.pie().sort(null).value(function (d) {
+        const _data = d3.layout.pie().sort(null).value(function (d) {
             return d.value;
         })(data);
 
-        var slices = d3.select("#" + id).append("g").attr("transform", "translate(" + x + "," + y + ")")
+        const slices = d3.select("#" + id).append("g").attr("transform", "translate(" + x + "," + y + ")")
                 .attr("class", "slices");
 
-        var slices_inner = slices.selectAll(".innerSlice").data(_data).enter().append("path").attr("class", "innerSlice")
+        const slices_inner = slices.selectAll(".innerSlice").data(_data).enter().append("path").attr("class", "innerSlice")
                 .style("fill", function (d) {
                     return d3.hsl(d.data.color).darker(0.7);
                 })
@@ -127,7 +127,7 @@
                     this._current = d;
                 });
 
-        var slices_top = slices.selectAll(".topSlice").data(_data).enter().append("path").attr("class", "topSlice")
+        const slices_top = slices.selectAll(".topSlice").data(_data).enter().append("path").attr("class", "topSlice")
                 .style("fill", function (d) {
                     return d.data.color;
                 })
@@ -141,7 +141,7 @@
                     this._current = d;
                 });
 
-        var slices_outer = slices.selectAll(".outerSlice").data(_data).enter().append("path").attr("class", "outerSlice")
+        const slices_outer = slices.selectAll(".outerSlice").data(_data).enter().append("path").attr("class", "outerSlice")
                 .style("fill", function (d) {
                     return d3.hsl(d.data.color).darker(0.7);
                 })
@@ -152,7 +152,7 @@
                     this._current = d;
                 });
 
-        var percents = slices.selectAll(".percent").data(_data).enter().append("text").attr("class", "percent")
+        const percents = slices.selectAll(".percent").data(_data).enter().append("text").attr("class", "percent")
                 .attr("x", function (d) {
                     return 0.6 * rx * Math.cos(0.5 * (d.startAngle + d.endAngle));
                 })
@@ -163,17 +163,17 @@
             this._current = d;
         });
 
-        for (var i = 0; i < slices_outer[0].length; i++) {
+        for (let i = 0; i < slices_outer[0].length; i++) {
             const index = i;
             
-            var enter = function(){
+            const enter = function(){
                 $(slices_outer[0][index]).css("fill",d3.hsl(data[index].hover_color).darker(0.7));
                 $(slices_top[0][index]).css("fill",data[index].hover_color);
                 $(data[index].labelobj).tipsy(true).show();
                 $(data[index].labelobj).find(".cor").css("background", data[index].hover_color);
             };
             
-            var out = function(){
+            const out = function(){
                 $(slices_outer[0][index]).css("fill",d3.hsl(data[index].color).darker(0.7));
                 $(slices_top[0][index]).css("fill",data[index].color);
                 $(data[index].labelobj).tipsy(true).hide();
@@ -185,13 +185,13 @@
             $(slices_inner[0][i]).mouseenter(enter).mouseleave(out);
             $(percents[0][i]).mouseenter(enter).mouseleave(out).css("cursor","default");
             
-            var enterlabel = function(){
+            const enterlabel = function(){
                 $(slices_outer[0][index]).css("fill",d3.hsl(data[index].hover_color).darker(0.7));
                 $(slices_top[0][index]).css("fill",data[index].hover_color);
                 $(data[index].labelobj).find(".cor").css("background", data[index].hover_color);
             };
             
-            var outlabel = function(){
+            const outlabel = function(){
                 $(slices_outer[0][index]).css("fill",d3.hsl(data[index].color).darker(0.7));
                 $(slices_top[0][index]).css("fill",data[index].color);
                 $(data[index].labelobj).find(".cor").css("background", data[index].color);

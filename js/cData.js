@@ -1,4 +1,4 @@
-
+'use strict';
 (function () {
 
     window.cData = new function () {
@@ -10,7 +10,7 @@
             });
         };
 
-        var request_markers = false;
+        let request_markers = false;
         this.requestMarkers = function (filters, mapa, callback) {
             if (request_markers) {
                 request_markers.abort();
@@ -33,7 +33,7 @@
             });
         };
 
-        var request_cursos = false;
+        let request_cursos = false;
         this.listCursos = function (id, mapa, filters, callback) {
             if (request_cursos) {
                 request_cursos.abort();

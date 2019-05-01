@@ -1,6 +1,7 @@
+'use strict';
 (function () {
 
-    ENUM_TIPOS = {
+    const ENUM_TIPOS = {
         numero: {
             id: 0
         }, boleano: {
@@ -106,9 +107,9 @@
         },
         category_insert_dialog: function (id, categoria, tabheaders, tabs, onchange) {
             $("<div/>").addClass("tab-header").attr("id", "tab-" + id).html(categoria.titulo).appendTo(tabheaders);
-            var tab = $("<div/>").addClass("tab").appendTo(tabs);
-            var inputs = categoria.vs;
-            for (var key in inputs) {
+            const tab = $("<div/>").addClass("tab").appendTo(tabs);
+            const inputs = categoria.vs;
+            for (let key in inputs) {
                 cUserConfig.input_insert_dialog(key + "_" + id, inputs[key], tab, onchange);
             }
             $("<button/>")
@@ -122,14 +123,14 @@
             tab.controlgroup({"direction": "vertical"});
         },
         content_insert_dialog: function (data, onchange, initial_tab) {
-            var notebook = $("<div/>").attr("id", "modal-dialog-config").addClass("notebook");
+            const notebook = $("<div/>").attr("id", "modal-dialog-config").addClass("notebook");
             $("<div/>").addClass("subtitle").html(data.subtitulo).appendTo(notebook);
-            var tabheaders = $("<div/>").addClass("tabs-header").html(data.childdesc).appendTo(notebook);
-            var tabs = $("<div/>").addClass("tabs").appendTo(notebook);
+            const tabheaders = $("<div/>").addClass("tabs-header").html(data.childdesc).appendTo(notebook);
+            const tabs = $("<div/>").addClass("tabs").appendTo(notebook);
 
-            var categorias = data.cs;
+            const categorias = data.cs;
 
-            for (var i = 0; i < categorias.length; i++) {
+            for (let i = 0; i < categorias.length; i++) {
                 cUserConfig.category_insert_dialog(i, categorias[i], tabheaders, tabs, onchange);
             }
             notebook.dialog({
@@ -137,10 +138,10 @@
                 minWidth: 400,
                 position: {my: "right-10 top+10", at: "right-10 top+10", of: window}
             });
-            cNotebookControl(cUI.catchElement(notebook[0]), initial_tab);
+            new cNotebookControl(cUI.catchElement(notebook[0]), initial_tab);
         },
         empty_content_insert_dialog: function (data) {
-            var notebook = $("<div/>").attr("id", "modal-dialog-config").addClass("notebook");
+            const notebook = $("<div/>").attr("id", "modal-dialog-config").addClass("notebook");
             $("<div/>").addClass("subtitle").html(data.subtitulo).appendTo(notebook);
             $("<div/>").addClass("empty").html("Nenhuma configuração disponível para este modo").appendTo(notebook);
             notebook.dialog({
@@ -151,7 +152,7 @@
         },
         config_dialog: function (map_id, config_id, onchange, initial_tab) {
             cUserConfig.close_dialog();
-            var data = cUserConfig.data[map_id][config_id];
+            const data = cUserConfig.data[map_id][config_id];
             if (data.cs) {
                 cUserConfig.content_insert_dialog(data, onchange, initial_tab);
             } else {

@@ -425,3 +425,17 @@ table{
         background: $background_50;
     }
 }
+
+.transparent-button{
+    border: 2px solid $background;
+    color: $background;
+    background: transparent;
+}
+
+.transparent-button:hover{
+    background: $background_20;
+}
+
+.transparent-button:active{
+    background: $background_50;
+}

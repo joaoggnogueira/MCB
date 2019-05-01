@@ -182,11 +182,9 @@ body{
 
 .about{
     text-align: justify;
-    margin: 50px;
+    margin: 100px;
     width: calc(100% - 200px);
     position: relative;
-    margin-left: 100px;
-    margin-right: 100px;
     > .title{
         font-size: 20px;
         color: $color_theme_7;
@@ -227,9 +225,9 @@ body{
     flex-direction: column;
     position: relative;
     width: 100%;
-    box-shadow: 0px 0px 5px rgba(0,0,0,0.3);
     margin-bottom: 30px;
     > .control-header{
+        padding: 10px 0px;
         border-top: 1px solid #ccc;
         border-bottom: 1px solid #ccc;
         position: relative;

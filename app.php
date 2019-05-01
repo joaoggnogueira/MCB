@@ -30,37 +30,26 @@ $listRegiao = $model->listRegiao();
 if ($mapaId == 1) {
     $avaliacao = array(
         array("id" => 0, "nome" => "INDEFINIDO"),
-        array("id" => 1, "nome" => utf8_decode("1 (0.0 até 1.0)")),
-        array("id" => 2, "nome" => utf8_decode("2 (1.0 até 2.0)")),
-        array("id" => 3, "nome" => utf8_decode("3 (2.0 até 3.0)")),
-        array("id" => 4, "nome" => utf8_decode("4 (3.0 até 4.0)")),
-        array("id" => 5, "nome" => utf8_decode("5 (4.0 até 5.0)"))
+        array("id" => 1, "nome" => ("1 (0.0 até 1.0)")),
+        array("id" => 2, "nome" => ("2 (1.0 até 2.0)")),
+        array("id" => 3, "nome" => ("3 (2.0 até 3.0)")),
+        array("id" => 4, "nome" => ("4 (3.0 até 4.0)")),
+        array("id" => 5, "nome" => ("5 (4.0 até 5.0)"))
     );
 } else {
     $avaliacao = array(
-        array("id" => 1, "nome" => "1"),
-        array("id" => 2, "nome" => "2"),
         array("id" => 3, "nome" => "3"),
         array("id" => 4, "nome" => "4"),
         array("id" => 5, "nome" => "5"),
         array("id" => 6, "nome" => "6"),
         array("id" => 7, "nome" => "7"),
-        array("id" => 7, "nome" => "8"),
-        array("id" => 7, "nome" => "9"),
         array("id" => 'A', "nome" => "A")
     );
 }
 
 $enade_enable = constant('ENABLE_ENADE');
-
-function encode_all_strings($arr) {
-    return utf8_encode($arr);
-}
-
-if (is_array($mapaInfo)) {
-    $mapaInfo = array_map("encode_all_strings", $mapaInfo);
-}
 ?>
+<!DOCTYPE html>
 <html lang="pt-BR">
     <head>
         <title>Mapa da Computação</title>
@@ -117,12 +106,14 @@ if (is_array($mapaInfo)) {
         <link rel="stylesheet" href="<?= resource_css("app.css"); ?>"/>
         <link async href="<?= resource_css("responsive.css"); ?>" rel="stylesheet" media="(max-width: 510px)"/>
         <link async rel="stylesheet" href='<?= resource_css("thirdparty/tipsy.css"); ?>'/>
+        <link async href="//cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
 
         <script async src="https://d3js.org/d3.v3.min.js"></script>
         <script async src='<?= resource_script("thirdparty/Donut3D.js"); ?>'></script>
         <link async src='<?= resource_css("thirdparty/Donut3D.css"); ?>'/>
         <script src='<?= resource_script("thirdparty/jquery.tipsy.js"); ?>'></script>
         <script async src='<?= resource_script("cGraphs.js"); ?>'></script>
+        <script async src="//cdn.quilljs.com/1.3.6/quill.min.js"></script>
     </head>
     <body id='body' class='day-theme'>
         <div class="header-group" id="header-group">
@@ -214,7 +205,7 @@ if (is_array($mapaInfo)) {
                     </ul>
                     <ul class='filter-list' style="display: none">
                         <?PHP
-                        resource_component("Filter.php", array("li-name" => "enade", "id" => "enade", "title" => "Nota ".$mapaInfo['avaliacao'], "lista" => $avaliacao));
+                        resource_component("Filter.php", array("li-name" => "enade", "id" => "enade", "title" => "Nota " . $mapaInfo['avaliacao'], "lista" => $avaliacao));
                         ?>
                     </ul>
                 </div>
@@ -256,11 +247,14 @@ if (is_array($mapaInfo)) {
                                     <th>#</th>
                                     <th>Nome (<?= $mapaInfo['fonte'] ?>)</th>
                                     <th>Instituição</th>
+                                    <?PHP if ($mapaId === 2): ?>
+                                        <th>Nível</th>
+                                    <?PHP endif; ?>
                                 </tr>
                             </thead>
                         </table>
-                        <?PHP if($mapaId == 1): ?>
-                        <div class="clabel tabulation f12"> (*) Cursos ofertados na modalidade a distância (EAD)</div>
+                        <?PHP if ($mapaId == 1): ?>
+                            <div class="clabel tabulation f12"> (*) Cursos ofertados na modalidade a distância (EAD)</div>
                         <?PHP endif; ?>
                     </div>
                     <div class="tab" id="graphs-tab">
@@ -269,7 +263,7 @@ if (is_array($mapaInfo)) {
                             resource_component("Graph.php", array("id" => "grau", "title" => "Grau Académico", "type" => "sector"));
                             resource_component("Graph.php", array("id" => "rede", "title" => "Rede", "type" => "sector"));
                             resource_component("Graph.php", array("id" => "modalidade", "title" => "Modalidade", "type" => "sector"));
-                            resource_component("Graph.php", array("id" => "enade", "title" => "Nota ".$mapaInfo['avaliacao'], "type" => "bars"));
+                            resource_component("Graph.php", array("id" => "enade", "title" => "Nota " . $mapaInfo['avaliacao'], "type" => "bars"));
                             resource_component("Graph.php", array("id" => "natureza", "title" => "Natureza Privada", "type" => "sector"));
                             resource_component("Graph.php", array("id" => "naturezadep", "title" => "Natureza Pública", "type" => "sector"));
                             resource_component("Graph.php", array("id" => "nivel", "title" => "Nível", "type" => "sector"));

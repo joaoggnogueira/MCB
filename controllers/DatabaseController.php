@@ -30,9 +30,7 @@ class DatabaseController {
         $database_user = constant('DATABASE_USER');
         $database_password = constant('DATABASE_PASSWORD');
         try {
-            $this->connection = new PDO(
-                    "mysql:host=$database_host;dbname=$database_name", $database_user, $database_password
-                    , array('charset' => 'utf8'));
+            $this->connection = new PDO("mysql:host=$database_host;dbname=$database_name", $database_user, $database_password, array(PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES utf8"));
         } catch (PDOException $e) {
             echo '<code>' . $e->getMessage() . '</code>';
             die();
@@ -41,6 +39,10 @@ class DatabaseController {
 
     public function beginTransaction() {
         $this->connection->beginTransaction();
+    }
+
+    public function rollback() {
+        $this->connection->rollBack();
     }
 
     public function commit() {
@@ -64,7 +66,7 @@ class DatabaseController {
             }
             $query .= " `$key` = $value";
         }
-        
+
         $stmt = $this->connection->prepare($query);
         if ($stmt->execute()) {
             return $stmt->fetch(PDO::FETCH_ASSOC);
@@ -93,6 +95,7 @@ class DatabaseController {
         if (isset($order_by) && is_string($order_by)) {
             $query .= " ORDER BY $order_by ASC";
         }
+
         $stmt = $this->connection->prepare($query);
         if ($stmt->execute()) {
             return $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -119,20 +122,29 @@ class QueryDatabase {
      */
     private $stmt;
     private $query;
+    private $error;
 
     public function __construct($connection, $query) {
         $this->stmt = $connection->prepare($query);
         $this->query = $query;
     }
 
+    public function bindJson($name, $value) {
+        $work = "" . json_encode($value);
+        $this->stmt->bindParam($name, $work, PDO::PARAM_STR);
+        return $this;
+    }
+
     public function bindInt($name, $value) {
         $work = (int) $value;
         $this->stmt->bindParam($name, $work, PDO::PARAM_INT);
+        return $this;
     }
 
     public function bindString($name, $value) {
         $work = "" . $value;
         $this->stmt->bindParam($name, $work, PDO::PARAM_STR);
+        return $this;
     }
 
     public function bindCurrentIp($name) {
@@ -153,6 +165,7 @@ class QueryDatabase {
             $ipaddress = 'UNKNOWN';
         }
         $this->stmt->bindParam($name, $ipaddress, PDO::PARAM_STR);
+        return $this;
     }
 
     public function fetchAssoc() {
@@ -172,12 +185,23 @@ class QueryDatabase {
     public function fetchAllAssoc() {
         if ($this->stmt->execute()) {
             return $this->stmt->fetchAll(PDO::FETCH_ASSOC);
+        } else {
+            $this->error = $this->stmt->errorInfo();
         }
         return false;
     }
 
+    public function get_error() {
+        return $this->error;
+    }
+
     public function execute() {
-        return $this->stmt->execute();
+        if ($this->stmt->execute()) {
+            return true;
+        } else {
+            $this->error = $this->stmt->errorInfo();
+        }
+        return false;
     }
 
 }

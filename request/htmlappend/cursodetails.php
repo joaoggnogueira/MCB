@@ -5,46 +5,37 @@ if (!isset($data)) {
 }
 $enade_enable = constant('ENABLE_ENADE');
 
-if($data['mapa']=="2"){
+if ($data['mapa'] == "2") {
     $enade_enable = false;
 }
 
 include_once './htmlappend/generator.php';
 $periodo_definido = $data['eh_matutino'] === '1' || $data['eh_vespertino'] === '1' || $data['eh_noturno'] === '1' || $data['eh_integral'] === '1';
 
+function get_hash_date() {
+    return array(
+        "JAN" => "JANEIRO",
+        "FEB" => "FEVEREIRO",
+        "MAR" => "MARÇO",
+        "APR" => "ABRIL",
+        "MAY" => "MAIO",
+        "JUN" => "JUNHO",
+        "JUL" => "JULHO",
+        "AUG" => "AGOSTO",
+        "SEP" => "SETEMBRO",
+        "OCT" => "OUTUBRO",
+        "NOV" => "NOVEMBRO",
+        "DEC" => "DEZEMBRO"
+    );
+}
+
 function parser_data($data) {
     if (count($data) !== 0) {
         $dia = substr($data, 0, 2);
-        $mes = substr($data, 2, 3);
-        switch ($mes) {
-            case "JAN":$mes = "JANEIRO";
-                break;
-            case "FEB":$mes = "FEVEREIRO";
-                break;
-            case "MAR":$mes = "MARÇO";
-                break;
-            case "APR":$mes = "ABRIL";
-                break;
-            case "MAY":$mes = "MAIO";
-                break;
-            case "JUN":$mes = "JUNHO";
-                break;
-            case "JUL":$mes = "JULHO";
-                break;
-            case "AUG":$mes = "AGOSTO";
-                break;
-            case "SEP":$mes = "SETEMBRO";
-                break;
-            case "OCT":$mes = "OUTUBRO";
-                break;
-            case "NOV":$mes = "NOVEMBRO";
-                break;
-            case "DEC":$mes = "DEZEMBRO";
-                break;
-            default: $mes = "???";
-        }
+        $mes_brute = substr($data, 2, 3);
+        $hash = get_hash_date();
+        $mes = (isset($hash[$mes_brute]) ? $hash[$mes_brute] : "???");
         $ano = substr($data, 5, 4);
-
         return "$dia de $mes de $ano";
     } else {
         return "Não Definido";
@@ -53,7 +44,9 @@ function parser_data($data) {
 
 $conceito_enade_campus = $data['conceito_enade_campus'];
 ?>
-
+<a href="./dashboard/sugestao.php?id_curso=<?= $data['id_curso'] ?>" <?= ($data['mapa'] == "2" ? "" : "style='display:none'") ?>>
+    <button class="transparent-button">Sugerir Edição</button>
+</a>
 <div class="notebook" id="details-dialog">
     <div class="tabs-header">
         <div class="tab-header selected">
@@ -62,108 +55,112 @@ $conceito_enade_campus = $data['conceito_enade_campus'];
         <div class="tab-header">
             Instituição
         </div>
-        <div class="tab-header" <?= ($enade_enable?'':'style="display: none"') ?>>
+        <div class="tab-header" <?= ($enade_enable ? '' : 'style="display: none"') ?>>
             Conceito Enade
         </div>
-        <div class="tab-header" style="display: none">
-            Metadados
+        <div class="tab-header">
+            Adicional
         </div>
         <button class="btn-close"><i class="fa fa-times"></i> Fechar</button>
     </div>
     <div class="tabs">
         <div class="tab">
             <div class="label">Nome</div>
-            <div class="value"><?= utf8_encode($data['nome_do_curso']) ?></div>
+            <div class="value"><?= $data['nome_do_curso'] ?></div>
             <div class="label">Início do funcionamento</div>
             <div class="value"><?= parser_data($data['inicio_do_funcionamento']) ?></div>
             <div class="label">Modalidade</div>
-            <div class="value"><?= utf8_encode($data['modalidade']) ?></div>
+            <div class="value"><?= ($data['modalidade']) ?></div>
             <div class="label">Nível</div>
-            <div class="value"><?= utf8_encode($data['nivel']) ?></div>
-            <?PHP if($data['grau_academico'] != "N/D"): ?>
+            <div class="value"><?= ($data['nivel']) ?></div>
+            <?PHP if ($data['grau_academico'] != "N/D"): ?>
                 <div class="label">Grau Acadêmico</div>
-                <div class="value"><?= utf8_encode($data['grau_academico']) ?></div>
+                <div class="value"><?= ($data['grau_academico']) ?></div>
             <?PHP endif; ?>
-            <?PHP if($data['total_de_alunos'] != "N/D"): ?>
+            <?PHP if ($data['total_de_alunos'] != "N/D"): ?>
                 <div class="label">Total de Alunos Vinculados</div>
-                <div class="value"><?= utf8_encode($data['total_de_alunos']) ?></div>
+                <div class="value"><?= ($data['total_de_alunos']) ?></div>
             <?PHP endif; ?>
-            <?PHP if($data['carga_horaria'] != "N/D"): ?>
+            <?PHP if ($data['carga_horaria'] != "N/D"): ?>
                 <div class="label">Carga Horária</div>
                 <div class="value"><?= $data['carga_horaria'] ?></div>
             <?PHP endif; ?>
-<!--        <div class="label">Periodo</div>
-                <ul>
-                <li>            
-                    <input type="checkbox" <?= $data['eh_matutino'] === '1' ? "checked" : "" ?> onclick="return false;"/>
-                    <label>Matutino</label>
-                </li>
-                <li>            
-                    <input type="checkbox" <?= $data['eh_vespertino'] === '1' ? "checked" : "" ?> onclick="return false;"/>
-                    <label>Vespertino</label>
-                </li>
-                <li>            
-                    <input type="checkbox" <?= $data['eh_noturno'] === '1' ? "checked" : "" ?> onclick="return false;"/>
-                    <label>Noturno</label>
-                </li>
-                <li>            
-                    <input type="checkbox" <?= $data['eh_integral'] === '1' ? "checked" : "" ?> onclick="return false;"/>
-                    <label>Integral</label>
-                </li>
-                <li>            
-                    <input type="checkbox" <?= $periodo_definido ? "" : "checked" ?> onclick="return false;"/>
-                    <label>Não se aplica</label>
-                </li>
-            </ul>-->
-            <?PHP if($data['codigo_do_programa'] != "N/D"): ?>
+            <!--        <div class="label">Periodo</div>
+                            <ul>
+                            <li>            
+                                <input type="checkbox" <?= $data['eh_matutino'] === '1' ? "checked" : "" ?> onclick="return false;"/>
+                                <label>Matutino</label>
+                            </li>
+                            <li>            
+                                <input type="checkbox" <?= $data['eh_vespertino'] === '1' ? "checked" : "" ?> onclick="return false;"/>
+                                <label>Vespertino</label>
+                            </li>
+                            <li>            
+                                <input type="checkbox" <?= $data['eh_noturno'] === '1' ? "checked" : "" ?> onclick="return false;"/>
+                                <label>Noturno</label>
+                            </li>
+                            <li>            
+                                <input type="checkbox" <?= $data['eh_integral'] === '1' ? "checked" : "" ?> onclick="return false;"/>
+                                <label>Integral</label>
+                            </li>
+                            <li>            
+                                <input type="checkbox" <?= $periodo_definido ? "" : "checked" ?> onclick="return false;"/>
+                                <label>Não se aplica</label>
+                            </li>
+                        </ul>-->
+            <?PHP if ($data['codigo_do_programa'] != "N/D"): ?>
                 <div class="label">Programa</div>
-                <div class="value"><?= utf8_encode($data['codigo_do_programa']) ?> - <?= utf8_encode($data['nome_do_programa']) ?></div>
+                <div class="value"><?= ($data['codigo_do_programa']) ?> - <?= ($data['nome_do_programa']) ?></div>
             <?PHP endif; ?>
-            <?PHP if($data['area_detalhada'] != "N/D"): ?>
+            <?PHP if ($data['area_detalhada'] != "N/D"): ?>
                 <div class="label">Área Detalhada</div>
-                <div class="value"><?= utf8_encode($data['area_detalhada']) ?></div>
+                <div class="value"><?= ($data['area_detalhada']) ?></div>
             <?PHP endif; ?>
-            <?PHP if($data['area_especifica'] != "N/D"): ?>
+            <?PHP if ($data['area_especifica'] != "N/D"): ?>
                 <div class="label">Área Específica</div>
-                <div class="value"><?= utf8_encode($data['area_especifica']) ?></div>
+                <div class="value"><?= ($data['area_especifica']) ?></div>
             <?PHP endif; ?>
-            <?PHP if($data['area_geral'] != "N/D"): ?>
+            <?PHP if ($data['area_geral'] != "N/D"): ?>
                 <div class="label">Área Geral</div>
-                <div class="value"><?= utf8_encode($data['area_geral']) ?></div>
+                <div class="value"><?= ($data['area_geral']) ?></div>
+            <?PHP endif; ?>
+            <?PHP if ($data['nota'] != "0"): ?>
+                <div class="label">Avaliação <?= $data['avaliacao'] ?></div>
+                <div class="value">Nota <?= $data['nota'] ?></div>
             <?PHP endif; ?>
         </div>
         <div class="tab">
             <div class="label">Instituição</div>
-            <div class="value"><?= $data['id_instituicao'] ?> - <?= utf8_encode($data['nome_da_instituicao']) ?> (<?= utf8_encode($data['sigla_da_instituicao']) ?>)</div>
-            <?PHP if($data['tipo_da_organizacao'] != "N/D"): ?>
+            <div class="value"><?= $data['id_instituicao'] ?> - <?= ($data['nome_da_instituicao']) ?> (<?= utf8_encode($data['sigla_da_instituicao']) ?>)</div>
+            <?PHP if ($data['tipo_da_organizacao'] != "N/D"): ?>
                 <div class="label">Tipo da Organização</div>
-                <div class="value"><?= utf8_encode($data['tipo_da_organizacao']) ?></div>
+                <div class="value"><?= ($data['tipo_da_organizacao']) ?></div>
             <?PHP endif; ?>
-            <?PHP if(utf8_encode($data['local_de_oferta']) != "NÃO SE APLICA/INDEFINIDO"): ?>
+            <?PHP if (($data['local_de_oferta']) != "NÃO SE APLICA/INDEFINIDO"): ?>
                 <div class="label">Campus / Local de Oferta do Curso</div>
-                <div class="value"><?= utf8_encode($data['local_de_oferta']) ?></div>
+                <div class="value"><?= ($data['local_de_oferta']) ?></div>
             <?PHP endif; ?>
-            <?PHP if($data['mantenedora'] != "N/D"): ?>
+            <?PHP if ($data['mantenedora'] != "N/D"): ?>
                 <div class="label">Mantenedora - CNPJ</div>
-                <div class="value"><?= utf8_encode($data['mantenedora']) ?></div>
+                <div class="value"><?= ($data['mantenedora']) ?></div>
             <?PHP endif; ?>
-            <?PHP if($data['rede'] != "N/D"): ?>
+            <?PHP if ($data['rede'] != "N/D"): ?>
                 <div class="label">Rede</div>
-                <div class="value"><?= utf8_encode($data['rede']) ?></div>
+                <div class="value"><?= ($data['rede']) ?></div>
             <?PHP endif; ?>
             <div class="label">Natureza</div>
-            <div class="value"><?= utf8_encode($data['natureza_publica']) ?></div>
-            <?PHP if($data['natureza_privada'] != "N/D"): ?>
+            <div class="value"><?= ($data['natureza_publica']) ?></div>
+            <?PHP if ($data['natureza_privada'] != "N/D"): ?>
                 <div class="label">Natureza Jurídica</div>
-                <div class="value"><?= utf8_encode($data['natureza_privada']) ?></div>
+                <div class="value"><?= ($data['natureza_privada']) ?></div>
             <?PHP endif; ?>
             <div class="label">Múnicipio</div>
-            <div class="value"><?= utf8_encode($data['codigo_municipio']) ?> - <?= utf8_encode($data['nome_do_municipio']) ?> (<?= $data['sigla_do_estado'] ?>)</div>
+            <div class="value"><?= ($data['codigo_municipio']) ?> - <?= ($data['nome_do_municipio']) ?> (<?= $data['sigla_do_estado'] ?>)</div>
         </div>
         <div class="tab">
             <div class="controlgroup_vertical">
                 <div class="label">Nome da Instituição</div>
-                <div class="value"><?= utf8_encode($data['nome_da_instituicao']) ?> (<?= utf8_encode($data['sigla_da_instituicao']) ?>)</div>
+                <div class="value"><?= ($data['nome_da_instituicao']) ?> (<?= ($data['sigla_da_instituicao']) ?>)</div>
                 <?PHP if (!is_array($conceito_enade_campus)): ?>
                     <div class="label"><i>Falha ao Consultar o Banco</i></div>
                 <?PHP else: ?>
@@ -210,7 +207,9 @@ $conceito_enade_campus = $data['conceito_enade_campus'];
             </div>
         </div>
         <div class="tab">
-            <?= utf8_encode(print_r($data,true)) ?>
+            <div id="rich_editor">
+
+            </div>
         </div>
     </div>
 </div>

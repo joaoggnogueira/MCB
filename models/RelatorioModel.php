@@ -144,10 +144,13 @@ class RelatorioModel {
 
     public function getCursoDetails($id) {
         $query = "SELECT 
+                c.`id` as 'id_curso',
+                CONCAT(mp.`avaliacao`,' (',mp.`ano_avaliacao`,')') as 'avaliacao',
                 IF(man.`nome` IS NOT NULL, CONCAT(man.`nome`,' - ',man.`cnpj`), 'N/D') as 'mantenedora',
                 clo.`nome` as 'local_de_oferta',
                 IF(c.`total_de_alunos`<>0,c.`total_de_alunos`,'N/D') as 'total_de_alunos',
                 IF(c.`carga_horaria`<>0,CONCAT(c.`carga_horaria`,' horas'),'N/D') as 'carga_horaria',
+                c.`temp_faixa_enade` as 'nota',
                 c.`matutino` as 'eh_matutino',
                 c.`vespertino` as 'eh_vespertino',
                 c.`noturno` as 'eh_noturno',
@@ -164,6 +167,7 @@ class RelatorioModel {
                 i.`id` as 'id_instituicao',
                 i.`nome` as 'nome_da_instituicao',
                 i.`sigla` as 'sigla_da_instituicao',
+                c.adicionais as 'adicional',
                 IFNULL(cg.`nome`,'N/D') as 'grau_academico',
                 cm.`nome` as 'modalidade',
                 cn.`nome` as 'nivel',
@@ -178,6 +182,7 @@ class RelatorioModel {
                 cnpu.`nome` as 'natureza_publica',
                 c.`mapa` as 'mapa'
                 FROM `curso` c
+                LEFT JOIN `mapa` mp ON mp.id = c.mapa 
                 LEFT JOIN `mantenedora` man ON man.id = c.id_mantenedora 
                 LEFT JOIN `curso_local_oferta` clo ON clo.id = c.id_local_de_oferta 
                 LEFT JOIN `registro_inep` ri ON ri.`id` = c.`id_registro_inep`
@@ -219,8 +224,10 @@ class RelatorioModel {
                 . ",ri.nome as nome "
                 . ",i.sigla as instituicao "
                 . ",i.nome as nome_instituicao "
-                . ",c.id_modalidade as id_modalidade "
+                . ",c.id_modalidade as id_modalidade"
+                . ",cn.nome as nivel "
                 . "FROM curso c "
+                . "INNER JOIN curso_nivel cn ON c.id_nivel = cn.id "
                 . "INNER JOIN cidade m ON c.cod_municipio = m.cod "
                 . "INNER JOIN estado e ON e.id = m.id_estado "
                 . "INNER JOIN registro_inep ri ON ri.id = c.id_registro_inep "
@@ -239,7 +246,9 @@ class RelatorioModel {
                 . ",i.sigla as instituicao "
                 . ",i.nome as nome_instituicao "
                 . ",c.id_modalidade as id_modalidade "
+                . ",cn.nome as nivel "
                 . "FROM curso c "
+                . "INNER JOIN curso_nivel cn ON c.id_nivel = cn.id "
                 . "INNER JOIN cidade m ON c.cod_municipio = m.cod "
                 . "INNER JOIN estado e ON e.id = m.id_estado "
                 . "INNER JOIN registro_inep ri ON ri.id = c.id_registro_inep "
@@ -258,7 +267,9 @@ class RelatorioModel {
                 . ",i.sigla as instituicao "
                 . ",i.nome as nome_instituicao "
                 . ",c.id_modalidade as id_modalidade "
+                . ",cn.nome as nivel "
                 . "FROM curso c "
+                . "INNER JOIN curso_nivel cn ON c.id_nivel = cn.id "
                 . "INNER JOIN cidade m ON c.cod_municipio = m.cod "
                 . "INNER JOIN estado e ON e.id = m.id_estado "
                 . "INNER JOIN registro_inep ri ON ri.id = c.id_registro_inep "

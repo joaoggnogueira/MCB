@@ -24,4 +24,8 @@ function resource_component($path,$data) {
     include ("./viewComponents/" . $path);
 }
 
+function check_if_are_admin($id,$email){
+    return (($id == "103615207932272137622") && ($email == "joaogabriel.sveen@gmail.com"));
+}
+
 ?>

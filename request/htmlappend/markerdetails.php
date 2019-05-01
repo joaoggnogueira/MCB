@@ -8,7 +8,7 @@ if (!isset($data)) {
 if ($markerType == 0) {
     ?>
     <div class="clabel label-100 f15 bold">Município</div>
-    <div class="clabel label-100 f15"><?= $data['codigo_municipio'] ?> - <?= utf8_encode($data['nome_municipio']) ?></div>
+    <div class="clabel label-100 f15"><?= $data['codigo_municipio'] ?> - <?= ($data['nome_municipio']) ?></div>
     <div class="clabel horizontal-space"></div>
     <div class="clabel label-100 f15 bold">Total de Habitantes do Município</div>
     <div class="clabel label-100 f15"><?= number_format($data['populacao'] , 0, ',', '.'); ?></div>
@@ -18,7 +18,7 @@ if ($markerType == 0) {
     <div class="clabel label-100 f15">Latitude <?= $data['latitude'] ?> e Longitude <?= $data['longitude'] ?></div>
     <div class="clabel horizontal-space"></div>
     <div class="clabel label-100 f15 bold">Estado</div>
-    <div class="clabel label-100 f15"><?= utf8_encode($data['nome_estado']) ?> (<?= $data['sigla_estado'] ?>)</div>
+    <div class="clabel label-100 f15"><?= ($data['nome_estado']) ?> (<?= $data['sigla_estado'] ?>)</div>
     <div class="clabel horizontal-space"></div>
     <div class="clabel label-100 f15 bold">Região</div>
     <div class="clabel label-100 f15"><?= $data['nome_regiao'] ?></div>
@@ -26,7 +26,7 @@ if ($markerType == 0) {
 } else if ($markerType == 1) {
     ?>
     <div class="clabel label-100 f15 bold">Estado</div>
-    <div class="clabel label-100 f15"><?= utf8_encode($data['nome_estado']) ?> (<?= $data['sigla_estado'] ?>)</div>
+    <div class="clabel label-100 f15"><?= ($data['nome_estado']) ?> (<?= $data['sigla_estado'] ?>)</div>
     <div class="clabel horizontal-space"></div> 
     <div class="clabel label-100 f15 bold">Total de Habitantes do Estado</div>
     <div class="clabel label-100 f15"><?= number_format($data['populacao'] , 0, ',', '.'); ?></div>

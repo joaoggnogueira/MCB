@@ -22,11 +22,12 @@ if ($request->verifyPOST(["id"])) {
         ob_end_flush();
         $request->responseSuccess(
                 "Sucesso ao recuperar dados", 
-                array("view" => utf8_encode($view),
+                array("view" => ($view),
                     "cod_mun" => $data['codigo_municipio'],
                     "nome_instituicao" => $data["nome_da_instituicao"], 
                     "sigla_instituicao" => $data["sigla_da_instituicao"], 
-                    "id_inst" => $data['id_instituicao'])
+                    "id_inst" => $data['id_instituicao'],
+                    "adicional" => $data['adicional'])
         );
     } else {
         $request->responseError("Erro ao retornar dados do banco", "");

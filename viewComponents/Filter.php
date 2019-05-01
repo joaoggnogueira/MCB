@@ -25,8 +25,8 @@ if (!isset($first[$keyname])) {
             <ul>
                 <?PHP foreach ($lista as $i => $elem): ?>
                     <li>
-                        <input class="filter-checkbox" id='filter-<?= $data['id'] ?>-<?= $elem[$keyname] ?>' checked="checked" type='checkbox' value='<?= $elem[$keyname] ?>' title='<?= utf8_encode($elem['nome']) ?>' name='filter-<?= $data['id'] ?>'/>
-                        <label for='filter-<?= $data['id'] ?>-<?= $elem[$keyname] ?>'><?= utf8_encode($elem['nome']) ?></label>
+                        <input class="filter-checkbox" id='filter-<?= $data['id'] ?>-<?= $elem[$keyname] ?>' checked="checked" type='checkbox' value='<?= $elem[$keyname] ?>' title='<?= ($elem['nome']) ?>' name='filter-<?= $data['id'] ?>'/>
+                        <label for='filter-<?= $data['id'] ?>-<?= $elem[$keyname] ?>'><?= ($elem['nome']) ?></label>
                     </li>
                 <?PHP endforeach; ?>
             </ul>

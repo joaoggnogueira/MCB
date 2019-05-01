@@ -17,7 +17,7 @@ if ($request->verifyPOST(["id", "markerType"])) {
         include './htmlappend/markerdetails.php';
         $view = ob_get_clean();
         ob_end_flush();
-        $request->responseSuccess("Sucesso ao recuperar dados", array("view" => utf8_encode($view)));
+        $request->responseSuccess("Sucesso ao recuperar dados", array("view" => ($view)));
     } else {
         $request->responseError("Erro ao retornar dados do banco", "");
     }
