@@ -145,6 +145,7 @@ class RelatorioModel {
     public function getCursoDetails($id) {
         $query = "SELECT 
                 c.`id` as 'id_curso',
+                c.`link` as 'link',
                 CONCAT(mp.`avaliacao`,' (',mp.`ano_avaliacao`,')') as 'avaliacao',
                 IF(man.`nome` IS NOT NULL, CONCAT(man.`nome`,' - ',man.`cnpj`), 'N/D') as 'mantenedora',
                 clo.`nome` as 'local_de_oferta',

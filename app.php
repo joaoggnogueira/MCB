@@ -184,8 +184,10 @@ $enade_enable = constant('ENABLE_ENADE');
                     <ul class='filter-list'>
                         <?PHP
                         resource_component("Filter.php", array("li-name" => "grau", "id" => "grau", "title" => "Grau Académico", "lista" => $listGrau));
-                        resource_component("Filter.php", array("li-name" => "modalidades", "id" => "modalidade", "title" => "Modalidade", "lista" => $listModalidade));
-                        resource_component("Filter.php", array("li-name" => "nivel", "id" => "nivel", "title" => "Nível", "lista" => $listNivel));
+                        if($mapaId !== 1){
+                            resource_component("Filter.php", array("li-name" => "modalidades", "id" => "modalidade", "title" => "Modalidade", "lista" => $listModalidade));
+                            resource_component("Filter.php", array("li-name" => "nivel", "id" => "nivel", "title" => "Nível", "lista" => $listNivel));
+                        }
                         resource_component("Filter.php", array("li-name" => "programa", "id" => "programa", "title" => "Programa", "lista" => $listPrograma));
                         ?>
                     </ul>
@@ -253,9 +255,6 @@ $enade_enable = constant('ENABLE_ENADE');
                                 </tr>
                             </thead>
                         </table>
-                        <?PHP if ($mapaId == 1): ?>
-                            <div class="clabel tabulation f12"> (*) Cursos ofertados na modalidade a distância (EAD)</div>
-                        <?PHP endif; ?>
                     </div>
                     <div class="tab" id="graphs-tab">
                         <ul>

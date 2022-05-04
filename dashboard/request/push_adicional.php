@@ -12,12 +12,14 @@ if ($request->verifyPOST(array("id", "password", "contents"))) {
     $id = $request->takePOST("id", RequestController::$PROCESS_INT);
     $password = $request->takePOST("password", RequestController::$PROCESS_STRING);
     $contents = $request->takePOST("contents", RequestController::$PROCESS_STRING);
+    $link = $request->takePOST("link", RequestController::$PROCESS_STRING);
+
     include "../../controllers/DatabaseController.php";
     include "../../models/DashboardModel.php";
 
     $model = new DashboardModel();
-        
-    if ($model->push_adicional($id, $password, $contents)) {
+
+    if ($model->push_adicional($id, $password, $contents, $link)) {
         $request->responseSuccess("Sucesso ao cadastrar", "Sucesso");
     } else {
         $request->responseError("Falha na requisição", "Erro ao cadastrar curso");

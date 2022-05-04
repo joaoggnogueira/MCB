@@ -3,8 +3,16 @@
     Author     : Acer
 */
 
+body{
+    margin:0px;
+    margin-top: 78px;
+    box-shadow: 0px 0px 5px rgba(0,0,0,0.4);
+    background: white;
+}
 
 .topbar{
+    width: 100%;
+
     > .title{
         max-width: 50px;
         margin-right: 10px;
@@ -17,9 +25,15 @@
     }
 }
 
+.control.carrosel-system{
+    > .control-content{
+        > .carrosel-content{
+            justify-content: start;
+        }
+    }
+}
 .cover{
     > .logo-principal{
         width: 250px;
-        margin-left: 10px;
     }
 }

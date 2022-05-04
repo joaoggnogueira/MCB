@@ -28,7 +28,7 @@
         <link async rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/7.24.1/sweetalert2.min.css"/>
     </head>
     <body>
-        <div class="topbar">
+        <div class="topbar" id="topbar">
             <a class="title linkpage" href="#top">MCB</a>
             <div class="linkspage"> 
                 <a class="linkpage" href="#about">Sobre</a>
@@ -40,7 +40,7 @@
             </div>
         </div>
         <div class="cover" id="top">
-            <img class="logo-principal" alt="Logo do Projeto MCB" src="./images/mcb-mini.svg" width="200" height="100"/>
+            <img class="logo-principal animate-scroll" alt="Logo do Projeto MCB" src="./images/mcb-mini.svg"/>
         </div>
         <div class="alert">
             <div class="icon">
@@ -55,7 +55,7 @@
                 Sobre o Projeto
             </div>
             <div class="text">
-                O “Mapas Computação Brasil - MCB” é uma ferramenta online para visualização georreferenciada  de dados abertos (base de dados) sobre a Computação no Brasil.
+                O “Mapas Computação Brasil - MCB” é uma ferramenta online de visualização georreferenciada de dados abertos (base de dados) sobre cursos superiores em computação no Brasil.
                 È uma iniciativa do Prof. Ronaldo Celso Messias Correia da UNESP Campus de Presidente Prudente, membro da Comissão de Educação da SBC. 
                 Atualmente está sob a responsabilidade da Diretoria de Educação. <br/><br/>
                 O principal objetivo do Mapa é permitir que Instituições de Ensino, Professores, alunos e demais cidadãos, possam acessar e compartilhar os dados sobre: os 
@@ -65,24 +65,24 @@
         <div class="control carrosel-system" id="mapas">
             <div class="control-header">
                 <div class="icon">
-                    <i class="fa fa-map"></i>
+                    <i class="fa fa-map animate-scroll"></i>
                 </div>
                 <div class="control-header-content">
                     <div class="title">
                         Mapas
                     </div>
                     <div class="subtitle">
-                        Explore os aspectos dos cursos de computação no território nacional
+                        Explore dos cursos superiores e pós-gradução em computação no território nacional
                     </div>
                 </div>
             </div>
             <div class="control-content">
                 <div class="carrosel-content">
                     <div class="card">
-                        <img class="image" alt="Imagem do Mapa dos Cursos Superiores de Computação de 2016" async src="./images/mapas/superior.svg"/>
+                        <img class="image" alt="Imagem do Mapa dos Cursos Superiores de Computação de 2017" async src="./images/mapas/superior.svg"/>
                         <div class="content">
                             <a href="./app.php?mapa=1" class="title">
-                                Cursos Superiores de Computação de 2016
+                                <span>Cursos Superiores de Computação em 2017</span>
                             </a>
                             <a href="#relatorioMapa1" class="details">
                                 Detalhes
@@ -93,7 +93,7 @@
                         <img class="image" alt="Imagem do Mapa dos Cursos de Pós-Graduação (Doutorado e Mestrado) em Computação" async src="./images/mapas/superior.svg"/>
                         <div class="content">
                             <a href="./app.php?mapa=2" class="title">
-                                Cursos de Pós-Graduação (Doutorado e Mestrado) em Computação
+                                <span>Cursos de Pós-Graduação (Doutorado e Mestrado) em Computação</span>
                             </a>
                             <a href="#relatorioMapa2" class="details">
                                 Detalhes
@@ -106,7 +106,7 @@
         <div class="control carrosel-system" id="artigos">
             <div class="control-header">
                 <div class="icon">
-                    <i class="fa fa-file"></i>
+                    <i class="fa fa-file animate-scroll"></i>
                 </div>
                 <div class="control-header-content">
                     <div class="title">
@@ -123,7 +123,7 @@
                         <img async alt="Imagem do Relatório INEP 2016" class="image" src="./images/artigos/01.png"/>
                         <div class="content">
                             <a href="./RelatorioComputacaoINEP2016.pdf" class="title">
-                                Educação Superior em Computação Estatísticas – 2016 
+                                <span>Educação Superior em Computação Estatísticas – 2016 </span>
                             </a>
                             <a href="#detalhesRelatorioINEP" class="details">
                                 Detalhes
@@ -134,7 +134,7 @@
                         <img async class="image" alt="Imagem do Livro 'A Trajetória dos Cursos de Graduação da Área de Computação e Informática'" src="./images/artigos/02.png"/>
                         <div class="content"/>
                         <a href="./KM_C554e-20180806145356.pdf" class="title">
-                            A Trajetória dos Cursos de Graduação da Área de Computação e Informática
+                            <span>A Trajetória dos Cursos de Graduação da Área de Computação e Informática</span>
                         </a>
                         <a href="#detalhesArtigo2" class="details">
                             Detalhes
@@ -147,35 +147,33 @@
     <div class="control carrosel-system" id="manuais">
         <div class="control-header">
             <div class="icon">
-                <i class="fa fa-info-circle"></i>
+                <i class="fa fa-info-circle animate-scroll"></i>
             </div>
             <div class="control-header-content">
                 <div class="title">
-                    Outros
+                    Outras
                 </div>
                 <div class="subtitle">
-                    Outros áreas do Sistema
+                    Outras áreas do Sistema
                 </div>
             </div>
         </div>
         <div class="control-content">
             <div class="carrosel-content">
                 <div class="card">
-                    <img  width="50" height="50" class="image" alt="Icone da área de sugestões" async src="./images/mapas/dialog.svg"/>
-                    <div class="content">
-                        <a href="./dashboard/area_publica.php" class="title" style="line-height: 75px;">
-                            ÁREA PÚBLICA
+                    <div class="content button">
+                        <a href="./dashboard/area_publica.php" class="title button" style="line-height: 75px;">
+                            <span>ÁREA PÚBLICA</span>
                         </a>
                         <a href="#menusugestao" style="padding: 0px;" class="details">
                             Detalhes
                         </a>
                     </div>
                 </div>
-                <div  width="50" height="50" class="card">
-                    <img class="image" alt="Icone da área administrativa" async src="./images/mapas/layers.svg"/>
-                    <div class="content">
-                        <a href="./dashboard/area_privada.php" class="title" style="line-height: 75px;">
-                            AREA ADMINISTRATIVA
+                <div class="card">
+                    <div class="content button">
+                        <a href="./dashboard/area_privada.php" class="title button" style="line-height: 75px;">
+                            <span>AREA ADMINISTRATIVA</span>
                         </a>
                         <a href="#menuadministrativo" style="padding: 0px;" class="details">
                             Detalhes
@@ -201,21 +199,21 @@
         <div class="list-content">
             <ul>
                 <li>
-                    <a href="http://www.fct.unesp.br/" target="_blank" rel="noopener"><img async width="100" height="36" class="logo" title="Logotipo da UNESP" src="./images/logotipos/unesp.svg"/></a>
+                    <a href="http://www.fct.unesp.br/" target="_blank" rel="noopener"><img class="animate-scroll" async height="72" class="logo" title="Logotipo da UNESP" src="./images/logotipos/unesp.svg"/></a>
                     <div class="content">
                         <div class="title">Unesp - Universidade Estadual de São Paulo</div>
                         <div class="text">A Universidade do Estado de São Paulo, Júlio de Mesquita Filho, campus localizado no município de Presidente Prudente atua com regularidade nas três grandes áreas do conhecimento, oferecendo doze cursos de graduação, sete programas em nível de pós-graduação e diversos cursos de especialização (lato sensu) em diferentes áreas e participa de mais quatro programas de pós-graduação interunidades. Além do ensino, seus docentes desenvolvem pesquisas e projetos com intensa troca com a sociedade, por meio da extensão universitária. A existência de vários convênios, o trabalho dos laboratórios e a dedicação dos seus funcionários fazem desta unidade não apenas um local de agradável convívio e muito trabalho, mas também um centro de irradiação de desenvolvimento regional.</div>
                     </div>
                 </li>
                 <li>
-                    <a href="http://www.sbc.org.br/" target="_blank" rel="noopener"><img async width="100" class="logo" title="Logotipo da Sociedade Brasileira de Computação" src="./images/logotipos/sbc.svg"/></a>
+                    <a href="http://www.sbc.org.br/" target="_blank" rel="noopener"><img class="animate-scroll" async height="150" class="logo" title="Logotipo da Sociedade Brasileira de Computação" src="./images/logotipos/sbc.svg"/></a>
                     <div class="content">
                         <div class="title">SBC - Sociedade Brasileira de Computação</div>
                         <div class="text">A Sociedade Brasileira de Computação – SBC é uma Sociedade Científica sem fins lucrativos, fundada em 24 de Julho de 1978, que reúne estudantes, professores, profissionais, pesquisadores e entusiastas da área de Computação e Informática de todo o Brasil. A SBC tem como função fomentar o acesso à informação e cultura por meio da informática, promover a inclusão digital, incentivar a pesquisa e o ensino em computação no Brasil, e contribuir para a formação do profissional da computação com responsabilidade social.</div>
                     </div>
                 </li>
                 <li>
-                    <a href="#" target="_blank" rel="noopener"><img async class="logo" title="Logotipo do LAPESCA" width="100" src="./images/logotipos/lapesca2.svg"/></a>
+                    <a href="#" target="_blank" rel="noopener"><img class="animate-scroll" async class="logo" title="Logotipo do LAPESCA" height="150" src="./images/logotipos/lapesca2.svg"/></a>
                     <div class="content">
                         <div class="title">LAPESCA - Laboratório de Pesquisa de Computação Aplicada</div>
                         <div class="text">Localizado no Campus da Unesp de Presidente Prudente, o Laboratório de Pesquisa de Computação Aplicada é um espaço físico gerenciado pelo professor Ronaldo Celso Messias Correia e por alunos do Curso de Bacharelado de Ciência da Computação, realizando projetos de desenvolvimento e pesquisa para a faculdade e colaboradores.</div>
@@ -228,7 +226,7 @@
 <div class="footer" id="contatos">
     <div class="developers">
         <div class="year">
-            <div class="header">2018</div>
+            <div class="header">2018 - 2019</div>
             <div class="card">
                 <div class="cargo">Coordenador</div>
                 <div class="nome">Ronaldo Celso Messias Correia</div>
@@ -283,9 +281,9 @@
 </div>
 <div id="relatorioMapa1" style="display: none">
     Através de Técnica de Visualização de Dados em Georeferência, e do cruzamento de dados a partir do Censo (dos últimos anos) do INEP, ENADE, IBGE e outras entidades, 
-    esta ferramenta visa apresentar a concentração das caracteristicas dos cursos de computação, e similares, no Território Nacional, sejam presenciais ou a distância, de instituições públicas ou privadas. 
+    esta ferramenta visa apresentar a concentração das caracteristicas dos cursos de computação presencial, e similares, no Território Nacional, de instituições públicas ou privadas. 
     <br/><br/>
-    Mapa com a localização de cursos superiores de Computação segundo o Censo <b>INEP 2016</b>, além dos resultados do Conceito <b>Enade</b> de 2014.
+    Mapa com a localização de cursos superiores de Computação segundo o Censo <b>INEP 2017</b>, além dos resultados do Conceito <b>Enade</b> de 2017.
     <br/>
     Para os cursos do mapa é apresentado dados como:
     <br/><br/>
@@ -293,7 +291,6 @@
         <li>Instituição de Ensino;</li>
         <li>Local de Oferta;</li>
         <li>Área de Conhecimento;</li>
-        <li>Modalidade do Curso;</li>
         <li>Carga Horária;</li>
         <li>Ano de início;</li>
         <li>Grau Acadêmico;</li>
@@ -310,6 +307,40 @@
           gtag('js', new Date());
           gtag('config', 'UA-122930708-1');
         </script>-->
+<script>
+    (function () {
+        const topCoverImage = document.getElementById("top");
+        const DOMSANIMATE = Array.from(document.getElementsByClassName("animate-scroll"));
+        function updateVisibleDOMS() {
+            const docViewTop = $(window).scrollTop();
+            const docViewBottom = docViewTop + $(window).height();
+            DOMSANIMATE.forEach((elem) => {
+                const elemTop = $(elem).offset().top;
+                const elemBottom = elemTop + $(elem).height();
+                if ((elemBottom <= docViewBottom) && (elemTop >= docViewTop)) {
+                    elem.classList.remove("hide");
+                    elem.animationready = true;
+                } else {
+                    elem.classList.add("hide");
+                }
+            });
+        }
 
+        function parallaxbubbles() {
+            const offset = (0.4 * window.window.innerHeight);
+            var scrolltop = window.pageYOffset // get number of pixels document has scrolled vertically 
+            const factor = Math.min(scrolltop, offset) / offset;
+            topbar.style.background = `rgba(240, 240, 240,${factor})`;
+            topbar.style.marginTop = (-(64 + Math.min(scrolltop, 14))) + "px";
+            updateVisibleDOMS();
+        }
+
+        window.addEventListener('scroll', function () { // on page scroll
+            requestAnimationFrame(parallaxbubbles) // call parallaxbubbles() on next available screen paint
+        }, false);
+
+        updateVisibleDOMS();
+    })();
+</script>
 </body>
 </html>

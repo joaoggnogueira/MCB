@@ -46,6 +46,8 @@ function append_dialogs_methods($scope, $mdDialog, $mdToast, $log) {
         $mdDialog.show(confirm).then(function () {
             if (doToast) {
                 $scope.showSimpleToast(text);
+            }
+            if (callback_success) {
                 callback_success();
             }
         });

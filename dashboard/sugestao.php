@@ -298,11 +298,15 @@ include "../config/config.php";
                             <md-icon md-svg-icon="../images/material/overview.svg"></md-icon>
                             &nbsp;&nbsp; Informações Adicionais
                         </md-subheader>
-                        <md-input-container class="md-block custom-input-container">
+                        <md-input-container style="height:auto" class="md-block custom-input-container">
                             <button md-button aria-label="Salvar" class="md-raised" ng-click="show_rich_editor();" style="margin-bottom: 25px;"> ABRIR EDITOR </button>
                             <div class="rich_editor">
 
                             </div>
+                        </md-input-container>
+                        <md-input-container class="md-block custom-input-container">
+                            <label>Link para mais informações do curso</label>
+                            <input type="text" ng-model="link" aria-label="Campo para Link" id="link"/>
                         </md-input-container>
                     </section>
                 </md-content>

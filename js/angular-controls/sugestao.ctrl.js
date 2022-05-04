@@ -99,9 +99,12 @@
                     console.error(response);
                 });
             } else {
-                scope.$parent.showConfirmDialog("É necessário uma senha", "Deseja descartar alteração e sair?", (ok) => {
+                scope.$parent.showConfirmDialog("É necessário uma senha", "Deseja cancelar e encerrar a sessão?", (ok) => {
                     if (ok) {
-                        window.location.href = "./area_publica.php";
+                        scope.showMessageDialog("Sessão encerrada", "", false, () => {
+                            window.location.href = "../app.php?mapa=2";
+                        });
+                        
                     } else {
                         get_curso_data(scope, http, mdDialog, callback);
                     }
@@ -366,6 +369,7 @@
                         $scope.mapaId = data_curso.mapaId;
                         $scope.mapa = data_curso.mapa;
                         $scope.registro = data_curso.nome;
+                        $scope.link = data_curso.link;
 
                         $scope.total_de_alunos = parseInt(data_curso.total_de_alunos);
                         $scope.carga_horaria = parseInt(data_curso.carga_horaria);
@@ -492,6 +496,8 @@
 
                     let formdata = {id: $scope.id_curso, password: $scope.password};
                     formdata.contents = JSON.stringify($scope.quill_adicionais.getContents());
+                    formdata.link = $scope.link;
+
                     $http({
                         method: 'POST',
                         url: './request/push_adicional.php',

@@ -94,14 +94,14 @@ class DashboardModel {
     }
 
     public function checkpassword_curso($id, $password) {
-        $query = "SELECT senha, id_programa FROM curso WHERE id = :id ";
+        $query = "SELECT senha, id_registro_inep FROM curso WHERE id = :id ";
 
         $stmt = $this->controller->query($query);
         $stmt->bindString("id", $id);
 
         $fetch = $stmt->fetchAssoc();
         return array(
-            "access_granted" => (($password == "B30CB754671060F604A0A91CFE1C5224") || ($fetch['senha'] == $password) || ($fetch['id_programa'] == $password)),
+            "access_granted" => (($password == "B30CB754671060F604A0A91CFE1C5224") || ($fetch['senha'] == $password) || ($fetch['id_registro_inep'] == $password)),
             "need_reset" => (($fetch['senha'] != $password) && ($password != "B30CB754671060F604A0A91CFE1C5224"))
         );
     }
@@ -246,7 +246,7 @@ class DashboardModel {
                 . "LEFT JOIN mantenedora man ON man.id = c.id_mantenedora "
                 . "INNER JOIN cidade ci ON ci.cod = c.cod_municipio "
                 . "INNER JOIN estado e ON e.id = ci.id_estado "
-                . "WHERE c.id = :id AND ((:password LIKE 'B30CB754671060F604A0A91CFE1C5224') OR (c.senha LIKE :password) OR (c.id_programa LIKE :password))";
+                . "WHERE c.id = :id AND ((:password LIKE 'B30CB754671060F604A0A91CFE1C5224') OR (c.senha LIKE :password) OR (c.id_registro_inep LIKE :password))";
 
         $stmt = $this->controller->query($query);
         $stmt->bindInt("id", $id);
@@ -254,15 +254,16 @@ class DashboardModel {
         return $stmt->fetchAssoc();
     }
 
-    public function push_adicional($id, $password, $contents) {
+    public function push_adicional($id, $password, $contents, $link) {
         $query = "UPDATE curso "
-                . "SET adicionais = :contents "
-                . "WHERE id = :id AND ((:password LIKE 'B30CB754671060F604A0A91CFE1C5224') OR (senha LIKE :password) OR (id_programa LIKE :password))";
+                . "SET adicionais = :contents, link = :link "
+                . "WHERE id = :id AND ((:password LIKE 'B30CB754671060F604A0A91CFE1C5224') OR (senha LIKE :password) OR (id_registro_inep LIKE :password))";
 
         $stmt = $this->controller->query($query);
         $stmt->bindInt("id", $id);
         $stmt->bindString("password", $password);
         $stmt->bindString("contents", $contents);
+        $stmt->bindString("link", $link);
 
         return $stmt->execute();
     }

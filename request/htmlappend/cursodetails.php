@@ -187,28 +187,36 @@ $conceito_enade_campus = $data['conceito_enade_campus'];
                 <div class="clabel horizontal-space"></div>
                 <div class="clabel label-100 f15 bold">Formação Geral (25%)</div>
                 <div class="clabel label-100">
-                    <div class="clabel label-33 f12 tabulation"><b>Bruta:</b> <span name="nota_bruta_fg">50.5</span></div>
-                    <div class="clabel label-33 f12"><b>Padronizada:</b> <span name="nota_padronizada_fg">1.5</span></div>
+                    <div class="clabel label-33 f12 tabulation"><b>Bruta:</b> <span name="nota_bruta_fg">...</span></div>
+                    <div class="clabel label-33 f12"><b>Padronizada:</b> <span name="nota_padronizada_fg">...</span></div>
                 </div>
                 <div class="clabel horizontal-space"></div>
                 <div class="clabel label-100 f15 bold">Componente Específico (75%)</div>
                 <div class="clabel label-100">
-                    <div class="clabel label-33 f12 tabulation"><b>Bruta:</b> <span name="nota_bruta_ce">50.5</span></div>
-                    <div class="clabel label-33 f12"><b>Padronizada:</b> <span name="nota_padronizada_ce">1.5</span></div>
+                    <div class="clabel label-33 f12 tabulation"><b>Bruta:</b> <span name="nota_bruta_ce">...</span></div>
+                    <div class="clabel label-33 f12"><b>Padronizada:</b> <span name="nota_padronizada_ce">...</span></div>
                 </div>
                 <div class="clabel horizontal-space"></div>
                 <div class="clabel label-100 f15 bold">Nota GERAL</div>
                 <div class="clabel label-100">
-                    <div class="clabel label-33 f12 tabulation"><b>Bruta:</b>  <span name="nota_bruta_geral">50.5</span></div>
-                    <div class="clabel label-33 f12"><b>Padronizada:</b> <span name="nota_padronizada_geral">1.5</span></div>
+                    <div class="clabel label-33 f12 tabulation"><b>Bruta:</b>  <span name="nota_bruta_geral">...</span></div>
+                    <div class="clabel label-33 f12"><b>Padronizada:</b> <span name="nota_padronizada_geral">...</span></div>
                 </div>
                 <div class="clabel horizontal-space"></div>
-                <div class="clabel label-100 f12"><span name="n_inscritos">42</span> inscritos e <span name="n_participantes">40</span> participantes</div>
+                <div class="clabel label-100 f12"><span name="n_inscritos">...</span> inscritos e <span name="n_participantes">...</span> participantes</div>
             </div>
         </div>
         <div class="tab">
-            <div id="rich_editor">
+            <div class="controlgroup_vertical">
+                <div class="clabel label-100">
+                    <?PHP if (isset($data['link']) && $data['link'] && $data['link'] !== ""): ?>
+                        <div class="label">Link para informações adicionais</div>
+                        <a href="<?= $data['link'] ?>"><?= $data['link'] ?></a>
+                    <?PHP endif; ?>
+                </div>
+                <div id="rich_editor">
 
+                </div>
             </div>
         </div>
     </div>
